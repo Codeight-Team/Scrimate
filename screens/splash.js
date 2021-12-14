@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'white'
+        backgroundColor: '#F4F8FF'
     },
     txt: {
         fontSize: 36,
