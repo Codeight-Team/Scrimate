@@ -6,8 +6,9 @@ import SVGImg from '../assets/soccer.svg';
 export default function Splash(){
     return(
         <View style={styles.container}>
-            <SVGImg width={500} height={500} />
-            <FlatButton text='START' onPress={() => console.log("Start Button Pressed")}/>
+            <SVGImg width={417} height={227} />
+            <Text style={styles.txt}> SCRIMATE</Text>
+            <FlatButton text='START' onPress={() => console.log("Start Button Pressed")} backgroundColor={'#6C63FF'} width={150}/>
         </View>  
     )
 }
@@ -20,9 +21,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'white'
     },
-    img: {
-        width: 250,
-        height: 250,
-        marginBottom: 100
+    txt: {
+        fontSize: 36,
+        fontWeight: 'bold',
+        color: 'black',
+        marginBottom: 100,
+        marginTop: 100
+
     }
 })
