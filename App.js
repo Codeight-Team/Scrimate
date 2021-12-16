@@ -3,12 +3,16 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Splashes from './screens/splash';
 import LoginScreen from './screens/loginScreen';
+import OTPScreen from'./screens/OTPScreen';
+import RegisterScreen from'./screens/registerScreen';
 
 export default function App() {
   return (
     <View style={styles.container}>
       {/* <Splashes /> */}
-      <LoginScreen />
+      {/* <LoginScreen /> */}
+      <RegisterScreen />
+      {/* <OTPScreen /> */}
       <StatusBar style="auto" />
     </View>
   );
