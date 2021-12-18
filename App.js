@@ -5,6 +5,7 @@ import Splashes from './screens/splash';
 import LoginScreen from './screens/loginScreen';
 import OTPScreen from'./screens/OTPScreen';
 import RegisterScreen from'./screens/registerScreen';
+import ForgotPassword from './screens/forgot-password/index';
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
       {/* <LoginScreen /> */}
       <RegisterScreen />
       {/* <OTPScreen /> */}
+      {/* <ForgotPassword /> */}
       <StatusBar style="auto" />
     </View>
   );

@@ -5,6 +5,11 @@ import FlatButton from '../shared/button';
 import { color } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 
 export default function RegisterScreen(){
+
+    const buttonHandler = () =>{
+        console.log("button sign up pressed")
+    }
+
     return(
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
@@ -37,7 +42,7 @@ export default function RegisterScreen(){
                                     <TextInput
                                         style={styles.input}
                                         placeholder='Date of Birth'
-                                        onChangeText={props.handleChange('DOB')}
+                                        onChangeText={props.handleChange('birth_date')}
                                         value={props.values.birth_date}
                                     />
                                 </View>
@@ -76,7 +81,7 @@ export default function RegisterScreen(){
                             </ScrollView>
                             <View style={styles.buttonContainer}>
                                 <View style={styles.button}>
-                                    <FlatButton text='Sign Up' onPress={() => console.log("Sign Up Button Pressed")} backgroundColor={'#6C63FF'} width={150}/>
+                                    <FlatButton text='Sign Up' onPress={() => buttonHandler()} backgroundColor={'#6C63FF'} width={150}/>
                                 </View>
                             </View>
                         </View>
