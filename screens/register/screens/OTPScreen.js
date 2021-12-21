@@ -1,9 +1,12 @@
 import React from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
-import FlatButton from '../shared/button';
+import FlatButton from '../../../shared/button';
 
-export default function OTPScreen() {
+export default function OTPScreen({navigation}) {
+    const confirmButtonHandler = (pass) =>{
+        console.log(pass)
+    }
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
@@ -29,12 +32,12 @@ export default function OTPScreen() {
                                     textAlign='center'
                                 />
                             </View>
-                            <TouchableOpacity style={styles.textcontainer} onPress={() => console.log("Forgot Password Button Pressed")}>
+                            <TouchableOpacity style={styles.textcontainer} onPress={() => console.log("Resend Button Pressed")}>
                                     <Text style={styles.txt}>Resend</Text>
                             </TouchableOpacity>
                             <View style={styles.buttonContainer}>
                                 <View style={styles.button}>
-                                    <FlatButton text='confirm' onPress={() => console.log("confirm Button Pressed")} backgroundColor={'#6C63FF'} width={150} />
+                                    <FlatButton text='confirm' onPress={() => navigation.navigate('Register')} backgroundColor={'#6C63FF'} width={150} />
                                 </View>
                             </View>
                         </View>

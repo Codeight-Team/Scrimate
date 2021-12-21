@@ -1,27 +1,27 @@
 import React from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView } from 'react-native';
 import {Formik} from 'formik';
-import FlatButton from '../shared/button';
+import FlatButton from '../../../shared/button';
 import { color } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 
-export default function RegisterScreen(){
-
-    const buttonHandler = () =>{
-        console.log("button sign up pressed")
+export default function RegisterScreen({navigation}){
+    const buttonHandler = (values) =>{
+        console.log(values);
+        // navigation.navigate('OTP');
     }
-
     return(
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
+                <View style={styles.headingBox}>
+                                <Text style={styles.title}>Register</Text>
+                </View>
+                <ScrollView>
                 <Formik
                     initialValues={{first_name: '', last_name: '',birth_date:'', email: '', phone_number: '', password: '', confirm_password:''}}
                 >
                     {(props) => (
                         <View>
-                            <View style={styles.headingBox}>
-                                <Text style={styles.title}>Register</Text>
-                            </View>
-                            <ScrollView>
+                            
                                 <View style={styles.formUser}>
                                     <TextInput
                                         style={styles.input}
@@ -57,39 +57,53 @@ export default function RegisterScreen(){
                                 <View style={styles.formUser}>
                                     <TextInput
                                         style={styles.input}
+                                        keyboardType='phone-pad'
                                         placeholder='Phone'
-                                        onChangeText={props.handleChange('phone')}
+                                        onChangeText={props.handleChange('phone_number')}
                                         value={props.values.phone_number}
                                     />
                                 </View>
                                 <View style={styles.formUser}>
                                     <TextInput
                                         style={styles.input}
+                                        secureTextEntry={true}
                                         placeholder='Password'
                                         onChangeText={props.handleChange('password')}
                                         value={props.values.password}
                                     />
                                 </View>
-                                <View style={styles.formUser}>
+                                <View style={styles.formUser} removeClippedSubviews={true}>
                                     <TextInput
                                         style={styles.input}
+                                        secureTextEntry={true}
+                                        contextMenuHidden={true}
                                         placeholder='Confirm Password'
                                         onChangeText={props.handleChange('confirm_password')}
                                         value={props.values.confirm_password}
                                     />
                                 </View>
-                            </ScrollView>
-                            <View style={styles.buttonContainer}>
+                                <View style={styles.buttonContainer}>
                                 <View style={styles.button}>
-                                    <FlatButton text='Sign Up' onPress={() => buttonHandler()} backgroundColor={'#6C63FF'} width={150}/>
+                                    <FlatButton text='Sign Up' onPress={() => buttonHandler(props.values)} backgroundColor={'#6C63FF'} width={150}/>
                                 </View>
                             </View>
+                            
                         </View>
+                        
                     )}
                     
                 </Formik>
+                </ScrollView>
             </View>
         </TouchableWithoutFeedback>
+    )
+}
+
+const TnC = () => {
+    return (
+        <View>
+            <Text> By registering you agree to Term & Conditions</Text>
+        </View>
     )
 }
 

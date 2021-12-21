@@ -3,20 +3,22 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Splashes from './screens/splash';
 import LoginScreen from './screens/loginScreen';
-import OTPScreen from'./screens/OTPScreen';
-import RegisterScreen from'./screens/registerScreen';
+import OTPScreen from'./screens/register/screens/OTPScreen';
+import RegisterStack from'./screens/register/registerStack';
 import ForgotPassword from './screens/forgot-password/index';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      {/* <Splashes /> */}
-      {/* <LoginScreen /> */}
-      <RegisterScreen />
-      {/* <OTPScreen /> */}
-      {/* <ForgotPassword /> */}
-      <StatusBar style="auto" />
-    </View>
+      // <View style={styles.container}>
+      // {/* <Splashes /> */}
+      // {/* <LoginScreen /> */}
+      // {/* <RegisterStack /> */}
+      // <RegisterScreen/>
+      // {/* <OTPScreen /> */}
+      // {/* <ForgotPassword /> */}
+        <RegisterStack/>
+      // <StatusBar style="auto" />
+      // </View>
   );
 }
 

@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import RadioButtonRN from "radio-buttons-react-native";
 import { StyleSheet, Text, View } from 'react-native';
 import FlatButton from '../../../shared/button';
-import { isEmptyArray } from 'formik';
-
 
 export default function selectionMethod(){
 
