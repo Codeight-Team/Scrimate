@@ -1,24 +1,47 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, {useState,useEffect} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Splashes from './screens/splash';
 import LoginScreen from './screens/loginScreen';
 import OTPScreen from'./screens/register/screens/OTPScreen';
 import RegisterStack from'./screens/register/registerStack';
-import ForgotPassword from './screens/forgot-password/index';
+import ForgotPasswordStack from './screens/forgot-password/forgotPasswordStack';
+import MainStack from './screens/main/mainTabStack';
+import HomeScreen from './screens/main/screen/homeScreen';
+import axios from 'axios';
 
-export default function App() {
-  return (
+function App () {
+  const [count, setCount] = useState(0);
+  // componentDidMount(){
+  //   axios.get('https://jsonplaceholder.typicode.com/todos/1'
+  //   )
+  //   .then(({response}) => {
+  //     console.log(response);
+  //   }).catch((error) => {
+  //     console.log(error)
+  //   });
+  // }
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setCount((count) => count + 1);
+  //   }, 1000);
+  // });
+    return (
       // <View style={styles.container}>
       // {/* <Splashes /> */}
-      // {/* <LoginScreen /> */}
-      // {/* <RegisterStack /> */}
+        // <LoginScreen /> 
       // <RegisterScreen/>
-      // {/* <OTPScreen /> */}
-      // {/* <ForgotPassword /> */}
-        <RegisterStack/>
-      // <StatusBar style="auto" />
+      // <OTPScreen />
+      //  <ForgotPasswordStack />
+      // <HomeScreen></HomeScreen>
+        <MainStack />
+        // <RegisterStack/>
+        // <StatusBar style="auto" />
       // </View>
+        // <View style={styles.container}>
+        //     <Text>I've rendered {count} times!</Text>
+        // </View>
+      
   );
 }
 
@@ -30,3 +53,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+export default App;

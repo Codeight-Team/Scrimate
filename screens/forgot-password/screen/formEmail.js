@@ -2,8 +2,22 @@ import React from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity } from 'react-native';
 import {Formik} from 'formik';
 import FlatButton from '../../../shared/button';
+import * as yup from 'yup';
+import { useState } from 'react';
 
-export default function formEmail(){
+const validationSchema = yup.object({
+    email: yup.string()
+    .email("Please enter valid email")
+    .required(),
+})
+
+export default function formEmail({navigation}){
+    const [isDisabled,setIsDisabled] = useState(true)
+    
+    const buttonHandler = (props) => {
+        console.log(props.values.email)
+        console.log("Confirm Button Pressed")
+    }
     return(
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
@@ -11,24 +25,28 @@ export default function formEmail(){
                     <Text style={styles.txt}>Enter your account email</Text>
                 </View>
                 <Formik
-                    initialValues={{email: '', password: ''}}
+                    initialValues={{email: ''}}
+                    validationSchema={validationSchema}
                 >
                     {(props) => (
                         <View>
+                            {(props.touched.email && props.errors.email) &&
+                            <Text style={styles.error}>{props.touched.email && props.errors.email} </Text>}
                             <View style={styles.formUser}>
                                 <TextInput
                                     style={styles.input}
                                     placeholder='Email'
                                     onChangeText={props.handleChange('email')}
                                     value={props.values.email}
+                                    onBlur={props.handleBlur('email')}
                                 />
                             </View>
-                            <TouchableOpacity style={styles.center} onPress={() => console.log("Change method press")}>
+                            <TouchableOpacity style={styles.center} onPress={() => navigation.navigate('Selection Screen')}>
                                 <Text style={styles.purple}>change recovery method</Text>
                             </TouchableOpacity>
                             <View style={styles.buttonContainer}>
                                 <View style={styles.button}>
-                                    <FlatButton text='CONFIRM' onPress={() => console.log("Confirm Button Pressed")} backgroundColor={'#6C63FF'} width={150}/>
+                                    <FlatButton text='CONFIRM'onPress={() => buttonHandler(props)} backgroundColor={'#6C63FF'} width={150} isDisable={isDisabled}/>
                                 </View>
                             </View>
                         </View>
@@ -41,7 +59,11 @@ export default function formEmail(){
 
 const styles = StyleSheet.create({
     container: {
-        
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F4F8FF',
+        width: '100%',
     },
     formUser: {
         flexDirection: 'row',
@@ -81,5 +103,9 @@ const styles = StyleSheet.create({
     infoContainer:{
         padding: 10,
         alignItems: 'flex-start'
+    },
+    error:{
+        color: 'red',
+        fontSize: 10
     }
 })

@@ -7,7 +7,7 @@ import { color } from 'react-native/Libraries/Components/View/ReactNativeStyleAt
 export default function RegisterScreen({navigation}){
     const buttonHandler = (values) =>{
         console.log(values);
-        // navigation.navigate('OTP');
+        navigation.navigate('OTP');
     }
     return(
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

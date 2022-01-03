@@ -7,48 +7,48 @@ export default function LoginScreen(){
     return(
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
-                <Formik
-                    initialValues={{email: '', password: ''}}
-                >
-                    {(props) => (
-                        <View>
-                            <View style={styles.formUser}>
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder='Email'
-                                    onChangeText={props.handleChange('email')}
-                                    value={props.values.email}
-                                />
-                            </View>
-                            <View style={styles.formUser}>
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder='Password'
-                                    onChangeText={props.handleChange('password')}
-                                    value={props.values.password}
-                                />
-                            </View>
+                    <Formik
+                        initialValues={{email: '', password: ''}}
+                    >
+                        {(props) => (
                             <View>
-                                {/* <Button
-                                onPress={() => console.log("Forgot Password Button Pressed")}
-                                title='Forgot password?'
-                                color={'transparent'}
-                                
-                                /> */}
-                                <TouchableOpacity onPress={() => console.log("Forgot Password Button Pressed")}>
-                                    <Text style={styles.txt}>Forgot Password?</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.buttonContainer}>
-                                <View style={styles.button}>
-                                    <FlatButton text='Sign In' onPress={() => console.log("Login Button Pressed")} backgroundColor={'#6C63FF'} width={150}/>
+                                <View style={styles.formUser}>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder='Email'
+                                        onChangeText={props.handleChange('email')}
+                                        value={props.values.email}
+                                    />
+                                </View>
+                                <View style={styles.formUser}>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder='Password'
+                                        onChangeText={props.handleChange('password')}
+                                        value={props.values.password}
+                                    />
+                                </View>
+                                <View>
+                                    {/* <Button
+                                    onPress={() => console.log("Forgot Password Button Pressed")}
+                                    title='Forgot password?'
+                                    color={'transparent'}
+                                    
+                                    /> */}
+                                    <TouchableOpacity onPress={() => console.log("Forgot Password Button Pressed")}>
+                                        <Text style={styles.txt}>Forgot Password?</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.buttonContainer}>
+                                    <View style={styles.button}>
+                                        <FlatButton text='Sign In' onPress={() => console.log("Login Button Pressed")} backgroundColor={'#6C63FF'} width={150}/>
+                                    </View>
                                 </View>
                             </View>
-                        </View>
-                    )}
-                    
-                </Formik>
-            </View>
+                        )}
+                        
+                    </Formik>
+                </View>
         </TouchableWithoutFeedback>
     )
 }

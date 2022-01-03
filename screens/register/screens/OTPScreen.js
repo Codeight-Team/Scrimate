@@ -2,10 +2,14 @@ import React from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
 import FlatButton from '../../../shared/button';
+import axios from 'axios';
 
 export default function OTPScreen({navigation}) {
     const confirmButtonHandler = (pass) =>{
-        console.log(pass)
+        console.log(pass.values)
+        axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
+            console.log(response.data);
+          });
     }
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -24,7 +28,7 @@ export default function OTPScreen({navigation}) {
                             <View style={styles.formUser}>
                                 <TextInput
                                     style={styles.input}
-                                    placeholder='****'
+                                    placeholder='* * * *'
                                     onChangeText={props.handleChange('passkey')}
                                     value={props.values.passkey}
                                     keyboardType='number-pad'
@@ -37,7 +41,10 @@ export default function OTPScreen({navigation}) {
                             </TouchableOpacity>
                             <View style={styles.buttonContainer}>
                                 <View style={styles.button}>
-                                    <FlatButton text='confirm' onPress={() => navigation.navigate('Register')} backgroundColor={'#6C63FF'} width={150} />
+                                    <FlatButton text='confirm' onPress={() => 
+                                        // navigation.navigate('Register')
+                                        confirmButtonHandler(props)
+                                        } backgroundColor={'#6C63FF'} width={150} />
                                 </View>
                             </View>
                         </View>
