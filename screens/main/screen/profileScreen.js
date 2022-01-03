@@ -2,24 +2,35 @@
 
 import * as React from 'react';
 import { StyleSheet, View, Text, Image, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SettingsImage from '../../../assets/icons/settings.svg'
 import ProfilePicture from '../../../assets/bimay.jpg'
 import GopaySVG from '../../../assets/icons/gopay-logo.svg'
+import axios from'axios'
 
 function ProfileScreen({navigation}) {
-  const [userInformation, setUser] = useState("Kampank Si Krinj");
+  const [userName, setUser] = useState("Default");
+  const [userBalance, setBalance] = useState(2000000);
+  // const [user, setUser] = useState("Default");
+  // const [userName, setUser] = useState("Default");
+  // const [userName, setUser] = useState("Default");
+  useEffect(() => {
+        // axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
+        //     console.log(response.data);
+        //   });
+  })
+  
   return (
     <View style={styles.container}>
         <View style={[styles.box,styles.containerProfile]}>
             <Image source={ProfilePicture} style={styles.profilePicture}/>
             <View style={styles.innerProfile}>
-              <Text style={[styles.white,styles.fontMedium]}>{userInformation}</Text>
+              <Text style={[styles.white,styles.fontMedium]}>{userName}</Text>
               <View style={{marginLeft: 0, margin: 7, width: 130, height: 35, backgroundColor: '#fff', borderRadius:50, alignItems: 'center',justifyContent:'center', padding:4, flexDirection: 'row'}}>
                 <GopaySVG style={{marginRight:10}}/>
                 <View>
                   <Text style={{fontSize: 11, fontWeight: 'bold', color: 'black'}}>gopay</Text>
-                  <Text style={{fontSize: 10, color: '#BCBCBC'}}>Rp2.000.000</Text>
+                  <Text style={{fontSize: 10, color: '#BCBCBC'}}>Rp{userBalance}</Text>
                 </View>
               </View>
             </View>
@@ -72,8 +83,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor:'white',
     marginTop: 5,
-    padding: 5,
-    height: '15%',
+    padding: 10,
+    minHeight: '15%',
     width: '100%'
   },
   profilePicture:{

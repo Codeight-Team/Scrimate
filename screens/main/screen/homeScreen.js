@@ -2,15 +2,16 @@
 
 import * as React from 'react';
 import { StyleSheet, View, Text, Button, useWindowDimensions, TouchableOpacity, Image, SafeAreaView, StatusBar, TouchableOpacityComponent} from 'react-native';
-import { useEffect } from 'react';
+import { useEffect, useState} from 'react';
 import { PanGestureHandler, ScrollView } from 'react-native-gesture-handler';
 import Animated, {useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring,} from 'react-native-reanimated';
 import pp from '../../../assets/bimay.jpg'
 import GopaySVG from '../../../assets/icons/gopay-logo.svg'
 import TrophySVG from '../../../assets//icons/trophy.svg'
-
+import Swiper from 'react-native-swiper';
 
 function HomeScreen({navigation}) {
+  const [userName, setName] = useState("Rafi");
   useEffect(() => {
     top.value  = 750
   });
@@ -62,8 +63,8 @@ function HomeScreen({navigation}) {
         </ScrollView>
       </SafeAreaView>
   }
-  const UserBubble = ({userName}) =>{
-      return <View style={styles.bubbleContainer}>
+  const UserBubble = () =>{
+      return <View style={[styles.bubbleContainer, styles.purple]}>
         <Image
         style={styles.profilePicture}
         source={pp}
@@ -92,37 +93,39 @@ function HomeScreen({navigation}) {
         </View>
       </View>
     }
+    const ComponentBubble = ({color, title}) =>{
+      return <View style={[styles.bubbleContainer, color]}>
+          <Text style={styles.userText}>{title}</Text>
+      </View>
+    }
+
+    const white = styles.white;
+    const red = styles.red;
+    const orange = styles.orange;
    
   return (
     <>
-      <View style={{flex:1, alignItems: 'center', justifyContent: 'flex-start', top: 145,}}>
-        <SafeAreaView style={{margin: 50}}>
-        <UserBubble backgroundColor='#6C63FF' userName={'Kampank'}/>
-        </SafeAreaView>
-        {/* <View style={{flex:0.2, alignItems: 'center', justifyContent: 'center',}}>
-          <Highlights/>
-
-        </View> */}
-        {/* <PanGestureHandler>
-          <Animated.View 
+      <View style={{flex:0.3, alignItems: 'center', justifyContent: 'flex-start', top: 147}}>
+        {/* <ComponentBubble></ComponentBubble>
+         */}
+         <Swiper 
+            showsButtons={true} 
+            loop={false} 
+            showsPagination={true} 
+            nextButton={<Text style={styles.button}>›</Text>}
+            prevButton={<Text style={styles.button}>‹</Text>}
             >
-                <View style={styles.csheet}>
-                  <MenuComp title="Futsal"/>
-                  <MenuComp title="Sepak bola"/>
-                  <MenuComp title="Badminton"/>
-                </View>
-          </Animated.View>
-        </PanGestureHandler> */}
-        <Button title='Cinccong' 
-          onPress={()=>{
-            if(top.value > dimensions.height / 2){
-              top.value = withSpring(
-                dimensions.height / 2,
-                SPRING_CONFIG 
-            )} else {
-              top.value = dimensions.height / 1.2
-            }
-          }}/>
+            
+        <View style={styles.slide1}>
+          <UserBubble/>
+        </View>
+        <View style={styles.slide2}>
+          <ComponentBubble color={red} title={"Activity"}/>
+        </View>
+        <View style={styles.slide3}>
+          <ComponentBubble color={orange} title={"Match"}/>
+        </View>
+      </Swiper>
       </View>
       <PanGestureHandler onGestureEvent={gestureHandler}>
         <Animated.View 
@@ -164,6 +167,26 @@ function HomeScreen({navigation}) {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
+  wrapper: {},
+  button:{
+    color: "#6C63FF",
+    fontSize: 50,
+  },
+  slide1: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  slide2: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  slide3: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight,
@@ -196,9 +219,20 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     width: 300,
     height: 168,
-    backgroundColor: '#6C63FF',
     borderRadius: 40,
     padding: 20
+  },
+  purple:{
+    backgroundColor: '#6C63FF',
+  },
+  orange:{
+    backgroundColor: '#FF9400',
+  },
+  red:{
+    backgroundColor: '#e35259',
+  },
+  white:{
+    backgroundColor: '#FFF',
   },
   userText:{
     color: '#fff',
