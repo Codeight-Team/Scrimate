@@ -175,7 +175,7 @@ function HomeScreen({navigation}) {
             style
             ]}>
               <View style={styles.csheet}>
-                <MenuComp name="Find Match" url='Post' svg="match"></MenuComp>
+                <MenuComp name="Find Match" url='Forum Stack' title="Forum" svg="match"></MenuComp>
                 <MenuComp name="Reserve Venue" url='Post' svg="field"/>
 
                 <MenuComp name="Futsal" url='Reservation Screen' title="Futsal" svg="futsal" />
