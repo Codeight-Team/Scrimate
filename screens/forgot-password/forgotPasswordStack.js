@@ -69,8 +69,8 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-import SelectionMethod from './screen/selectionMethod';
-import FormEmail from './screen/formEmail';
+import SelectionMethod from './screens/selectionMethod';
+import FormEmail from './screens/formEmail';
 import OTPScreen from '../register/screens/OTPScreen';
 
 const Stack = createNativeStackNavigator();

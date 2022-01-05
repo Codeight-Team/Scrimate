@@ -7,7 +7,6 @@ import OTPScreen from'./screens/register/screens/OTPScreen';
 import RegisterStack from'./screens/register/registerStack';
 import ForgotPasswordStack from './screens/forgot-password/forgotPasswordStack';
 import MainStack from './screens/main/mainTabStack';
-import HomeScreen from './screens/main/screen/homeScreen';
 import axios from 'axios';
 
 function App () {

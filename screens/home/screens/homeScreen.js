@@ -5,9 +5,14 @@ import { StyleSheet, View, Text, Button, useWindowDimensions, TouchableOpacity, 
 import { useEffect, useState} from 'react';
 import { PanGestureHandler, ScrollView } from 'react-native-gesture-handler';
 import Animated, {useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring,} from 'react-native-reanimated';
-import pp from '../../../assets/bimay.jpg'
-import GopaySVG from '../../../assets/icons/gopay-logo.svg'
-import TrophySVG from '../../../assets//icons/trophy.svg'
+import pp from '../../../assets/bimay.jpg';
+import GopaySVG from '../../../assets/icons/gopay-logo.svg';
+import TrophySVG from '../../../assets/icons/trophy.svg';
+import Match from '../../../assets/icons/multi.svg';
+import Field from '../../../assets/icons/field.svg';
+import Futsal from '../../../assets/icons/futsal.svg';
+import Football from '../../../assets/soccer-ball.svg';
+import Badminton from '../../../assets/icons/shuttlecock.svg';
 import Swiper from 'react-native-swiper';
 
 function HomeScreen({navigation}) {
@@ -46,10 +51,27 @@ function HomeScreen({navigation}) {
       }
     }
   });
-  const MenuComp = ( {title, }) =>{
-    return <TouchableOpacity onPress={() => navigation.navigate('Reservation Screen',{sports:title})}>
+
+  function Svg({name}){
+    if(name === "match"){
+      return <Match width={50} height={50}/>
+    } else if( name === "field"){
+      return <Field />
+    } else if( name === 'futsal'){
+      return <Futsal width={50} height={50}/>
+    } else if(name === 'shuttle'){
+      return <Badminton marginBottom={5} marginRight={5}/>
+    }else{
+      return <Football width={35} height={35} marginBottom={5}/>
+    }
+  }
+
+
+  const MenuComp = ( {name, title, url , svg}) =>{
+    return <TouchableOpacity onPress={() => navigation.navigate(url,{sports:title})}>
       <View style={styles.cmenu}>
-        <Text style={styles.ctitle}>{title}</Text>
+        <Svg name={svg}></Svg>
+        <Text style={styles.ctitle}>{name}</Text>
       </View>
     </TouchableOpacity>
   }
@@ -153,9 +175,12 @@ function HomeScreen({navigation}) {
             style
             ]}>
               <View style={styles.csheet}>
-                <MenuComp title="Futsal"/>
-                <MenuComp title="Football" />
-                <MenuComp title="Badminton" />
+                <MenuComp name="Find Match" url='Post' svg="match"></MenuComp>
+                <MenuComp name="Reserve Venue" url='Post' svg="field"/>
+
+                <MenuComp name="Futsal" url='Reservation Screen' title="Futsal" svg="futsal" />
+                <MenuComp name="Football" url='Reservation Screen' title="Football" svg="" />
+                <MenuComp name="Badminton" url='Reservation Screen' title="Badminton"svg="shuttle" />
               </View>
         </Animated.View>
       </PanGestureHandler>
@@ -204,10 +229,12 @@ const styles = StyleSheet.create({
   },
   ctitle:{
     fontSize: 10,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: 'black'
   },
   csheet:{
-    flexDirection: 'row'
+    flexDirection: 'row',
+    flexWrap: 'wrap'
   },
   chighlights:{
     width: 300,
