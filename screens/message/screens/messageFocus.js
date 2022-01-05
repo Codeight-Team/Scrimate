@@ -10,7 +10,7 @@ function MessageFocus({route}) {
             console.log(response.data);
           });
     })
-    const {sports} =route.params
+    const {message_id} =route.params
     return(
         <View style={styles.container}>
             <Text>Detail Message {sports}</Text>

@@ -11,7 +11,7 @@ function MessageFocus({navigation}) {
     })
     return(
         <View style={styles.container}>
-            <Text>Home Message</Text>
+            <Text>Detail Message</Text>
         </View>
     )
 }

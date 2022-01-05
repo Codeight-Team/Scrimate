@@ -100,7 +100,7 @@ function Posts({navigation}) {
     function RenderPost() {
         return postArray.map((item) => {
             return (
-                <TouchableOpacity onPress={() => 
+                <TouchableOpacity key={item.id} onPress={() => 
                 // console.log('pressed')
                 navigation.navigate("Match Detail", {match_id: item.id})
                 }>
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     },
     box: {
         width: 200,
-        height: 300,
+        height: 350,
         padding: 5,
     },
     inner: {
