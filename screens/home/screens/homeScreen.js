@@ -8,12 +8,8 @@ import Animated, {useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, w
 import pp from '../../../assets/bimay.jpg';
 import GopaySVG from '../../../assets/icons/gopay-logo.svg';
 import TrophySVG from '../../../assets/icons/trophy.svg';
-import Match from '../../../assets/icons/multi.svg';
-import Field from '../../../assets/icons/field.svg';
-import Futsal from '../../../assets/icons/futsal.svg';
-import Football from '../../../assets/soccer-ball.svg';
-import Badminton from '../../../assets/icons/shuttlecock.svg';
 import Swiper from 'react-native-swiper';
+import MenuComponent from '../components/menu'
 
 function HomeScreen({navigation}) {
   const [userName, setName] = useState("Rafi");
@@ -52,29 +48,6 @@ function HomeScreen({navigation}) {
     }
   });
 
-  function Svg({name}){
-    if(name === "match"){
-      return <Match width={50} height={50}/>
-    } else if( name === "field"){
-      return <Field />
-    } else if( name === 'futsal'){
-      return <Futsal width={50} height={50}/>
-    } else if(name === 'shuttle'){
-      return <Badminton marginBottom={5} marginRight={5}/>
-    }else{
-      return <Football width={35} height={35} marginBottom={5}/>
-    }
-  }
-
-
-  const MenuComp = ( {name, title, url , svg}) =>{
-    return <TouchableOpacity onPress={() => navigation.navigate(url,{sports:title})}>
-      <View style={styles.cmenu}>
-        <Svg name={svg}></Svg>
-        <Text style={styles.ctitle}>{name}</Text>
-      </View>
-    </TouchableOpacity>
-  }
   const Highlights = () =>{
     return <SafeAreaView style={styles.container}>
       <Text>Test</Text>
@@ -119,6 +92,51 @@ function HomeScreen({navigation}) {
       return <View style={[styles.bubbleContainer, color]}>
           <Text style={styles.userText}>{title}</Text>
       </View>
+    }
+
+    const menuData = [
+      {
+          name:"Create Match", 
+          url:'Create Match', 
+          title:"Create",
+          svg:"field"
+      },
+      {
+        name:"Find Match",
+        url:'Forum Stack',
+        title:"Forum",
+        svg:"match"
+      },
+      {
+        name:"Futsal",
+        url:'Reservation Screen',
+        title:"Futsal",
+        svg:"futsal"
+      },
+      {
+        name:"Football",
+        url:'Reservation Screen',
+        title:"Football",
+        svg:""
+      },
+      {
+        name:"Badminton",
+        url:'Reservation Screen',
+        title:"Badminton",
+        svg:"shuttle"
+      },
+    ]
+
+    function RenderPost() {
+      return menuData.map((item) => {
+        return (
+          <TouchableOpacity key={item.title} onPress={() => 
+            navigation.navigate(item.url,{sports:item.name})
+          }>
+              <MenuComponent name={item.name} image={item.svg}></MenuComponent>
+          </TouchableOpacity>
+        )
+      });
     }
 
     const white = styles.white;
@@ -175,12 +193,16 @@ function HomeScreen({navigation}) {
             style
             ]}>
               <View style={styles.csheet}>
+              {/* <TouchableOpacity onPress={() => navigation.navigate(url,{sports:"Forum"})}>
+                <MenuComp name="Create Match" url='Create Match' title="Create Match" svg="field"/>
                 <MenuComp name="Find Match" url='Forum Stack' title="Forum" svg="match"></MenuComp>
-                <MenuComp name="Reserve Venue" url='Post' svg="field"/>
-
                 <MenuComp name="Futsal" url='Reservation Screen' title="Futsal" svg="futsal" />
                 <MenuComp name="Football" url='Reservation Screen' title="Football" svg="" />
                 <MenuComp name="Badminton" url='Reservation Screen' title="Badminton"svg="shuttle" />
+              </TouchableOpacity> */}
+              {
+                        RenderPost()
+                  }
               </View>
         </Animated.View>
       </PanGestureHandler>
@@ -216,21 +238,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: StatusBar.currentHeight,
     maxHeight: 1000
-  },
-  cmenu:{
-    width: 100,
-    height: 80,
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 5,
-    margin: 10,
-  },
-  ctitle:{
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: 'black'
   },
   csheet:{
     flexDirection: 'row',

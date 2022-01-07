@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './screens/homeScreen';
 import ReservationScreen from '../reservation/reservationScreen';
 import ForumStack from '../reservation/matchmaking-forum/forumStack';
+import CreateMatch from '../reservation/createMatch'
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ function HomeStack(){
                             headerShown: false,
               }} /> */}
               <Stack.Screen name="Reservation Screen" component={ReservationScreen} />
+              <Stack.Screen name="Create Match" component={CreateMatch} />
               <Stack.Screen name="Forum Stack" component={ForumStack} 
                             options={{
                               headerShown: false,
