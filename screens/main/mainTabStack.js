@@ -41,6 +41,7 @@ const MainTabStack = () =>{
           tabBarShowLabel:false,
           headerShown: false,
           tabBarStyle: { position: 'absolute' },
+          tabBarHideOnKeyboard: true,
         }}>
               <Tab.Screen name="Home" component={HomeStack} options={{
                 title:"Home",
@@ -49,7 +50,7 @@ const MainTabStack = () =>{
                   if(focused)
                     return <View><HomeIconActive/></View>
                   return <View><HomeIcon/></View>
-                }
+                },
               }} />
               <Tab.Screen name="Chat" component={MessageStack} options={{
                 title:"Chat",
@@ -58,7 +59,7 @@ const MainTabStack = () =>{
                   if(focused)
                     return <View><ChatIconActive/></View>
                   return <View><ChatIcon/></View>
-                }
+                },
               }} />
               <Tab.Screen name="Profile" component={ProfileScreen} options={{
                 title:"Profile",

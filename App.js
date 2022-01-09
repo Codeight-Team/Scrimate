@@ -11,20 +11,6 @@ import axios from 'axios';
 
 function App () {
   const [count, setCount] = useState(0);
-  // componentDidMount(){
-  //   axios.get('https://jsonplaceholder.typicode.com/todos/1'
-  //   )
-  //   .then(({response}) => {
-  //     console.log(response);
-  //   }).catch((error) => {
-  //     console.log(error)
-  //   });
-  // }
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setCount((count) => count + 1);
-  //   }, 1000);
-  // });
     return (
       // <View style={styles.container}>
       // {/* <Splashes /> */}
@@ -33,8 +19,8 @@ function App () {
       // <OTPScreen />
       //  <ForgotPasswordStack />
       // <HomeScreen></HomeScreen>
-        <MainStack />
-        // <RegisterStack/>
+        // <MainStack />
+        <RegisterStack/>
         // <StatusBar style="auto" />
       // </View>
         // <View style={styles.container}>

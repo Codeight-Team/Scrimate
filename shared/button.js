@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
 
-export default function FlatButton({ text, onPress, backgroundColor, width, isDisable }) {
+export default function FlatButton({ text, onPress, backgroundColor, width, disabled }) {
     return (
-        <TouchableOpacity onPress={onPress} disabled={isDisable}>
+        <TouchableOpacity onPress={onPress} disabled={disabled}>
             <View style={[styles.button, { backgroundColor, width }]}>
                 <Text style={styles.textButton} > {text} </Text>
             </View>

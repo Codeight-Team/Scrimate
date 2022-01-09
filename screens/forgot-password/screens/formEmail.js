@@ -46,7 +46,7 @@ export default function formEmail({navigation}){
                             </TouchableOpacity>
                             <View style={styles.buttonContainer}>
                                 <View style={styles.button}>
-                                    <FlatButton text='CONFIRM'onPress={() => buttonHandler(props)} backgroundColor={'#6C63FF'} width={150} isDisable={isDisabled}/>
+                                    <FlatButton isDisable={true} text='CONFIRM' onPress={() => buttonHandler(props)} backgroundColor={'#6C63FF'} width={150} isDisable={isDisabled}/>
                                 </View>
                             </View>
                         </View>
