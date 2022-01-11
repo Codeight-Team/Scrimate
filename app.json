@@ -21,13 +21,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foreground": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "userInterfaceStyle": "automatic"
+    }
   }
 }

@@ -17,10 +17,10 @@ function App () {
         // <LoginScreen /> 
       // <RegisterScreen/>
       // <OTPScreen />
-      //  <ForgotPasswordStack />
+       <ForgotPasswordStack />
       // <HomeScreen></HomeScreen>
         // <MainStack />
-        <RegisterStack/>
+        // <RegisterStack/>
         // <StatusBar style="auto" />
       // </View>
         // <View style={styles.container}>

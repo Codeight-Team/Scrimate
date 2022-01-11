@@ -72,6 +72,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import SelectionMethod from './screens/selectionMethod';
 import FormEmail from './screens/formEmail';
 import OTPScreen from '../register/screens/OTPScreen';
+import SuccessScreen from './screens/success';
 
 const Stack = createNativeStackNavigator();
 
@@ -85,6 +86,10 @@ function ForgotPasswordStack(){
                             headerShown: false,
             }} />
             <Stack.Screen name="Form Email" component={FormEmail} 
+                          options={{
+                          headerShown: false,
+            }} />
+            <Stack.Screen name="Success" component={SuccessScreen} 
                           options={{
                           headerShown: false,
             }} />

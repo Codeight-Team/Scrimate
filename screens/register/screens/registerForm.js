@@ -3,28 +3,70 @@ import { Dimensions } from 'react-native';
 import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView } from 'react-native';
 import { Formik, Field, Form } from 'formik';
 import FlatButton from '../../../shared/button';
-import DatePicker from 'react-native-modal-datetime-picker'
-import { useState } from 'react';
-import * as yup from 'yup'
-import axios from 'axios'
+import DatePicker from '@react-native-community/datetimepicker';
+import { useState, useEffect } from 'react';
+import * as yup from 'yup';
+import axios from 'axios';
 import Moment from 'moment';
+import DropDown from 'react-native-modal-dropdown';
+import RadioButtonRN from "radio-buttons-react-native";
 
 export default function RegisterScreen({ navigation }) {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [date, setDate] = useState({ DOB: null });
+    const [date, setDate] = useState(new Date());
+    const url_country = `https://dev.farizdotid.com`
+    const [province, setProvince] = useState([]); state
+    const [state, setState] = useState([]);
+
+    const gender = [
+        {
+            label: 'Male'
+        },
+        {
+            label: 'Female'
+        }
+    ]
+
+    useEffect(() => {
+        axios.get(`${url_country}/api/daerahindonesia/provinsi`)
+            .then((response) => {
+                const res = response.data.provinsi
+                setProvince(res)
+            })
+            .catch(function (error) {
+                console.warn(error);
+            });
+    })
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setDate(currentDate);
+        setDatePickerVisibility(false);
+    };
+
+    const HandleData = (index, value) => {
+        let pos = province.map(function (e) {
+            return e.nama;
+        }).indexOf(value);
+        axios.get(`${url_country}/api/daerahindonesia/kota?id_provinsi=${province[pos].id}`)
+            .then((response) => {
+                setState(response.data.kota_kabupaten)
+            })
+            .catch(function (error) {
+                console.warn(error);
+            });
+    }
+
+    const HandleSelect = (index, value) => {
+        console.log(value)
+    }
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
     };
 
-    const hideDatePicker = () => {
-        setDatePickerVisibility(false);
-    };
-
-    const handleConfirm = (value) => {
-        setDatePickerVisibility(false);
-        setDate({ DOB: value });
-    };
+    function DropdownCountries(defaultValue, onSelect, options, disabled) {
+        return <DropDown defaultValue={defaultValue} onSelect={onSelect} showsVerticalScrollIndicator={false} isFullWidth={false} options={options} disabled={disabled} />
+    }
 
     const regisValidationSchema = yup.object().shape({
         email: yup
@@ -50,14 +92,16 @@ export default function RegisterScreen({ navigation }) {
             .oneOf([yup.ref('password')], 'Passwords does not match'),
     })
     const sendData = (values) => {
-        let data = Object.assign(values, date)
-        axios.post('http://66.42.49.240/api/auth/register', data)
+        values.BOD = date;
+        console.log('test')
+        axios.post('http://66.42.49.240/api/auth/register', values)
             .then(() => {
                 navigation.navigate('OTP');
             })
             .catch(function (error) {
                 console.warn(error);
             });
+
     }
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -68,15 +112,23 @@ export default function RegisterScreen({ navigation }) {
                 <ScrollView>
                     <Formik
                         validationSchema={regisValidationSchema}
-                        initialValues={{ first_name: '', last_name: '', email: '', phone_number: '', password: '', confirm_password: '' }}
+                        initialValues={{
+                            first_name: '', last_name: '', email: '', phone_number: '',
+                            password: '', confirm_password: '', BOD: new Date(),
+                            address: {
+                                address_city: '',
+                                address_country: '',
+                                address_postalcode: '',
+                                address_street: ''
+                            },
+                            gender:''
+                        }}
                         onSubmit={values =>
-                            // sendData(values)
-                            console.log(values)
+                            sendData(values)
                         }
                     >
                         {(props) => (
                             <View>
-
                                 <View style={styles.formUser}>
                                     <TextInput
                                         style={styles.input}
@@ -101,10 +153,19 @@ export default function RegisterScreen({ navigation }) {
                                 {(props.errors.last_name && props.touched.last_name) &&
                                     <Text style={styles.errorText}>{props.errors.last_name}</Text>
                                 }
+                                <RadioButtonRN 
+                                    box={false} 
+                                    boxStyle={{marginLeft:10,width:70}}
+                                    data={gender} 
+                                    circleSize={10} 
+                                    textStyle={{marginLeft:5,fontSize: 11} } 
+                                    activeColor={'#6C63FF'}
+                                    style={{flexDirection:'row'}}
+                                    selectedBtn={(e) => props.values.gender = e.label} />
                                 <TouchableOpacity onPress={showDatePicker}>
                                     <View style={styles.formUser}>
                                         <View style={styles.input}>
-                                            <Text>{Moment(date.DOB).format('DD-MM-YYYY')}</Text>
+                                            <Text>{Moment(date).format('DD-MM-YYYY')}</Text>
                                         </View>
                                         {/* <TextInput
                                         style={styles.input}
@@ -114,12 +175,16 @@ export default function RegisterScreen({ navigation }) {
                                     /> */}
                                     </View>
                                 </TouchableOpacity>
-                                <DatePicker
-                    isVisible={isDatePickerVisible}
-                    mode="date"
-                    onConfirm={handleConfirm}
-                    onCancel={hideDatePicker}
-                />
+                                {isDatePickerVisible && (
+                                    <DatePicker
+                                        // isVisible={isDatePickerVisible}
+                                        value={date}
+                                        mode="date"
+                                        // onConfirm={handleConfirm}
+                                        // onCancel={hideDatePicker}
+                                        onChange={onChange}
+                                    />)
+                                }
                                 <View style={styles.formUser}>
                                     <TextInput
                                         style={styles.input}
@@ -145,6 +210,22 @@ export default function RegisterScreen({ navigation }) {
                                 {(props.errors.phone_number && props.touched.phone_number) &&
                                     <Text style={styles.errorText}>{props.errors.phone_number}</Text>
                                 }
+                                <View style={styles.formUser}>
+                                    <View style={styles.input}>
+                                        {
+                                            DropdownCountries("City", HandleData, province.map((e) => {
+                                                return e.nama
+                                            }))
+                                        }
+                                    </View>
+                                    <View style={styles.input}>
+                                        {
+                                            DropdownCountries("State", HandleSelect, state.map((e) => {
+                                                return e.nama
+                                            }))
+                                        }
+                                    </View>
+                                </View>
                                 <View style={styles.formUser}>
                                     <TextInput
                                         style={styles.input}
@@ -176,7 +257,7 @@ export default function RegisterScreen({ navigation }) {
                                     <option value="red">Red</option>
                                     <option value="green">Green</option>
                                     <option value="blue">Blue</option>
-                                </Field> */}                         
+                                </Field> */}
                                 <View style={styles.buttonContainer}>
                                     <View style={styles.button}>
                                         <FlatButton disabled={!props.isValid} onPress={props.handleSubmit} text="Sign Up" backgroundColor={'#6C63FF'} width={150} />
@@ -219,7 +300,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     buttonContainer: {
-        marginTop: 10,
+        marginTop: 20,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'flex-start'
@@ -245,7 +326,7 @@ const styles = StyleSheet.create({
         paddingTop: 100
     },
     errorText: {
-        marginLeft:7,
+        marginLeft: 7,
         fontSize: 10,
         color: 'red',
     },
