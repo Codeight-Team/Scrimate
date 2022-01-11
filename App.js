@@ -7,34 +7,19 @@ import OTPScreen from'./screens/register/screens/OTPScreen';
 import RegisterStack from'./screens/register/registerStack';
 import ForgotPasswordStack from './screens/forgot-password/forgotPasswordStack';
 import MainStack from './screens/main/mainTabStack';
-import HomeScreen from './screens/main/screen/homeScreen';
 import axios from 'axios';
 
 function App () {
   const [count, setCount] = useState(0);
-  // componentDidMount(){
-  //   axios.get('https://jsonplaceholder.typicode.com/todos/1'
-  //   )
-  //   .then(({response}) => {
-  //     console.log(response);
-  //   }).catch((error) => {
-  //     console.log(error)
-  //   });
-  // }
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setCount((count) => count + 1);
-  //   }, 1000);
-  // });
     return (
       // <View style={styles.container}>
       // {/* <Splashes /> */}
         // <LoginScreen /> 
       // <RegisterScreen/>
       // <OTPScreen />
-      //  <ForgotPasswordStack />
+       <ForgotPasswordStack />
       // <HomeScreen></HomeScreen>
-        <MainStack />
+        // <MainStack />
         // <RegisterStack/>
         // <StatusBar style="auto" />
       // </View>

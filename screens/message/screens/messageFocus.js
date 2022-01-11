@@ -3,17 +3,17 @@ import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, 
 import { useState, useEffect} from 'react';
 import axios from 'axios';
 
-function ReservationScreen({navigation, route}) {
+function MessageFocus({route}) {
     useEffect(() => {
         console.log(route.params)
         axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
             console.log(response.data);
           });
     })
-    const {sports} =route.params
+    const {message_id} =route.params
     return(
         <View style={styles.container}>
-            <Text>This is {sports} Reservation settings </Text>
+            <Text>Detail Message {sports}</Text>
         </View>
     )
 }
@@ -29,4 +29,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ReservationScreen;
+export default MessageFocus;

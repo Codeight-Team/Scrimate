@@ -10,10 +10,9 @@ function ReservationScreen({navigation, route}) {
             console.log(response.data);
           });
     })
-    const {sports} =route.params
     return(
         <View style={styles.container}>
-            <Text>This is {sports} Reservation settings </Text>
+            <Text>This is  Reservation settings </Text>
         </View>
     )
 }

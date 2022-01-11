@@ -12,11 +12,16 @@ const validationSchema = yup.object({
 })
 
 export default function formEmail({navigation}){
-    const [isDisabled,setIsDisabled] = useState(true)
-    
     const buttonHandler = (props) => {
-        console.log(props.values.email)
-        console.log("Confirm Button Pressed")
+        // axios.post('http://66.42.49.240/api/auth/register', props)
+        //     .then(() => {
+        //         navigation.navigate('OTP');
+        //     })
+        //     .catch(function (error) {
+        //         console.warn(error);
+        //     });
+        console.warn('check button handler');
+        navigation.navigate('Success')
     }
     return(
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -30,8 +35,6 @@ export default function formEmail({navigation}){
                 >
                     {(props) => (
                         <View>
-                            {(props.touched.email && props.errors.email) &&
-                            <Text style={styles.error}>{props.touched.email && props.errors.email} </Text>}
                             <View style={styles.formUser}>
                                 <TextInput
                                     style={styles.input}
@@ -41,12 +44,14 @@ export default function formEmail({navigation}){
                                     onBlur={props.handleBlur('email')}
                                 />
                             </View>
+                            {(props.touched.email && props.errors.email) &&
+                            <Text style={styles.error}>{props.touched.email && props.errors.email} </Text>}
                             <TouchableOpacity style={styles.center} onPress={() => navigation.navigate('Selection Screen')}>
                                 <Text style={styles.purple}>change recovery method</Text>
                             </TouchableOpacity>
                             <View style={styles.buttonContainer}>
                                 <View style={styles.button}>
-                                    <FlatButton text='CONFIRM'onPress={() => buttonHandler(props)} backgroundColor={'#6C63FF'} width={150} isDisable={isDisabled}/>
+                                    <FlatButton isDisable={true} text='CONFIRM' onPress={() => buttonHandler(props)} backgroundColor={'#6C63FF'} width={150} disabled={!props.isValid}/>
                                 </View>
                             </View>
                         </View>
@@ -76,7 +81,6 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         fontSize: 14,
         borderRadius: 100,
-        marginBottom: 10,
         flex: 1,
         backgroundColor: 'white'
     },
@@ -106,6 +110,7 @@ const styles = StyleSheet.create({
     },
     error:{
         color: 'red',
-        fontSize: 10
+        fontSize: 10,
+        textAlign: 'center'
     }
 })

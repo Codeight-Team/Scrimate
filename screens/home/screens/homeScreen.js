@@ -5,10 +5,11 @@ import { StyleSheet, View, Text, Button, useWindowDimensions, TouchableOpacity, 
 import { useEffect, useState} from 'react';
 import { PanGestureHandler, ScrollView } from 'react-native-gesture-handler';
 import Animated, {useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring,} from 'react-native-reanimated';
-import pp from '../../../assets/bimay.jpg'
-import GopaySVG from '../../../assets/icons/gopay-logo.svg'
-import TrophySVG from '../../../assets//icons/trophy.svg'
+import pp from '../../../assets/bimay.jpg';
+import GopaySVG from '../../../assets/icons/gopay-logo.svg';
+import TrophySVG from '../../../assets/icons/trophy.svg';
 import Swiper from 'react-native-swiper';
+import MenuComponent from '../components/menu'
 
 function HomeScreen({navigation}) {
   const [userName, setName] = useState("Rafi");
@@ -46,13 +47,7 @@ function HomeScreen({navigation}) {
       }
     }
   });
-  const MenuComp = ( {title, }) =>{
-    return <TouchableOpacity onPress={() => navigation.navigate('Reservation Screen',{sports:title})}>
-      <View style={styles.cmenu}>
-        <Text style={styles.ctitle}>{title}</Text>
-      </View>
-    </TouchableOpacity>
-  }
+
   const Highlights = () =>{
     return <SafeAreaView style={styles.container}>
       <Text>Test</Text>
@@ -97,6 +92,51 @@ function HomeScreen({navigation}) {
       return <View style={[styles.bubbleContainer, color]}>
           <Text style={styles.userText}>{title}</Text>
       </View>
+    }
+
+    const menuData = [
+      {
+          name:"Create Match", 
+          url:'Create Match', 
+          title:"Create",
+          svg:"field"
+      },
+      {
+        name:"Find Match",
+        url:'Forum Stack',
+        title:"Forum",
+        svg:"match"
+      },
+      {
+        name:"Futsal",
+        url:'Reservation Screen',
+        title:"Futsal",
+        svg:"futsal"
+      },
+      {
+        name:"Football",
+        url:'Reservation Screen',
+        title:"Football",
+        svg:""
+      },
+      {
+        name:"Badminton",
+        url:'Reservation Screen',
+        title:"Badminton",
+        svg:"shuttle"
+      },
+    ]
+
+    function RenderPost() {
+      return menuData.map((item) => {
+        return (
+          <TouchableOpacity key={item.title} onPress={() => 
+            navigation.navigate(item.url,{sports:item.name})
+          }>
+              <MenuComponent name={item.name} image={item.svg}></MenuComponent>
+          </TouchableOpacity>
+        )
+      });
     }
 
     const white = styles.white;
@@ -153,9 +193,16 @@ function HomeScreen({navigation}) {
             style
             ]}>
               <View style={styles.csheet}>
-                <MenuComp title="Futsal"/>
-                <MenuComp title="Football" />
-                <MenuComp title="Badminton" />
+              {/* <TouchableOpacity onPress={() => navigation.navigate(url,{sports:"Forum"})}>
+                <MenuComp name="Create Match" url='Create Match' title="Create Match" svg="field"/>
+                <MenuComp name="Find Match" url='Forum Stack' title="Forum" svg="match"></MenuComp>
+                <MenuComp name="Futsal" url='Reservation Screen' title="Futsal" svg="futsal" />
+                <MenuComp name="Football" url='Reservation Screen' title="Football" svg="" />
+                <MenuComp name="Badminton" url='Reservation Screen' title="Badminton"svg="shuttle" />
+              </TouchableOpacity> */}
+              {
+                        RenderPost()
+                  }
               </View>
         </Animated.View>
       </PanGestureHandler>
@@ -192,22 +239,9 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight,
     maxHeight: 1000
   },
-  cmenu:{
-    width: 100,
-    height: 80,
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 5,
-    margin: 10,
-  },
-  ctitle:{
-    fontSize: 10,
-    fontWeight: 'bold'
-  },
   csheet:{
-    flexDirection: 'row'
+    flexDirection: 'row',
+    flexWrap: 'wrap'
   },
   chighlights:{
     width: 300,
