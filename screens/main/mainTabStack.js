@@ -36,7 +36,6 @@ const MainTabStack = () =>{
       //       <Stack.Screen name="Reservation Screen" component={ReservationScreen} />
       //     </Stack.Navigator>
       //   </NavigationContainer>
-      <NavigationContainer>
         <Tab.Navigator screenOptions={{
           tabBarShowLabel:false,
           headerShown: false,
@@ -79,7 +78,6 @@ const MainTabStack = () =>{
                 }
               }}/>
         </Tab.Navigator>
-      </NavigationContainer>
       );
 }
 
