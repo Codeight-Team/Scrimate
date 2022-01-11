@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
 import {Formik} from 'formik';
-import FlatButton from '../shared/button';
+import FlatButton from '../../../shared/button';
 
-export default function LoginScreen(){
+export default function LoginScreen({navigation}){
     return(
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
@@ -42,6 +42,9 @@ export default function LoginScreen(){
                                 <View style={styles.buttonContainer}>
                                     <View style={styles.button}>
                                         <FlatButton text='Sign In' onPress={() => console.log("Login Button Pressed")} backgroundColor={'#6C63FF'} width={150}/>
+                                    </View>
+                                    <View style={styles.button}>
+                                        <FlatButton text='Sign up' onPress={() => [console.log("Sign up Button Pressed"),navigation.navigate('Register Stack')]} backgroundColor={'#6C63FF'} width={150}/>
                                     </View>
                                 </View>
                             </View>
