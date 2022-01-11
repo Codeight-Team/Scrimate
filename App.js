@@ -21,7 +21,11 @@ function App () {
                           options={{
                             headerShown: false,
             }} />
-            <Stack.Screen name="Login Stack" component={LoginStack} 
+            <Stack.Screen name="Login Stack" component={LoginScreen} 
+                          options={{
+                            headerShown: false,
+            }} />
+            <Stack.Screen name="Forgot Stack" component={ForgotPasswordStack} 
                           options={{
                             headerShown: false,
             }} />
@@ -36,31 +40,7 @@ function App () {
           </Stack.Navigator>
           <StatusBar style="auto" />
         </NavigationContainer>
-      // <View style={styles.container}>
-      // {/* <Splashes /> */}
-        // <LoginStack /> 
-      // <RegisterScreen/>
-      // <OTPScreen />
-      //  <ForgotPasswordStack />
-      // <HomeScreen></HomeScreen>
-        // <MainStack />
-        // <RegisterStack/>
-        // <StatusBar style="auto" />
-      // </View>
-        // <View style={styles.container}>
-        //     <Text>I've rendered {count} times!</Text>
-        // </View>
-      
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
 
 export default App;

@@ -78,7 +78,6 @@ const Stack = createNativeStackNavigator();
 
 function ForgotPasswordStack(){
     return (
-        <NavigationContainer>
           <Stack.Navigator>
             {/* <Stack.Screen name="Home" component={HomeScreen} /> */}
             <Stack.Screen name="Selection Screen" component={SelectionMethod} 
@@ -94,12 +93,6 @@ function ForgotPasswordStack(){
                           headerShown: false,
             }} />
           </Stack.Navigator>
-          {/* <View>
-            <Text>Powered by </Text>
-            <Text>HARAFI</Text>
-          </View> */}
-          <StatusBar style="auto" />
-        </NavigationContainer>
       );
 }
 

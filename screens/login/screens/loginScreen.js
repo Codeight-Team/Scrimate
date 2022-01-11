@@ -1,14 +1,64 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
-import {Formik} from 'formik';
+import { Alert, StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
+import { Formik } from 'formik';
 import FlatButton from '../../../shared/button';
+import BasketSVG from '../../../assets/basketball.svg'
+import axios from 'axios';
+import { useState } from 'react/cjs/react.development';
+import * as yup from 'yup';
+import { AsyncStorage } from '@react-native-async-storage/async-storage'
 
-export default function LoginScreen({navigation}){
-    return(
+export default function LoginScreen({ navigation }) {
+    const [show, setShow] = useState(true);
+    const loginValidationSchema = yup.object().shape({
+        email: yup
+            .string()
+            .required("Email Address Required"),
+        password: yup
+            .string()
+            .required('Password is required'),
+    })
+    
+    function onPress(){
+        if(show===true)
+            return setShow(false)
+        else
+            return setShow(true)
+    }
+
+    const handleSubmit = (props) =>{
+        axios.post('http://66.42.49.240/api/auth/login', props)
+        .then(async response => {
+            // console.log(response.data.user_id);
+            var token = response.data.user_id
+            try {
+                await AsyncStorage.setItem('@user_Token', token)
+              } catch (e) {
+                console.warn('Not Saved')
+              }
+            
+        })
+        .catch(function (error) {
+            console.log(error)
+            if(error.message === 'Request failed with status code 401' )
+                Alert.alert("Wrong password")
+            else if(error.message==='Request failed with status code 404')
+                Alert.alert("User not found")
+        });
+        // navigation.navigate('Main Stack')
+    }
+
+    return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
+                <View style={styles.header}>
+                    <BasketSVG></BasketSVG>
+                </View>
+                <View style={styles.contentContainer}>
+                    <Text style={{ fontSize: 24, fontWeight: 'bold', height: '20%'}}>LOGIN</Text>
                     <Formik
-                        initialValues={{email: '', password: ''}}
+                        validationSchema={loginValidationSchema}
+                        initialValues={{ email: '', password: '' }}
                     >
                         {(props) => (
                             <View>
@@ -20,14 +70,24 @@ export default function LoginScreen({navigation}){
                                         value={props.values.email}
                                     />
                                 </View>
+                                {(props.errors.email && props.touched.email) &&
+                                    <Text style={styles.errorText}>{props.errors.email}</Text>
+                                }
                                 <View style={styles.formUser}>
                                     <TextInput
-                                        style={styles.input}
+                                        secureTextEntry={show}
+                                        style={[styles.input,styles.inputVisible]}
                                         placeholder='Password'
                                         onChangeText={props.handleChange('password')}
                                         value={props.values.password}
                                     />
+                                    <TouchableOpacity style={styles.visibleBtn} onPress={() => onPress()}>
+
+                                    </TouchableOpacity>
                                 </View>
+                                {(props.errors.password && props.touched.password) &&
+                                    <Text style={styles.errorText}>{props.errors.password}</Text>
+                                }
                                 <View>
                                     {/* <Button
                                     onPress={() => console.log("Forgot Password Button Pressed")}
@@ -35,23 +95,34 @@ export default function LoginScreen({navigation}){
                                     color={'transparent'}
                                     
                                     /> */}
-                                    <TouchableOpacity onPress={() => console.log("Forgot Password Button Pressed")}>
+                                    <TouchableOpacity onPress={() => navigation.navigate('Forgot Stack')}>
                                         <Text style={styles.txt}>Forgot Password?</Text>
                                     </TouchableOpacity>
                                 </View>
                                 <View style={styles.buttonContainer}>
                                     <View style={styles.button}>
-                                        <FlatButton text='Sign In' onPress={() => console.log("Login Button Pressed")} backgroundColor={'#6C63FF'} width={150}/>
+                                        <FlatButton text='Sign In' 
+                                        // disabled={!props.isValid} 
+                                        onPress={() =>[handleSubmit(props.values)] } backgroundColor={'#6C63FF'} width={199} />
                                     </View>
-                                    <View style={styles.button}>
-                                        <FlatButton text='Sign up' onPress={() => [console.log("Sign up Button Pressed"),navigation.navigate('Register Stack')]} backgroundColor={'#6C63FF'} width={150}/>
-                                    </View>
+
                                 </View>
                             </View>
                         )}
-                        
+
                     </Formik>
                 </View>
+                <View style={[styles.footer,styles.center]}>
+                    <TouchableOpacity style={styles.center} onPress={() => navigation.navigate('Register Stack')}>
+                        <Text style={{color:'#CFCFCF'}}>
+                            Don’t have an account?
+                        </Text>
+                        <Text style={{color:'#6C63FF'}}>
+                            Create new account
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
         </TouchableWithoutFeedback>
     )
 }
@@ -59,26 +130,60 @@ export default function LoginScreen({navigation}){
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#F4F8FF',
         width: '100%'
     },
+    header: {
+        height: '35%',
+        backgroundColor: '#E1DFFF',
+        width: '100%',
+        borderBottomEndRadius: 66,
+        borderBottomStartRadius: 66,
+        padding: 20,
+        alignItems: 'flex-end',
+        justifyContent: 'flex-end'
+    },
+    contentContainer: {
+        height: '50%',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    footer:{
+        height: '15%',
+    },
+    center:{
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     formUser: {
         flexDirection: 'row',
-        width: 250
+        width: "70%"
     },
     input: {
         borderWidth: 1,
         borderColor: '#E8EAF1',
         padding: 10,
-        fontSize: 18,
+        fontSize: 10,
         borderRadius: 100,
         marginBottom: 10,
         flex: 1,
-        fontSize: 20,
         backgroundColor: 'white'
+    },
+    inputVisible:{
+        borderRightWidth: 0,
+        borderBottomRightRadius: 0,
+        borderTopRightRadius: 0,
+    },
+    visibleBtn:{
+        borderWidth: 1,
+        borderLeftWidth: 0,
+        borderColor: '#E8EAF1',
+        padding: 10,
+        marginBottom: 10,
+        backgroundColor: 'white',
+        width: '15%',
+        borderBottomRightRadius: 100,
+        borderTopRightRadius: 100,
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -90,8 +195,13 @@ const styles = StyleSheet.create({
     },
     txt: {
         fontSize: 13,
-        color: 'grey',
-        paddingLeft: 8
-
-    }
+        color: '#CFCFCF',
+        paddingLeft: 8,
+        textAlign: 'right'
+    },
+    errorText: {
+        marginLeft: 7,
+        fontSize: 10,
+        color: 'red',
+    },
 })
