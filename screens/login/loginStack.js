@@ -2,24 +2,24 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-import RegisterScreen from './screens/registerForm';
-import OTPScreen from './screens/OTPScreen';
+import LoginScreen from './screens/loginScreen';
+import HomeScreen from '../home/screens/homeScreen';
 
 const Stack = createNativeStackNavigator();
 
-function RegisterStack(){
+function LoginStack(){
     return (
           <Stack.Navigator>
-            <Stack.Screen name="Register" component={RegisterScreen} 
+            <Stack.Screen name="Login" component={LoginScreen} 
                           options={{
                             headerShown: false,
             }} />
-            <Stack.Screen name="OTP" component={OTPScreen} 
+            <Stack.Screen name="Test" component={HomeScreen} 
                           options={{
-                          headerShown: false,
+                            headerShown: false,
             }} />
           </Stack.Navigator>
       );
 }
 
-export default RegisterStack;
+export default LoginStack;

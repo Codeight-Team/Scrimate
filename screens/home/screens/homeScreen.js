@@ -10,11 +10,24 @@ import GopaySVG from '../../../assets/icons/gopay-logo.svg';
 import TrophySVG from '../../../assets/icons/trophy.svg';
 import Swiper from 'react-native-swiper';
 import MenuComponent from '../components/menu'
+import { AsyncStorage } from '@react-native-async-storage/async-storage'
+import axios from 'axios'
 
-function HomeScreen({navigation}) {
+function HomeScreen({navigation, route}) {
   const [userName, setName] = useState("Rafi");
   useEffect(() => {
     top.value  = 750
+    // axios.post('http://66.42.49.240/api/users/'+user_id, props)
+    //     .then((response) => {
+    //         console.log(response.data);
+    //     })
+    //     .catch(function (error) {
+    //         console.log(error)
+    //         if(error.message === 'Request failed with status code 401' )
+    //             Alert.alert("Wrong password")
+    //         else if(error.message==='Request failed with status code 404')
+    //             Alert.alert("User not found")
+    //     });
   });
   const dimensions = useWindowDimensions();
   const top = useSharedValue(
@@ -25,6 +38,7 @@ function HomeScreen({navigation}) {
       top: withSpring(top.value, SPRING_CONFIG),
     };
   });
+  
   const SPRING_CONFIG = {
     damping: 80,
     overshootClamping: true,
@@ -48,16 +62,6 @@ function HomeScreen({navigation}) {
     }
   });
 
-  const Highlights = () =>{
-    return <SafeAreaView style={styles.container}>
-      <Text>Test</Text>
-      <ScrollView style={styles.chighlights} contentContainerStyle={{ flexGrow: 1 }}>
-        <Text>cincingmaning</Text>
-        
-
-        </ScrollView>
-      </SafeAreaView>
-  }
   const UserBubble = () =>{
       return <View style={[styles.bubbleContainer, styles.purple]}>
         <Image
@@ -65,7 +69,7 @@ function HomeScreen({navigation}) {
         source={pp}
       />
         <View>
-          <Text style={styles.userText}>Hi, {userName}!</Text>
+          <Text style={styles.userText}>Hi, {userName} !</Text>
           <Text style={{fontSize: 10, color: '#BCBCBC'}}>What sports you will choose today?</Text>
           <TouchableOpacity>
             <View style={{marginLeft: 0, margin: 7, width: 120, height: 35, backgroundColor: '#fff', borderRadius:50, alignItems: 'center',justifyContent:'center', padding:4, flexDirection: 'row'}}>
@@ -139,7 +143,6 @@ function HomeScreen({navigation}) {
       });
     }
 
-    const white = styles.white;
     const red = styles.red;
     const orange = styles.orange;
    
