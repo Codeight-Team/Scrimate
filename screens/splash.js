@@ -8,7 +8,7 @@ export default function Splash({navigation}){
         <View style={styles.container}>
             <SVGImg width={417} height={227} />
             <Text style={styles.txt}> SCRIMATE</Text>
-            <FlatButton text='START' onPress={() => navigation.navigate('Login Stack')} backgroundColor={'#6C63FF'} width={150}/>
+            <FlatButton text='START' onPress={() => navigation.navigate('Root Stack')} backgroundColor={'#6C63FF'} width={150}/>
         </View>  
     )
 }

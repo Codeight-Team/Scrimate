@@ -1,15 +1,15 @@
-import React from 'react';
+import React,  { useState, useContext } from 'react';
 import { Alert, StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
 import FlatButton from '../../shared/button';
 import BasketSVG from '../../assets/basketball.svg'
 import axios from 'axios';
-import { useState } from 'react/cjs/react.development';
 import * as yup from 'yup';
-import { AsyncStorage } from '@react-native-async-storage/async-storage'
+import { AuthContext } from '../../component/context';
 
 export default function LoginScreen({ navigation }) {
     const [show, setShow] = useState(true);
+    const context = useContext(AuthContext)
     const loginValidationSchema = yup.object().shape({
         email: yup
             .string()
@@ -45,7 +45,8 @@ export default function LoginScreen({ navigation }) {
         //     else if(error.message==='Request failed with status code 404')
         //         Alert.alert("User not found")
         // });
-        navigation.navigate('Main Stack')
+        context.dispatch.login(props)
+        // navigation.navigate('Main Stack')
     }
 
     return (
@@ -113,7 +114,7 @@ export default function LoginScreen({ navigation }) {
                     </Formik>
                 </View>
                 <View style={[styles.footer,styles.center]}>
-                    <TouchableOpacity style={styles.center} onPress={() => navigation.navigate('Register Stack')}>
+                    <TouchableOpacity style={styles.center} onPress={() => navigation.navigate('Register')}>
                         <Text style={{color:'#CFCFCF'}}>
                             Don’t have an account?
                         </Text>
