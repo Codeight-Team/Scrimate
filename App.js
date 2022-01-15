@@ -1,13 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState,useEffect} from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Splashes from './screens/splash';
-import LoginScreen from './screens/login/screens/loginScreen';
-import OTPScreen from'./screens/register/screens/OTPScreen';
-import RegisterStack from'./screens/register/registerStack';
-import ForgotPasswordStack from './screens/forgot-password/forgotPasswordStack';
-import MainStack from './screens/main/mainTabStack';
-import LoginStack from './screens/login/loginStack';
+// import { StyleSheet, Text, View } from 'react-native';
+// import Splashes from './screens/splash';
+// import LoginScreen from './screens/login/screens/loginScreen';
+// import OTPScreen from'./screens/register/screens/OTPScreen';
+// import RegisterStack from'./routes/registerStack';
+// import ForgotPasswordStack from './screens/forgot-password/forgotPasswordStack';
+import MainStack from './routes/mainTabStack';
+import LoginStack from './routes/loginStack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import Splash from './screens/splash';
@@ -21,18 +21,18 @@ function App () {
                           options={{
                             headerShown: false,
             }} />
-            <Stack.Screen name="Login Stack" component={LoginScreen} 
+            <Stack.Screen name="Login Stack" component={LoginStack} 
                           options={{
                             headerShown: false,
             }} />
-            <Stack.Screen name="Forgot Stack" component={ForgotPasswordStack} 
+            {/* <Stack.Screen name="Forgot Stack" component={ForgotPasswordStack} 
                           options={{
                             headerShown: false,
-            }} />
-            <Stack.Screen name="Register Stack" component={RegisterStack} 
+            }} /> */}
+            {/* <Stack.Screen name="Register Stack" component={RegisterStack} 
                           options={{
                             headerShown: false,
-            }} />
+            }} /> */}
             <Stack.Screen name="Main Stack" component={MainStack} 
                           options={{
                             headerShown: false,

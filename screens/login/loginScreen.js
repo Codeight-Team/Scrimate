@@ -1,8 +1,8 @@
 import React from 'react';
 import { Alert, StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
-import FlatButton from '../../../shared/button';
-import BasketSVG from '../../../assets/basketball.svg'
+import FlatButton from '../../shared/button';
+import BasketSVG from '../../assets/basketball.svg'
 import axios from 'axios';
 import { useState } from 'react/cjs/react.development';
 import * as yup from 'yup';
@@ -27,25 +27,25 @@ export default function LoginScreen({ navigation }) {
     }
 
     const handleSubmit = (props) =>{
-        axios.post('http://66.42.49.240/api/auth/login', props)
-        .then(async response => {
-            // console.log(response.data.user_id);
-            var token = response.data.user_id
-            try {
-                await AsyncStorage.setItem('@user_Token', token)
-              } catch (e) {
-                console.warn('Not Saved')
-              }
+        // axios.post('http://66.42.49.240/api/auth/login', props)
+        // .then(async response => {
+        //     // console.log(response.data.user_id);
+        //     var token = response.data.user_id
+        //     try {
+        //         await AsyncStorage.setItem('@user_Token', token)
+        //       } catch (e) {
+        //         console.warn('Not Saved')
+        //       }
             
-        })
-        .catch(function (error) {
-            console.log(error)
-            if(error.message === 'Request failed with status code 401' )
-                Alert.alert("Wrong password")
-            else if(error.message==='Request failed with status code 404')
-                Alert.alert("User not found")
-        });
-        // navigation.navigate('Main Stack')
+        // })
+        // .catch(function (error) {
+        //     console.log(error)
+        //     if(error.message === 'Request failed with status code 401' )
+        //         Alert.alert("Wrong password")
+        //     else if(error.message==='Request failed with status code 404')
+        //         Alert.alert("User not found")
+        // });
+        navigation.navigate('Main Stack')
     }
 
     return (

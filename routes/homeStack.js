@@ -1,9 +1,9 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from './screens/homeScreen';
-import ReservationScreen from '../reservation/reservationScreen';
-import ForumStack from '../reservation/matchmaking-forum/forumStack';
-import CreateMatch from '../reservation/createMatch'
+import HomeScreen from '../screens/home/screens/homeScreen';
+import ReservationScreen from '../screens/reservation/reservationScreen';
+import ForumStack from './forumStack';
+import CreateMatch from '../screens/reservation/createMatch'
 
 const Stack = createNativeStackNavigator();
 

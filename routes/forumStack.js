@@ -1,7 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Forum from './components/posts';
-import MatchDetail from './screens/MatchDetail'
+import Forum from '../screens/reservation/matchmaking-forum/components/posts';
+import MatchDetail from '../screens/reservation/matchmaking-forum/screens/MatchDetail';
 
 const Stack = createNativeStackNavigator();
 
