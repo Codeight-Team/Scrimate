@@ -28,15 +28,23 @@ export default function RegisterScreen({ navigation }) {
     ]
 
     useEffect(() => {
+        let isMounted = true;
         axios.get(`${url_country}/api/daerahindonesia/provinsi`)
             .then((response) => {
                 const res = response.data.provinsi
+                if(isMounted)
                 setProvince(res)
             })
             .catch(function (error) {
                 console.warn(error);
             });
+            return () => { isMounted = false };
+        
     })
+
+    function getProvince(){
+        
+    }
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setDate(currentDate);

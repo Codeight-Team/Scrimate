@@ -65,20 +65,15 @@
 // })
 
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
-import SelectionMethod from './screens/selectionMethod';
-import FormEmail from './screens/formEmail';
-import OTPScreen from '../register/screens/OTPScreen';
-import SuccessScreen from './screens/success';
+import SelectionMethod from '../screens/forgot-password/screens/selectionMethod';
+import FormEmail from '../screens/forgot-password/screens/formEmail';
+import SuccessScreen from '../screens/forgot-password/screens/success';
 
 const Stack = createNativeStackNavigator();
 
 function ForgotPasswordStack(){
     return (
-        <NavigationContainer>
           <Stack.Navigator>
             {/* <Stack.Screen name="Home" component={HomeScreen} /> */}
             <Stack.Screen name="Selection Screen" component={SelectionMethod} 
@@ -94,12 +89,6 @@ function ForgotPasswordStack(){
                           headerShown: false,
             }} />
           </Stack.Navigator>
-          {/* <View>
-            <Text>Powered by </Text>
-            <Text>HARAFI</Text>
-          </View> */}
-          <StatusBar style="auto" />
-        </NavigationContainer>
       );
 }
 

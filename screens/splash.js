@@ -3,12 +3,12 @@ import { StyleSheet ,View, Text, Image } from 'react-native';
 import FlatButton from '../shared/button';
 import SVGImg from '../assets/soccer.svg';
 
-export default function Splash(){
+export default function Splash({navigation}){
     return(
         <View style={styles.container}>
             <SVGImg width={417} height={227} />
             <Text style={styles.txt}> SCRIMATE</Text>
-            <FlatButton text='START' onPress={() => console.log("Start Button Pressed")} backgroundColor={'#6C63FF'} width={150}/>
+            <FlatButton text='START' onPress={() => navigation.navigate('Root Stack')} backgroundColor={'#6C63FF'} width={150}/>
         </View>  
     )
 }
