@@ -2,44 +2,75 @@
 
 import * as React from 'react';
 import { StyleSheet, View, Text, Image, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView } from 'react-native';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import SettingsImage from '../../../assets/icons/settings.svg'
 import ProfilePicture from '../../../assets/bimay.jpg'
 import GopaySVG from '../../../assets/icons/gopay-logo.svg'
+import { AuthContext } from '../../../component/context';
+import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 import axios from'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import TrophySVG from '../../../assets/icons/trophy.svg';
 
 function ProfileScreen({navigation}) {
   const [userName, setUser] = useState("Default");
-  const [userBalance, setBalance] = useState(2000000);
+  const [matchCount, setBalance] = useState(141);
+  const [data, setData] = useState([]);
+  const [user_id, setUserId] = useState('');
+  const context = useContext(AuthContext)
   // const [user, setUser] = useState("Default");
   // const [userName, setUser] = useState("Default");
   // const [userName, setUser] = useState("Default");
+  // useEffect(() => {
+  //       axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
+  //           console.log(response.data);
+  //         });
+  // })
   useEffect(() => {
-        // axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
-        //     console.log(response.data);
-        //   });
-  })
+    setTimeout(async () =>{
+      let user
+      try {
+        user = await AsyncStorage.getItem('user_id')
+      } catch (error) {
+        Alert.alert('Sign in needed')
+      }
+      setUserId(user)
+    },3000)
+
+    fetchUserData()
+  }, []);
+
+  const fetchUserData = async () => {
+    let isMounted = true
+    await axios.get(`http://66.42.49.240/api/users/${user_id}`).then(response => {
+      let data = response.data[0]
+      if(isMounted)
+      setData(data)
+    })
+    .catch(function (error) {
+        console.log(error)
+    });
+    return() => {isMounted = false }
+  }
+
+
+  const handleSignOut = () =>{
+    context.dispatch.signOut()
+  }
   
   return (
     <View style={styles.container}>
         <View style={[styles.box,styles.containerProfile]}>
-            <Image source={ProfilePicture} style={styles.profilePicture}/>
+            <Image source={{uri:'https://reactnative.dev/img/tiny_logo.png'}} style={styles.profilePicture}/>
             <View style={styles.innerProfile}>
-              <Text style={[styles.white,styles.fontMedium]}>{userName}</Text>
-              <View style={{marginLeft: 0, margin: 7, width: 130, height: 35, backgroundColor: '#fff', borderRadius:50, alignItems: 'center',justifyContent:'center', padding:4, flexDirection: 'row'}}>
-                <GopaySVG style={{marginRight:10}}/>
-                <View>
-                  <Text style={{fontSize: 11, fontWeight: 'bold', color: 'black'}}>gopay</Text>
-                  <Text style={{fontSize: 10, color: '#BCBCBC'}}>Rp{userBalance}</Text>
+              <Text style={[styles.white,styles.fontMedium, {textTransform:'capitalize'}]}>{data.first_name} {data.last_name}</Text>
+              <View style={{marginLeft: 0, margin: 7, width: 150, height: 35, backgroundColor: '#fff', borderRadius:50, alignItems: 'center',justifyContent:'center', padding:4, flexDirection: 'row'}}>
+                <TrophySVG />
+                <View style={{marginLeft: 10}}>
+                  <Text style={{fontSize: 11, fontWeight: 'bold', color: 'black'}}>Match Played</Text>
+                  <Text style={{fontSize: 10, color: '#BCBCBC'}}>{matchCount}</Text>
                 </View>
               </View>
-            </View>
-            <View style={styles.containerSettings}>
-              <TouchableOpacity onPress={() => navigation.navigate("Edit Profile")}>
-                <View style={styles.btnSettings}>
-                  <SettingsImage width={18} height={18} />
-                </View>
-              </TouchableOpacity>
             </View>
         </View>
         
@@ -52,14 +83,17 @@ function ProfileScreen({navigation}) {
 
         <View style={styles.box}>
           <Text style={styles.submenuText}>Settings</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Edit Profile")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Edit Profile Screen", data)}>
             <Text>Update Profile</Text> 
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => console.log("Message Button Pressed")}>
-            <Text>Message Settings</Text>
-          </TouchableOpacity>
           <TouchableOpacity onPress={() => console.log("Location Button Pressed")}>
-            <Text>Location Settings</Text>
+            <Text>Location / Address Settings</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.box}>
+          <Text style={styles.submenuText}>Account</Text>
+          <TouchableOpacity onPress={() => handleSignOut()}>
+            <Text>Sign out</Text> 
           </TouchableOpacity>
         </View>
     </View>
@@ -84,7 +118,6 @@ const styles = StyleSheet.create({
     backgroundColor:'white',
     marginTop: 5,
     padding: 10,
-    minHeight: '15%',
     width: '100%'
   },
   profilePicture:{

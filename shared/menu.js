@@ -1,24 +1,18 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Match from '../../../assets/icons/multi.svg';
-import Field from '../../../assets/icons/field.svg';
-import Futsal from '../../../assets/icons/futsal.svg';
-import Football from '../../../assets/soccer-ball.svg';
-import Badminton from '../../../assets/icons/shuttlecock.svg';
-import Soccer from '../../../assets/soccer.svg';
+import Match from '../assets/icons/multi.svg';
+import Field from '../assets/icons/field.svg';
+import Futsal from '../assets/icons/futsal.svg';
+import Football from '../assets/soccer-ball.svg';
+import Badminton from '../assets/icons/shuttlecock.svg';
+import Soccer from '../assets/soccer.svg';
 
 function MenuComp({ name, image }) {
     function Svg(){
-        if(image === "match"){
-          return <Match width={50} height={50}/>
-        } else if( image === "field"){
-          return <Field />
-        } else if( image === 'futsal'){
+        if( image === 'futsal'){
           return <Futsal width={50} height={50}/>
         } else if(image === 'shuttle'){
           return <Badminton marginBottom={5} marginRight={5}/>
-        } else if(image === "soccer"){
-          return <Soccer width={70} height={70}/>
         } else{
           return <Football width={35} height={35} marginBottom={5}/>
         }

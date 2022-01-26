@@ -3,19 +3,15 @@ import { View} from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; 
-import ProfileScreen from '../screens/main/screen/profileScreen';
-import EditProfile from '../screens/main/screen/accountSettings';
+import Profile from './profileStack';
 import MessageStack from './messageStack';
-import ReservationScreen from '../screens/reservation/reservationScreen';
 import HomeIconActive from '../assets/icons/home-active.svg';
 import HomeIcon from '../assets/icons/home.svg';
 import UserIcon from '../assets/icons/user-icon.svg';
 import UserIconActive from '../assets/icons/user-icon-active.svg';
 import ChatIcon from '../assets/icons/rocket-chat.svg';
 import ChatIconActive from '../assets/icons/rocket-chat-active.svg';
-import axios from 'axios';
 import HomeStack from './homeStack';
-import HomeScreen from '../screens/home/screens/homeScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -60,11 +56,10 @@ const MainTabStack = () =>{
                   return <View><ChatIcon/></View>
                 },
               }} />
-              <Tab.Screen name="Profile" component={ProfileScreen} options={{
+              <Tab.Screen name="Profile" component={Profile} options={{
                 title:"Profile",
                 headerTintColor:"black",
-                headerShadowVisible: true ,
-                headerShown: true,
+                // headerShadowVisible: true ,
                 headerTitleStyle:{
                   fontSize: 20
                 },

@@ -1,31 +1,124 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView } from 'react-native';
-import { useState, useEffect} from 'react';
+import { StyleSheet, View, Text, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Dummy from '../../../../assets/lapangan-dummy.png'
+import FlatButton from '../../../../shared/button';
+import CustomHeader from '../../../../shared/customHeader';
 
-function ReservationScreen({navigation, route}) {
+function MatchDetail({ navigation, route }) {
     useEffect(() => {
+        // axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
+        //     console.log(response.data);
+        // });
         console.log(route.params)
-        axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
-            console.log(response.data);
-          });
     })
-    return(
+
+    const data = route.params.data
+
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: (props) => (
+            <CustomHeader props={props} title={"Match Detail"}/>
+          ),
+            headerStyle: {
+                backgroundColor: '#6C63FF', //Set Header color
+            },
+        });
+    }, [navigation]);
+
+    const a = [
+        {
+            id: 1,
+            start: 9,
+            end: 10
+        },
+        {
+            id: 2,
+            start: 10,
+            end: 11
+        },
+        {
+            id: 3,
+            start: 11,
+            end: 12
+        },
+        {
+            id: 4,
+            start: 12,
+            end: 13
+        },
+        {
+            id: 5,
+            start: 14,
+            end: 15
+        },
+    ];
+
+    function renderDay() {
+        a.map(item => {
+            <Text>{item}</Text>
+        }
+        )
+    }
+
+    return (
         <View style={styles.container}>
-            <Text>This is  Reservation settings </Text>
+            <View style={styles.ImageContainer}>
+                <Image style={{ height: '100%', width: '100%', borderRadius: 40 }} source={Dummy}></Image>
+            </View>
+            <View style={[styles.descriptionContainer, { alignItems: 'center', justifyContent: 'center' }]}>
+                <View style={{ height: '20%' }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{data.venue.name}</Text>
+                </View>
+                <View style={{ width: '100%', height: '80%', padding: 20 }}>
+                    <Text>Date: {data.schedule.date}</Text>
+                    <Text>Time: {data.schedule.time}</Text>
+                    <Text>Address: {data.venue.address.street}</Text>
+                    <Text>Region: {data.venue.address.country}</Text>
+                    <Text>Created by: {data.name}</Text>
+                    {
+                        renderDay()
+                    }
+                </View>
+            </View>
+            <View style={styles.buttonContainer}>
+                <FlatButton width={150} backgroundColor={'#6C63FF'} text={'Accept'} onPress={() => navigation.navigate('Home')}/>
+            </View>
+
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    container:{
-      flex: 1,
-      width: '100%',
-      backgroundColor:"#F4F8FF",
-      padding: 20,
-      flexDirection: 'column',
-      flexWrap: 'wrap'
+    container: {
+        flex: 1,
+        width: '100%',
+        backgroundColor: "#F4F8FF",
+        padding: 20,
+        flexDirection: 'row',
+        flexWrap: 'wrap'
     },
+    ImageContainer: {
+        width: "100%",
+        height: "28%",
+        backgroundColor: 'white',
+        borderRadius: 40,
+        marginBottom: 20
+    },
+    descriptionContainer: {
+        width: "100%",
+        height: "40%",
+        backgroundColor: "white",
+        borderRadius: 40,
+        elevation: 4,
+    },
+    buttonContainer:{
+        height:'30%',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 });
 
-export default ReservationScreen;
+export default MatchDetail;

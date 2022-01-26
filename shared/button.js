@@ -1,11 +1,12 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
+import { useState } from 'react/cjs/react.development';
 
-export default function FlatButton({ text, onPress, backgroundColor, width, disabled }) {
+export default function FlatButton({ text, onPress, backgroundColor, width, disabled, layoutStyle, textStyle }) {
     return (
         <TouchableOpacity onPress={onPress} disabled={disabled}>
-            <View style={[styles.button, { backgroundColor, width }]}>
-                <Text style={styles.textButton} > {text} </Text>
+            <View style={[styles.button, {width}, disabled?styles.btnDisabled:{ backgroundColor}, layoutStyle]}>
+                <Text style={[styles.textButton, disabled?{color:'#c0c0c0'}:textStyle]} > {text} </Text>
             </View>
         </TouchableOpacity>
     )
@@ -24,5 +25,8 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase',
         fontSize: 16,
         textAlign: 'center'
+    },
+    btnDisabled:{
+        backgroundColor: 'gray'
     }
 })
