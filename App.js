@@ -1,21 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useReducer, useMemo, useEffect } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
-// import Splashes from './screens/splash';
-// import LoginScreen from './screens/login/screens/loginScreen';
-// import OTPScreen from'./screens/register/screens/OTPScreen';
-// import RegisterStack from'./routes/registerStack';
-// import ForgotPasswordStack from './screens/forgot-password/forgotPasswordStack';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthContext } from './component/context';
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import axios from 'axios'
 import Main from './routes/mainTabStack'
 import Root from './routes/rootStack'
+import Loading from './shared/loading';
+import axios from 'axios'
 
 function App() {
-  const Stack = createNativeStackNavigator();
+  const [isLoading, setIsLoading] = useState(true);
 
   const initialLoginState = {
     accessToken: null,
@@ -60,27 +55,27 @@ function App() {
 
   const auth = useMemo(() => ({
     login: async (data) => {
-      let test = {}
+      let user = {}
         await axios.post('http://66.42.49.240/api/auth/login', data)
       .then(response => {
-        test = response.data
+        user = response.data
       }
       ).catch((error) => {
         return error
       }
       )
-      if(test){
+      if(user){
         try {
-          await AsyncStorage.setItem('AccessToken', test.accessToken)
-          await AsyncStorage.setItem('RefreshToken', test.refreshToken)
-          await AsyncStorage.setItem('user_id', test.user_id)
+          await AsyncStorage.setItem('AccessToken', user.accessToken)
+          await AsyncStorage.setItem('RefreshToken', user.refreshToken)
+          await AsyncStorage.setItem('user_id', user.user_id)
         } catch (error) {
           Alert.alert("Wrong Email or Password")
         }
       }
       else
         console.warn('null')
-      dispatch({ type: 'LOGIN', token: test.accessToken, refreshToken: test.refreshToken, user_id: test.user_id })
+      dispatch({ type: 'LOGIN', token: user.accessToken, refreshToken: user.refreshToken, user_id: user.user_id })
     },
     signOut: async () => {
       try {
@@ -103,6 +98,7 @@ function App() {
         accessToken = await AsyncStorage.getItem('AccessToken')
         refreshToken = await AsyncStorage.getItem('RefreshToken')
         user_id = await AsyncStorage.getItem('user_id')
+        setIsLoading(false)
       } catch (error) {
         Alert.alert('Sign in needed')
       }
@@ -112,31 +108,16 @@ function App() {
 
   return (
     <AuthContext.Provider value={{state: loginState, dispatch:auth}}>
-      <NavigationContainer>{loginState.accessToken? <Main/>:<Root/>}
-        {/* <Stack.Navigator>
-          <Stack.Screen name="Splash Screen" component={Splash}
-            options={{
-              headerShown: false,
-            }} />
-          <Stack.Screen name="Root Stack" component={RootStack}
-            options={{
-              headerShown: false,
-            }} />
-          <Stack.Screen name="Forgot Stack" component={ForgotPasswordStack} 
-                          options={{
-                            headerShown: false,
-            }} />
-          <Stack.Screen name="Register Stack" component={RegisterStack} 
-                          options={{
-                            headerShown: false,
-            }} />
-          <Stack.Screen name="Main Stack" component={MainStack}
-            options={{
-              headerShown: false,
-            }} />
-        </Stack.Navigator> */}
+      {isLoading?
+      <Loading/>
+        :
+      <NavigationContainer>{loginState.accessToken? 
+        <Main/>
+          :
+        <Root/>}
         <StatusBar style="auto" />
       </NavigationContainer>
+    }
     </AuthContext.Provider>
   );
 }

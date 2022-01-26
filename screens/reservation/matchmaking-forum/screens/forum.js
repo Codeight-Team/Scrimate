@@ -4,15 +4,16 @@ import { useState, useEffect} from 'react';
 import axios from 'axios';
 import Posts from '../components/posts';
 
-function Forum({navigation}) {
+function Forum({navigation, route}) {
     useEffect(() => {
-        axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
-            console.log(response.data);
-          });
+        // axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
+        //     console.log(response.data);
+        //   });
+        console.log(route.params)
     })
     return(
         <View style={styles.container}>
-            <Posts/>
+            <Posts props={route.params}/>
             {/* <Button
         title="Press me"
         onPress={() => navigation.navigate("Match Detail")}

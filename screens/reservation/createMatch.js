@@ -4,31 +4,42 @@ import { useState, useEffect } from 'react';
 import {Formik} from 'formik';
 import FlatButton from '../../shared/button';
 import axios from 'axios';
-import RadioButton from '../../shared/radio';
 
-function CreateMatchScreen({ navigation }) {
-    const [show, setShow] = useState(false)
+function CreateMatchScreen({ navigation, route}) {
+    const [show, setShow] = useState(true)
     useEffect(() => {
         // axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
         //     console.log(response.data);
         // });
     })
 
-    const labeldata = [
+    const payment_distribution = [
         {
-            label: 'choose venue now',
+            label: '30/70',
+            value: 2
+        },
+        {
+            label: '40/60',
             value: 1
         },
         {
-            label: 'choose later',
+            label: '50/50',
             value: 2
+        },
+        {
+            label: '60/40',
+            value: 1
+        },
+        {
+            label: '70/30',
+            value: 1
         },
     ]
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
                     <Formik
-                        initialValues={{email: '', password: ''}}
+                        initialValues={{sports: route.params.title, date: '', time: '', payment_distribution: '50/50'}}
                     >
                         {(props) => (
                             <View style={{top:80}}>
@@ -36,36 +47,16 @@ function CreateMatchScreen({ navigation }) {
                                     <TextInput
                                         style={styles.input}
                                         placeholder='sports'
-                                        onChangeText={props.handleChange('password')}
-                                        value={props.values.password}
+                                        onChangeText={props.handleChange('sports')}
+                                        value={props.values.sports}
+                                        editable= {false}
                                     />
                                 </View>   
-                                
-                                <View style={styles.formUser}>
-                                    <TextInput
-                                        style={styles.input}
-                                        placeholder='payment distribution'
-                                        onChangeText={props.handleChange('email')}
-                                        value={props.values.email}
-                                    />
-                                </View>
-                                <RadioButton labeldata={labeldata} width={100} callback={(e) => e.value===1?setShow(true):setShow(false)}/>
-                                {show && (
-                                    <View style={styles.formUser}>
-                                    <TextInput
-                                        style={styles.input}
-                                        placeholder='venue'
-                                        onChangeText={props.handleChange('email')}
-                                        value={props.values.email}
-                                    />
-                                    </View>
-                                 )
-                                }
                                 <View style={styles.formUser}>
                                     <TextInput
                                         style={styles.input}
                                         placeholder='date'
-                                        onChangeText={props.handleChange('email')}
+                                        onChangeText={props.handleChange('time')}
                                         value={props.values.email}
                                     />
                                     <TextInput
@@ -75,22 +66,29 @@ function CreateMatchScreen({ navigation }) {
                                         value={props.values.email}
                                     />
                                 </View>
+                                    {/* <View style={styles.formUser}>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder='venue'
+                                        onChangeText={props.handleChange('time')}
+                                        value={props.values.email}
+                                    />
+                                    </View> */}
+                                <View style={styles.formUser}>
+                                    <FlatButton 
+                                    text='Choose Venue' 
+                                    onPress={() => console.log("Modal Pop Up")} 
+                                    backgroundColor={show==true?'#6C63FF':'#ececed'}
+                                    layoutStyle={{borderRadius:20}}
+                                    width={250}/>
+                                </View>
                                 <View style={styles.formUser}>
                                     <TextInput
-                                            style={{width: '100%', 
-                                                maxHeight:100, 
-                                                    backgroundColor: 'white',
-                                                    borderWidth: 1,
-                                                    borderColor: '#E8EAF1',
-                                                    borderRadius: 40,
-                                                    fontSize: 18,
-                                                   }}
-                                            multiline
-                                            numberOfLines={10}
-                                            placeholder='description'
-                                            editable
-                                            maxLength={100}
-                                            />
+                                        style={styles.input}
+                                        placeholder='payment distribution'
+                                        onChangeText={props.handleChange('payment_dis')}
+                                        value={props.values.payment_distribution}
+                                    />
                                 </View>
                                 <View style={styles.buttonContainer}>
                                     <View style={styles.button}>
@@ -123,8 +121,9 @@ const styles = StyleSheet.create({
         borderColor: '#E8EAF1',
         padding: 10,
         fontSize: 18,
-        borderRadius: 100,
+        borderRadius: 20,
         marginBottom: 10,
+        margin: 5,
         flex: 1,
         backgroundColor: 'white',
     },
@@ -140,7 +139,7 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: 'grey',
         paddingLeft: 8
-    }
+    },
 });
 
 export default CreateMatchScreen;

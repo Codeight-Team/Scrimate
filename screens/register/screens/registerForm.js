@@ -103,8 +103,9 @@ export default function RegisterScreen({ navigation }) {
         values.BOD = date;
         console.log('test')
         axios.post('http://66.42.49.240/api/auth/register', values)
-            .then(() => {
-                navigation.navigate('OTP');
+            .then((response) => {
+                console.log(response.data)
+                // navigation.navigate('OTP');
             })
             .catch(function (error) {
                 console.warn(error);

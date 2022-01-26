@@ -2,8 +2,13 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/home/screens/homeScreen';
 import ReservationScreen from '../screens/reservation/reservationScreen';
-import ForumStack from './forumStack';
-import CreateMatch from '../screens/reservation/createMatch'
+import ActivityScreen from '../screens/reservation/activityScreen';
+import CreateMatch from '../screens/reservation/createMatch';
+import ReserveVenue from '../screens/venue/reserveVenue';
+import Match from '../screens/reservation/matchmaking-forum/components/posts';
+import MatchDetail from '../screens/reservation/matchmaking-forum/screens/MatchDetail';
+import ChooseField from '../screens/venue/chooseField';
+import PickDateTime from '../screens/venue/pickDateTime';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,12 +23,16 @@ function HomeStack(){
                             options={{
                             headerShown: false,
               }} /> */}
+              <Stack.Screen name="Activity Screen" component={ActivityScreen} options={{title: 'Choose Feature'}} />
               <Stack.Screen name="Reservation Screen" component={ReservationScreen} />
+              <Stack.Screen name="Reserve Venue" component={ReserveVenue} />
+              <Stack.Screen name="Choose Field" component={ChooseField} />
+              <Stack.Screen name="Pick Date Time" component={PickDateTime} />
+              <Stack.Group>
+                <Stack.Screen name="Forum Stack" component={Match} />
+                <Stack.Screen name="Match Detail" component={MatchDetail} />
+              </Stack.Group>
               <Stack.Screen name="Create Match" component={CreateMatch} />
-              <Stack.Screen name="Forum Stack" component={ForumStack} 
-                            options={{
-                              headerShown: false,
-              }}/>
             </Stack.Navigator>
     );
 }

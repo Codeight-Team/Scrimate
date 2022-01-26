@@ -18,13 +18,6 @@ export default function LoginScreen({ navigation }) {
             .string()
             .required('Password is required'),
     })
-    
-    function onPress(){
-        if(show===true)
-            return setShow(false)
-        else
-            return setShow(true)
-    }
 
     const handleSubmit = (props) =>{
         // axios.post('http://66.42.49.240/api/auth/login', props)
@@ -69,6 +62,7 @@ export default function LoginScreen({ navigation }) {
                                         placeholder='Email'
                                         onChangeText={props.handleChange('email')}
                                         value={props.values.email}
+                                        autoCapitalize='none'
                                     />
                                 </View>
                                 {(props.errors.email && props.touched.email) &&
@@ -81,8 +75,9 @@ export default function LoginScreen({ navigation }) {
                                         placeholder='Password'
                                         onChangeText={props.handleChange('password')}
                                         value={props.values.password}
+                                        autoCapitalize='none'
                                     />
-                                    <TouchableOpacity style={styles.visibleBtn} onPress={() => onPress()}>
+                                    <TouchableOpacity style={styles.visibleBtn} onPress={() => setShow(!show)}>
 
                                     </TouchableOpacity>
                                 </View>
@@ -114,10 +109,10 @@ export default function LoginScreen({ navigation }) {
                     </Formik>
                 </View>
                 <View style={[styles.footer,styles.center]}>
-                    <TouchableOpacity style={styles.center} onPress={() => navigation.navigate('Register')}>
-                        <Text style={{color:'#CFCFCF'}}>
+                    <Text style={{color:'#CFCFCF'}}>
                             Don’t have an account?
                         </Text>
+                    <TouchableOpacity style={styles.center} onPress={() => navigation.navigate('Register')}>
                         <Text style={{color:'#6C63FF'}}>
                             Create new account
                         </Text>

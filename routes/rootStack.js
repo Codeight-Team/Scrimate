@@ -3,13 +3,18 @@ import { StatusBar } from 'expo-status-bar';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '../screens/login/loginScreen';
 import RegisterStack from './registerStack';
-import ForgotPasswordStack from './forgotPasswordStack'
+import ForgotPasswordStack from './forgotPasswordStack';
+import Splash from '../screens/splash';
 
 const Stack = createNativeStackNavigator();
 
 function RootStack(){
     return (
           <Stack.Navigator>
+            <Stack.Screen name="Splash" component={Splash} 
+                          options={{
+                            headerShown: false,
+            }} />
             <Stack.Screen name="Login" component={LoginScreen} 
                           options={{
                             headerShown: false,

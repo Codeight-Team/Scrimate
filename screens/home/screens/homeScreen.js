@@ -1,34 +1,50 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import { StyleSheet, View, Text, Button, useWindowDimensions, TouchableOpacity, Image, SafeAreaView, StatusBar, TouchableOpacityComponent} from 'react-native';
+import { StyleSheet, View, Text, useWindowDimensions, TouchableOpacity, Image, StatusBar, TouchableOpacityComponent} from 'react-native';
 import { useEffect, useState} from 'react';
-import { PanGestureHandler, ScrollView } from 'react-native-gesture-handler';
+import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, {useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring,} from 'react-native-reanimated';
 import pp from '../../../assets/bimay.jpg';
 import GopaySVG from '../../../assets/icons/gopay-logo.svg';
 import TrophySVG from '../../../assets/icons/trophy.svg';
 import Swiper from 'react-native-swiper';
-import MenuComponent from '../components/menu'
-import { AsyncStorage } from '@react-native-async-storage/async-storage'
+import MenuComponent from '../../../shared/menu';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 
 function HomeScreen({navigation, route}) {
-  const [userName, setName] = useState("Rafi");
+  const [data, setData] = useState([]);
+  const [user_id, setUserId] = useState('');
+
   useEffect(() => {
-    top.value  = 750
-    // axios.post('http://66.42.49.240/api/users/'+user_id, props)
-    //     .then((response) => {
-    //         console.log(response.data);
-    //     })
-    //     .catch(function (error) {
-    //         console.log(error)
-    //         if(error.message === 'Request failed with status code 401' )
-    //             Alert.alert("Wrong password")
-    //         else if(error.message==='Request failed with status code 404')
-    //             Alert.alert("User not found")
-    //     });
-  });
+    top.value  = 680
+    setTimeout(async () =>{
+      let user
+      try {
+        user = await AsyncStorage.getItem('user_id')
+      } catch (error) {
+        Alert.alert('Sign in needed')
+      }
+      setUserId(user)
+    })
+
+    fetchUserData()
+  }, []);
+
+  const fetchUserData = async () => {
+    let isMounted = true
+    await axios.get(`http://66.42.49.240/api/users/${user_id}`).then(response => {
+      let data = response.data[0]
+      if(isMounted)
+      setData(data)
+    })
+    .catch(function (error) {
+        console.log(error)
+    });
+    return() => {isMounted = false }
+  }
+
   const dimensions = useWindowDimensions();
   const top = useSharedValue(
     dimensions.height
@@ -55,7 +71,7 @@ function HomeScreen({navigation, route}) {
     },
     onEnd(){
       if(top.value > dimensions.height / 2 + 200) {
-        top.value = dimensions.height;
+        top.value = 680;
       } else {
         top.value = dimensions.height / 2
       }
@@ -69,7 +85,7 @@ function HomeScreen({navigation, route}) {
         source={pp}
       />
         <View>
-          <Text style={styles.userText}>Hi, {userName} !</Text>
+          <Text style={styles.userText}>Hi, <Text style={{textTransform: 'capitalize'}}>{data.first_name}</Text>!</Text>
           <Text style={{fontSize: 10, color: '#BCBCBC'}}>What sports you will choose today?</Text>
           <TouchableOpacity>
             <View style={{marginLeft: 0, margin: 7, width: 120, height: 35, backgroundColor: '#fff', borderRadius:50, alignItems: 'center',justifyContent:'center', padding:4, flexDirection: 'row'}}>
@@ -84,7 +100,7 @@ function HomeScreen({navigation, route}) {
             <View style={{marginLeft: 0, margin: 7, width: 120, height: 35, backgroundColor: '#fff', borderRadius:50, alignItems: 'center', justifyContent:'flex-end', padding:4, flexDirection: 'row'}}>
               <View width='27%'><TrophySVG /></View>
               <View style={{width: '65%',}}>
-                <Text style={{fontSize: 11, fontWeight: 'bold', color: 'black'}}>Trophy</Text>
+                <Text style={{fontSize: 11, fontWeight: 'bold', color: 'black'}}>Matchs</Text>
                 <Text style={{fontSize: 10, color: '#BCBCBC'}}>47</Text>
               </View>
             </View>
@@ -98,44 +114,32 @@ function HomeScreen({navigation, route}) {
       </View>
     }
 
-    const menuData = [
-      {
-          name:"Create Match", 
-          url:'Create Match', 
-          title:"Create",
-          svg:"field"
-      },
-      {
-        name:"Find Match",
-        url:'Forum Stack',
-        title:"Forum",
-        svg:"match"
-      },
+    const sport =[
       {
         name:"Futsal",
-        url:'Reservation Screen',
+        url:'Activity Screen',
         title:"Futsal",
         svg:"futsal"
       },
       {
         name:"Football",
-        url:'Reservation Screen',
+        url:'Activity Screen',
         title:"Football",
         svg:""
       },
       {
         name:"Badminton",
-        url:'Reservation Screen',
+        url:'Activity Screen',
         title:"Badminton",
         svg:"shuttle"
       },
     ]
 
-    function RenderPost() {
-      return menuData.map((item) => {
+    function RenderBubble() {
+      return sport.map((item) => {
         return (
           <TouchableOpacity key={item.title} onPress={() => 
-            navigation.navigate(item.url,{sports:item.name})
+            navigation.navigate(item.url, {title: item.title})
           }>
               <MenuComponent name={item.name} image={item.svg}></MenuComponent>
           </TouchableOpacity>
@@ -159,13 +163,16 @@ function HomeScreen({navigation, route}) {
             prevButton={<Text style={styles.button}>‹</Text>}
             >
             
-        <View style={styles.slide1}>
-          <UserBubble/>
+        <View style={styles.slide}>
+          {
+            UserBubble()
+          }
+          
         </View>
-        <View style={styles.slide2}>
+        <View style={styles.slide}>
           <ComponentBubble color={red} title={"Activity"}/>
         </View>
-        <View style={styles.slide3}>
+        <View style={styles.slide}>
           <ComponentBubble color={orange} title={"Match"}/>
         </View>
       </Swiper>
@@ -204,7 +211,7 @@ function HomeScreen({navigation, route}) {
                 <MenuComp name="Badminton" url='Reservation Screen' title="Badminton"svg="shuttle" />
               </TouchableOpacity> */}
               {
-                        RenderPost()
+                        RenderBubble()
                   }
               </View>
         </Animated.View>
@@ -222,17 +229,7 @@ const styles = StyleSheet.create({
     color: "#6C63FF",
     fontSize: 50,
   },
-  slide1: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  slide2: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  slide3: {
+  slide: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -245,12 +242,6 @@ const styles = StyleSheet.create({
   csheet:{
     flexDirection: 'row',
     flexWrap: 'wrap'
-  },
-  chighlights:{
-    width: 300,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 10
   },
   bubbleContainer:{
     flexDirection:'row',
