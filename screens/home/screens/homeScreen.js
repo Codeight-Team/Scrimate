@@ -17,15 +17,14 @@ function HomeScreen({ navigation, route }) {
   const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
-    top.value = (dimensions.height / 1.2)
     setTimeout(async () => {
+      top.value = (dimensions.height / 1.2)
       let user
       try {
         user = await AsyncStorage.getItem('user_id')
         console.log(user);
         await axios.get(`http://66.42.49.240/api/users/${user}`)
           .then(response => {
-            console.log(response.data.userData)
             setData(response.data.userData)
           })
           .catch(function (error) {
@@ -37,7 +36,7 @@ function HomeScreen({ navigation, route }) {
       } catch (error) {
         Alert.alert('Sign in needed')
       }
-    })
+    },2000)
   }, []);
 
   const dimensions = useWindowDimensions();

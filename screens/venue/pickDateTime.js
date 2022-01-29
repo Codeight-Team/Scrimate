@@ -80,6 +80,9 @@ const PickDateTime = ({ navigation, route }) => {
                 <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#FFFFFF', borderRadius: 20, elevation: 3, alignItems: "center", justifyContent: "center" }}>
                     <Text style={{ fontWeight: "bold", color: 'black', }}>{route.params.field_name}</Text>
                 </View>
+                <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#FFFFFF', borderRadius: 20, elevation: 3, alignItems: "center", justifyContent: "center" }}>
+                    <Text style={{ fontWeight: "bold", color: 'black', }}>Rp {route.params.field_price}</Text>
+                </View>
             </View>
             <View style={{ padding: 20, height: '40%', justifyContent: "center", alignItems: 'flex-start' }}>
                 {/* <CustomDateTimePicker textStyle={{paddingVertical: 15, paddingHorizontal: 10, borderColor: 'gray', borderWidth: 1}}/> */}
@@ -138,21 +141,23 @@ const PickDateTime = ({ navigation, route }) => {
                     }
                 </View>
                 <View style={{ width: '95%', height: '20%', justifyContent: "center", alignItems: "center" }}>
-                    <FlatButton 
-                        width={200} 
-                        backgroundColor={'#FFFFFF'} 
-                        disabled={disabled} 
-                        textStyle={{ color: 'black' }} 
-                        text={'Choose'} 
+                    <FlatButton
+                        width={200}
+                        backgroundColor={'#FFFFFF'}
+                        disabled={disabled}
+                        textStyle={{ color: 'black' }}
+                        text={'Choose'}
                         onPress={() => navigation.navigate("Order Screen", {
-                                                                                data:{
-                                                                                    venue_name: route.params.venue_name,
-                                                                                    field_name: route.params.field_name,
-                                                                                        day: moment(date).format('dddd'),
-                                                                                        date: moment(date).format('DD-MM-yyyy'),
-                                                                                        time: time
-                                                                                    }
-                                                                            })} />
+                            data: {
+                                venue_name: route.params.venue_name,
+                                field_name: route.params.field_name,
+                                field_price: route.params.field_price,
+                                address: route.params.address,
+                                day: moment(date).format('dddd'),
+                                date: moment(date).format('DD-MM-yyyy'),
+                                time: time
+                            }
+                        })} />
                 </View>
             </View>
         </View >

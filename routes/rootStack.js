@@ -2,7 +2,6 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '../screens/login/loginScreen';
-import RegisterStack from './registerStack';
 import ForgotPasswordStack from './forgotPasswordStack';
 import Splash from '../screens/splash';
 import FormRegister from '../screens/register/screens/formRegister';
@@ -17,10 +16,6 @@ function RootStack(){
                             headerShown: false,
             }} />
             <Stack.Screen name="Login" component={LoginScreen} 
-                          options={{
-                            headerShown: false,
-            }} />
-            <Stack.Screen name="Register" component={RegisterStack} 
                           options={{
                             headerShown: false,
             }} />

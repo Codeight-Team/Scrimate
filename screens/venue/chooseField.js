@@ -2,15 +2,21 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native'
 
 function ChooseField({ navigation, route }) {
+    const data = route.params;
     function renderField() {
         return route.params.field.map((item) => {
             return (
                 <View key={item.id} style={styles.box}>
-                    <TouchableOpacity style={styles.inner} onPress={() => navigation.navigate('Pick Date Time', { field_name: item.name, venue_name: route.params.venue_name })}>
+                    <TouchableOpacity style={styles.inner} onPress={() => navigation.navigate('Pick Date Time', {
+                        field_name: item.name,
+                        venue_name: route.params.venue_name,
+                        address: route.params.address,
+                        field_price: item.price
+                    })}>
 
                         <Image style={{ height: '60%', width: '100%', borderRadius: 10, }} source={{ uri: route.params.venue_image }} />
                         <View style={{ width: '100%', alignItems: "center", backgroundColor: '#FFFFFF', borderRadius: 5, marginVertical: 4 }}>
-                            <Text style={{color:'#6C63FF', fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
+                            <Text style={{ color: '#6C63FF', fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
                         </View>
                         <View style={{ width: '100%', alignItems: "center", backgroundColor: '#FFFFFF', borderRadius: 5 }}>
                             <Text >Price/Hour: <Text style={{ fontWeight: 'bold' }}>{'Rp.' + item.price}</Text></Text>
@@ -36,7 +42,7 @@ function ChooseField({ navigation, route }) {
             </View>
             <View style={{ width: '100%', height: '70%', backgroundColor: "#6C63FF", borderTopLeftRadius: 20, borderTopRightRadius: 20, paddingTop: 40 }}>
                 <ScrollView>
-                    <View style={{ width: '100%', height: '50%', flexWrap: 'wrap', flexDirection: "row", justifyContent: 'center', borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
+                    <View style={{ width: '100%', height: '100%', flexWrap: 'wrap', flexDirection: "row", justifyContent: 'center', borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
                         {
                             renderField()
                         }

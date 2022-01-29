@@ -7,9 +7,9 @@ import axios from 'axios';
 export default function OTPScreen({navigation}) {
     const confirmButtonHandler = (pass) =>{
         console.log(pass.values)
-        axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
-            console.log(response.data);
-          });
+        // axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
+        //     console.log(response.data);
+        //   });
     }
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

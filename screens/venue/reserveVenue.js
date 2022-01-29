@@ -14,40 +14,127 @@ function ReserveVenue({ navigation, route }) {
 
     const tabData = [{ name: 'Time Open', id: 1 }, { name: 'Location', id: 2 }, { name: 'Rating', id: 3 }];
 
-    const schedule = [
+    const day = [
         {
-            day: 1,
-            timeOpen: 9,
-            timeClosed: 21
+            id: 1,
+            name: 'Monday'
+        },
+        {
+            id: 2,
+            name: 'Tuesday'
+        },
+        {
+            id: 3,
+            name: 'Wednesday'
+        },
+        {
+            id: 4,
+            name: 'Thursday'
+        },
+        {
+            id: 5,
+            name: 'Friday'
+        },
+        {
+            id: 6,
+            name: 'Saturday'
+        },
+        {
+            id: 7,
+            name: 'Minggu'
         }
     ]
 
-    function propsView() {
-        if (flag == 1) {
-            return <View style={{ flexDirection: 'column'}}>
-                <Text style={[styles.fontSmall,styles.red]}>Sunday</Text>
-                <Text style={[,styles.fontSmall,]}>Monday</Text>
-                <Text style={styles.fontSmall}>Tuesday</Text>
-                <Text style={styles.fontSmall}>Wednesday</Text>
-                <Text style={styles.fontSmall}>Thursday</Text>
-                <Text style={styles.fontSmall}>Friday</Text>
-                <Text style={styles.fontSmall}>Saturday</Text>
-            </View>
+    const timeOpen = [
+        {
+            operational_day: 1,
+            operational_timeOpen: '09:00',
+            operational_timeClosed: '21:00'
+        },
+        {
+            operational_day: 2,
+            operational_timeOpen: '09:00',
+            operational_timeClosed: '21:00'
+        },
+        {
+            operational_day: 3,
+            operational_timeOpen: '09:00',
+            operational_timeClosed: '21:00'
+        },
+        {
+            operational_day: 4,
+            operational_timeOpen: '09:00',
+            operational_timeClosed: '21:00'
+        },
+        {
+            operational_day: 5,
+            operational_timeOpen: '09:00',
+            operational_timeClosed: '21:00'
+        },
+        {
+            operational_day: 7,
+            operational_timeOpen: '09:00',
+            operational_timeClosed: '21:00'
         }
-        if (flag == 2) {
-            return <View>
-                <Text>Address: </Text>
-                <Text>{data.address.address_street}</Text>
-                <Text>{data.address.address_region}</Text>
-            </View>
+    ]
+
+    const renderTimeOpen = () => {
+        return day.map((item, index) => {
+            return (
+                <View style={{ flexDirection: 'row' }} key={item.id}>
+                    <View style={{ width: 150 }}>
+                        <Text style={[!timeOpen[index]?{color: 'red'}:{ color: 'black'}, {fontWeight: 'bold' }]}>
+                            {
+                                item.name
+                            }
+                        </Text>
+                    </View>
+                    {timeOpen[index] ?
+                        <Text style={{ color: '#6C63FF' }}>
+                            {timeOpen[index].operational_timeOpen} - {timeOpen[index].operational_timeClosed}
+                        </Text>
+                        :
+                        <View style={{width: 80, alignItems: 'center'}}>
+                            <Text style={{color: 'red'}}>
+                                Closed
+                            </Text>
+                        </View>
+                    }
+
+                </View>
+            )
         }
-        if (flag == 3) {
-            let rating = [];
-            for (let i = 0; i < data.rating.value; i++) {
-                rating.push(<Star key={i} fill={"#ffd700"} width={30} height={30} />)
-            }
-            return rating
-        } 
+        )
+    }
+
+    const propsView = () => {
+        return (
+            <View>
+                {flag == 1 ?
+                    <View style={{ flexDirection: 'column' }}>
+                        {
+                            renderTimeOpen()
+                        }
+                    </View>
+                    : flag == 2 ?
+                        <View>
+                            <Text style={{ fontWeight: 'bold' }}>Address: </Text>
+                            <Text>Tes{data.address.address_street}</Text>
+                            <Text>{data.address.address_region}</Text>
+                        </View>
+                        :
+                        <Text>Empty</Text>
+                }
+            </View>
+
+
+
+        )
+        // let rating = [];
+        // for (let i = 0; i < data.rating.value; i++) {
+        //     rating.push(<Star key={i} fill={"#ffd700"} width={30} height={30} />)
+        // }
+        // return rating
     }
 
     return (
@@ -76,7 +163,7 @@ function ReserveVenue({ navigation, route }) {
                     <Text>{route.params.item.address.address_region}</Text>
                     <Text>{route.params.item.address.address_city}</Text> */}
                 </View>
-                <View style={{ width: '100%', height: '50%', borderTopWidth: 0.3, borderColor: "#dedede", flexDirection: 'row', padding: 20, }}>
+                <View style={{ width: '100%', height: '50%', borderTopWidth: 0.3, borderColor: "#dedede", flexDirection: 'row', padding: 20, justifyContent: 'center' }}>
                     {
                         propsView()
                     }
@@ -87,7 +174,7 @@ function ReserveVenue({ navigation, route }) {
                     </View>
                     <FlatButton text='choose'
                         // disabled={!props.isValid} 
-                        onPress={() => navigation.navigate('Choose Field', {field: data.field, venue_name: data.name, venue_image: data.images})} backgroundColor={'#6C63FF'} width={199} />
+                        onPress={() => navigation.navigate('Choose Field', { field: data.field, venue_name: data.name, venue_image: data.images, address: data.address })} backgroundColor={'#6C63FF'} width={199} />
                 </View>
             </View>
         </View>
@@ -122,7 +209,7 @@ const styles = StyleSheet.create({
         color: '#6C63FF',
         fontWeight: 'bold'
     },
-    red:{
+    red: {
         color: 'red'
     }
 });

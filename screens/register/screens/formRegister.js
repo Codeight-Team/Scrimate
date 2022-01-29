@@ -93,10 +93,8 @@ const FormRegister = ({ navigation }) => {
     }
 
     const createUser = async (values) => {
-        console.log(values)
         await axios.post('http://66.42.49.240/api/auth/register', values)
-            .then((response) => {
-                // console.log(response.data)
+            .then(() => {
                 navigation.navigate('Login');
             })
             .catch(function (error) {

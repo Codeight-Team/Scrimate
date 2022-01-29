@@ -5,10 +5,10 @@ import axios from 'axios';
 
 function MessageFocus({route}) {
     useEffect(() => {
-        console.log(route.params)
-        axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
-            console.log(response.data);
-          });
+        // console.log(route.params)
+        // axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
+        //     console.log(response.data);
+        //   });
     })
     const {message_id} =route.params
     return(
