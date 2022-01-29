@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Image, useWindowDimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Badminton from '../../../../assets/icons/shuttlecock.svg';
@@ -8,13 +8,13 @@ import Dummy from '../../../../assets/lapangan-dummy.png';
 import CustomHeader from '../../../../shared/customHeader';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, } from 'react-native-reanimated';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 
 
 
 function Posts({ navigation, route }) {
     const [currLocation, setFilter] = useState(route.params.user_address)
-    const [show, setShow] = useState(false)
+    const [myMatch, setMyMatch] = useState(false)
     const [data, setData] = useState(postArray)
 
     const postArray = [
@@ -95,7 +95,7 @@ function Posts({ navigation, route }) {
                 date: '25-1-2022',
                 time: '07.00 WIB'
             }
-        },{
+        }, {
             id: 23,
             matchname: 'Cupu Lu Semua',
             venue: { name: "Lapangan Banteng", address: { street: "Jl. Andara Raya", country: "Jakarta Selatan" }, rating: "5" },
@@ -189,19 +189,8 @@ function Posts({ navigation, route }) {
                 }>
                     <View style={styles.box}>
                         <View style={styles.inner}>
-
-                            {/* <View style={{
-                                width: '100%',
-                                height: '30%', alignItems: 'center',
-                                justifyContent: 'center',
-                                backgroundColor: '#D2D1D1',
-                                borderRadius: 10,
-
-                            }}> */}
                             <Image style={{ width: "100%", height: "40%", borderRadius: 10 }}
                                 source={Dummy}></Image>
-                            {/* <Dummy color={'black'} width= {100}  height= {100}></Dummy> */}
-                            {/* </View> */}
                             <View style={{
                                 width: '100%',
                                 height: '60%',
@@ -256,19 +245,32 @@ function Posts({ navigation, route }) {
     return (
         <>
             <View>
-                <View style={{ width: '100%', backgroundColor: '#fff', padding: 10, elevation:4}}>
-                    <TouchableOpacity  onPress={() => top.value = dimensions.height / 2
-                } style={{ flexDirection: 'row' }}>
-                        <Text style={{ color: '#6C63FF', fontWeight: 'bold' }}>
-                            {/* {route.params.user_address} */}
-                            {route.params.user_address}
-                        </Text>
-                        <View style={{ padding: 3 }}>
-                            {
+                <View style={{ width: '100%', flexDirection: 'row', backgroundColor: '#fff', padding: 10, elevation: 4 }}>
+                    <View style={{ width: '50%', }}>
+                        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => setMyMatch(!myMatch)}>
+                            <Text style={[myMatch ? { color: '#6C63FF' } : { color: 'gray' }, { fontWeight: 'bold' }]}>My Match</Text>
+                            <View style={{ marginHorizontal: 4 }}>
+                                {
+                                    myMatch ?
+                                        <Ionicons name="checkmark-circle" size={20} color="green" />
+                                        :
+                                        <Ionicons name="close-circle-sharp" size={20} color="gray" />
+                                }
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ width: '50%', alignItems: 'flex-end' }}>
+                        <TouchableOpacity onPress={() => top.value = dimensions.height / 2
+                        } style={{ flexDirection: 'row' }}>
+                            <View style={{ padding: 4 }}>
                                 <AntDesign name="caretdown" size={10} color="black" />
-                            }
-                        </View>
-                    </TouchableOpacity>
+                            </View>
+                            <Text style={{ color: '#6C63FF', fontWeight: 'bold' }}>
+                                {route.params.user_address}
+                            </Text>
+
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <       ScrollView>
                     <View style={styles.container}>

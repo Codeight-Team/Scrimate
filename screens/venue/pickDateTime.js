@@ -50,20 +50,20 @@ const PickDateTime = ({ navigation, route }) => {
         return timeArr.map((item) => {
             return (
                 <View key={item.time} style={{ height: 50, width: "33%" }}>
-                        <TouchableOpacity onPress={() => setTimeBtn(item.time)} style={
-                            {
-                                height: "90%",
-                                width: "90%",
-                                backgroundColor: "#FFFFFF",
-                                elevation: 5,
-                                borderRadius: 10,
-                                justifyContent: 'center',
-                                alignItems: 'center'
-                            }
-                        }>
-                            <Text style={{ fontWeight: 'bold' }}>{item.time}</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity onPress={() => setTimeBtn(item.time)} style={
+                        {
+                            height: "90%",
+                            width: "90%",
+                            backgroundColor: "#FFFFFF",
+                            elevation: 5,
+                            borderRadius: 10,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }
+                    }>
+                        <Text style={{ fontWeight: 'bold' }}>{item.time}</Text>
+                    </TouchableOpacity>
+                </View>
             )
         }
 
@@ -73,8 +73,17 @@ const PickDateTime = ({ navigation, route }) => {
 
     return (
         <View style={styles.container}>
-            <View style={{ padding: 20, height: '50%', justifyContent: "center", alignItems: 'flex-start' }}>
+            <View style={{ width: '100%', height: "8%", flexDirection: "row", alignItems: "center", marginLeft: 20 }}>
+                <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#FFFFFF', borderRadius: 20, elevation: 3, alignItems: "center", justifyContent: "center" }}>
+                    <Text style={{ fontWeight: "bold", color: 'black' }}>{route.params.venue_name}</Text>
+                </View>
+                <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#FFFFFF', borderRadius: 20, elevation: 3, alignItems: "center", justifyContent: "center" }}>
+                    <Text style={{ fontWeight: "bold", color: 'black', }}>{route.params.field_name}</Text>
+                </View>
+            </View>
+            <View style={{ padding: 20, height: '40%', justifyContent: "center", alignItems: 'flex-start' }}>
                 {/* <CustomDateTimePicker textStyle={{paddingVertical: 15, paddingHorizontal: 10, borderColor: 'gray', borderWidth: 1}}/> */}
+
                 <View style={{ width: '100%', flexDirection: "row" }}>
                     <View style={{ width: "50%", paddingLeft: 20 }}>
                         <Text>{moment(date).format('dddd')}</Text>
@@ -111,14 +120,15 @@ const PickDateTime = ({ navigation, route }) => {
                     </View>
                 </View>
             </View>
-            {show && (
-                <DateTime timeZoneOffsetInMinutes={0}
-                    value={new Date(date)}
-                    mode="date"
-                    minimumDate={new Date(moment().format("YYYY-MM-DD"))}
-                    onChange={onChange}
-                />
-            )
+            {
+                show && (
+                    <DateTime timeZoneOffsetInMinutes={0}
+                        value={new Date(date)}
+                        mode="date"
+                        minimumDate={new Date(moment().format("YYYY-MM-DD"))}
+                        onChange={onChange}
+                    />
+                )
 
             }
             <View style={{ padding: 30, height: '50%', borderRadius: 20, backgroundColor: '#6C63FF' }}>
@@ -128,10 +138,24 @@ const PickDateTime = ({ navigation, route }) => {
                     }
                 </View>
                 <View style={{ width: '95%', height: '20%', justifyContent: "center", alignItems: "center" }}>
-                    <FlatButton width={200} backgroundColor={'#FFFFFF'} disabled={disabled} textStyle={{ color: 'black' }} text={'Choose'} onPress={() => navigation.navigate("Home Screen")} />
+                    <FlatButton 
+                        width={200} 
+                        backgroundColor={'#FFFFFF'} 
+                        disabled={disabled} 
+                        textStyle={{ color: 'black' }} 
+                        text={'Choose'} 
+                        onPress={() => navigation.navigate("Order Screen", {
+                                                                                data:{
+                                                                                    venue_name: route.params.venue_name,
+                                                                                    field_name: route.params.field_name,
+                                                                                        day: moment(date).format('dddd'),
+                                                                                        date: moment(date).format('DD-MM-yyyy'),
+                                                                                        time: time
+                                                                                    }
+                                                                            })} />
                 </View>
             </View>
-        </View>
+        </View >
     )
 }
 

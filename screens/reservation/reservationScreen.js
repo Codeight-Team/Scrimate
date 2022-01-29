@@ -38,19 +38,23 @@ function ReservationScreen({ navigation, route }) {
             field:[
                 {
                     id: 1,
-                    name: 'Field 1'
+                    name: 'Field 1',
+                    price: 100000
                 },
                 {
                     id: 2,
-                    name: 'Field 2'
+                    name: 'Field 2',
+                    price: 100000
                 },
                 {
                     id: 3,
-                    name: 'Field 3'
+                    name: 'Field 3',
+                    price: 100000
                 },
                 {
                     id: 4,
-                    name: 'Field 4'
+                    name: 'Field 4',
+                    price: 100000
                 }
             ],
             images: 'https://reactnative.dev/img/tiny_logo.png',

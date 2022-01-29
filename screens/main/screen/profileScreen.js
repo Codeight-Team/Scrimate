@@ -3,18 +3,14 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, Image, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView } from 'react-native';
 import { useState, useEffect, useContext } from 'react';
-import SettingsImage from '../../../assets/icons/settings.svg'
-import ProfilePicture from '../../../assets/bimay.jpg'
-import GopaySVG from '../../../assets/icons/gopay-logo.svg'
 import { AuthContext } from '../../../component/context';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 import axios from'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import TrophySVG from '../../../assets/icons/trophy.svg';
+import Loading from '../../../shared/loading'
 
 function ProfileScreen({navigation}) {
-  const [userName, setUser] = useState("Default");
-  const [matchCount, setBalance] = useState(141);
   const [data, setData] = useState([]);
   const [user_id, setUserId] = useState('');
   const context = useContext(AuthContext)
@@ -59,6 +55,7 @@ function ProfileScreen({navigation}) {
   }
   
   return (
+    <>
     <View style={styles.container}>
         <View style={[styles.box,styles.containerProfile]}>
             <Image source={{uri:'https://reactnative.dev/img/tiny_logo.png'}} style={styles.profilePicture}/>
@@ -68,7 +65,7 @@ function ProfileScreen({navigation}) {
                 <TrophySVG />
                 <View style={{marginLeft: 10}}>
                   <Text style={{fontSize: 11, fontWeight: 'bold', color: 'black'}}>Match Played</Text>
-                  <Text style={{fontSize: 10, color: '#BCBCBC'}}>{matchCount}</Text>
+                  <Text style={{fontSize: 10, color: '#BCBCBC'}}>{data.Match_Player?'Data':'0'}</Text>
                 </View>
               </View>
             </View>
@@ -91,12 +88,20 @@ function ProfileScreen({navigation}) {
           </TouchableOpacity>
         </View>
         <View style={styles.box}>
+          <Text style={styles.submenuText}>Host</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Manage Venue Screen", user_id)}>
+            <Text>Manage Venue</Text> 
+          </TouchableOpacity>
+        </View>
+        <View style={styles.box}>
           <Text style={styles.submenuText}>Account</Text>
           <TouchableOpacity onPress={() => handleSignOut()}>
             <Text>Sign out</Text> 
           </TouchableOpacity>
         </View>
     </View>
+    </>
+    
   );
 }
 
@@ -118,7 +123,8 @@ const styles = StyleSheet.create({
     backgroundColor:'white',
     marginTop: 5,
     padding: 10,
-    width: '100%'
+    width: '100%',
+    elevation: 3
   },
   profilePicture:{
     borderRadius: 50,

@@ -9,6 +9,7 @@ import Match from '../screens/reservation/matchmaking-forum/components/posts';
 import MatchDetail from '../screens/reservation/matchmaking-forum/screens/MatchDetail';
 import ChooseField from '../screens/venue/chooseField';
 import PickDateTime from '../screens/venue/pickDateTime';
+import CreateOrder from '../screens/venue/createOrder';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,7 @@ function HomeStack(){
               <Stack.Screen name="Reserve Venue" component={ReserveVenue} />
               <Stack.Screen name="Choose Field" component={ChooseField} />
               <Stack.Screen name="Pick Date Time" component={PickDateTime} />
+              <Stack.Screen name="Order Screen" component={CreateOrder} />
               <Stack.Group>
                 <Stack.Screen name="Forum Stack" component={Match} />
                 <Stack.Screen name="Match Detail" component={MatchDetail} />

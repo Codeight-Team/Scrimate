@@ -35,7 +35,7 @@ const MainTabStack = () =>{
         <Tab.Navigator screenOptions={{
           tabBarShowLabel:false,
           headerShown: false,
-          tabBarStyle: { position: 'absolute' },
+          // tabBarStyle: { position: 'absolute' },
           tabBarHideOnKeyboard: true,
         }}>
               <Tab.Screen name="Home" component={HomeStack} options={{

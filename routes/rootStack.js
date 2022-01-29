@@ -5,6 +5,7 @@ import LoginScreen from '../screens/login/loginScreen';
 import RegisterStack from './registerStack';
 import ForgotPasswordStack from './forgotPasswordStack';
 import Splash from '../screens/splash';
+import FormRegister from '../screens/register/screens/formRegister';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,10 @@ function RootStack(){
                             headerShown: false,
             }} />
              <Stack.Screen name="Forgot Stack" component={ForgotPasswordStack} 
+                          options={{
+                            headerShown: false,
+            }} />
+            <Stack.Screen name="Form Register" component={FormRegister} 
                           options={{
                             headerShown: false,
             }} />

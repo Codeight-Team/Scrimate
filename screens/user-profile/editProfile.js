@@ -60,15 +60,16 @@ function EditProfile({ route }) {
     }
 
     const updateForm = (values) => {
-        axios.put(`http://66.42.49.240/api/users/${data.user_id}`, values).then(response => {
-            let data = response.data[0]
-            // setData(data)
-            console.log(response.data);
-            setSuccess(true)
-        })
-            .catch(function (error) {
-                console.log(error)
-            });
+        // axios.put(`http://66.42.49.240/api/users/${data.user_id}`, values).then(response => {
+        //     let data = response.data[0]
+        //     // setData(data)
+        //     console.log(response.data);
+        //     setSuccess(true)
+        // })
+        //     .catch(function (error) {
+        //         console.log(error)
+        //     });
+        console.log(data);
     }
 
 
@@ -141,6 +142,7 @@ function EditProfile({ route }) {
                                 onBlur={handleBlur('email')}
                                 value={values.email}
                                 keyboardType="email-address"
+                                autoCapitalize='none'
                             />
                         </View>
                         <FlatButton text={"update"} backgroundColor={'#6C63FF'} width={100} onPress={handleSubmit} />
@@ -266,7 +268,7 @@ function EditProfile({ route }) {
                                 Birth Date
                             </Text>
                             <Text style={styles.fontLarge}>
-                                {Moment(data.DOB).format('D MMMM YYYY')}
+                                {Moment(data.DOB).format(' MM YYYY')}
                             </Text>
                         </View>
                         <View style={{ paddingBottom: 15 }}>

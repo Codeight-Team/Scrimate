@@ -29,7 +29,7 @@ export default function RegisterScreen({ navigation }) {
 
     useEffect(() => {
         let isMounted = true;
-        axios.get(`${url_country}/api/daerahindonesia/provinsi`)
+        axios.get(`https://dev.farizdotid.com/api/daerahindonesia/provinsi`)
             .then((response) => {
                 const res = response.data.provinsi
                 if(isMounted)
@@ -42,9 +42,6 @@ export default function RegisterScreen({ navigation }) {
         
     })
 
-    function getProvince(){
-        
-    }
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setDate(currentDate);
@@ -99,7 +96,7 @@ export default function RegisterScreen({ navigation }) {
             .required('Confirm Password is required')
             .oneOf([yup.ref('password')], 'Passwords does not match'),
     })
-    const sendData = (values) => {
+    const createUser = (values) => {
         values.BOD = date;
         console.log('test')
         axios.post('http://66.42.49.240/api/auth/register', values)
@@ -133,7 +130,7 @@ export default function RegisterScreen({ navigation }) {
                             gender:''
                         }}
                         onSubmit={values =>
-                            sendData(values)
+                            createUser(values)
                         }
                     >
                         {(props) => (

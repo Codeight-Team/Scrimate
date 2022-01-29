@@ -20,26 +20,7 @@ export default function LoginScreen({ navigation }) {
     })
 
     const handleSubmit = (props) =>{
-        // axios.post('http://66.42.49.240/api/auth/login', props)
-        // .then(async response => {
-        //     // console.log(response.data.user_id);
-        //     var token = response.data.user_id
-        //     try {
-        //         await AsyncStorage.setItem('@user_Token', token)
-        //       } catch (e) {
-        //         console.warn('Not Saved')
-        //       }
-            
-        // })
-        // .catch(function (error) {
-        //     console.log(error)
-        //     if(error.message === 'Request failed with status code 401' )
-        //         Alert.alert("Wrong password")
-        //     else if(error.message==='Request failed with status code 404')
-        //         Alert.alert("User not found")
-        // });
         context.dispatch.login(props)
-        // navigation.navigate('Main Stack')
     }
 
     return (
@@ -112,7 +93,7 @@ export default function LoginScreen({ navigation }) {
                     <Text style={{color:'#CFCFCF'}}>
                             Don’t have an account?
                         </Text>
-                    <TouchableOpacity style={styles.center} onPress={() => navigation.navigate('Register')}>
+                    <TouchableOpacity style={styles.center} onPress={() => navigation.navigate('Form Register')}>
                         <Text style={{color:'#6C63FF'}}>
                             Create new account
                         </Text>

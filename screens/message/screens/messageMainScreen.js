@@ -5,9 +5,9 @@ import axios from 'axios';
 
 function MessageFocus({navigation}) {
     useEffect(() => {
-        axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
-            console.log(response.data);
-          });
+        // axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
+        //     console.log(response.data);
+        //   });
     })
     return(
         <View style={styles.container}>
