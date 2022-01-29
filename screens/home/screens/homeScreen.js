@@ -14,7 +14,6 @@ import axios from 'axios'
 
 function HomeScreen({ navigation, route }) {
   const [data, setData] = useState([]);
-  const [user_id, setUserId] = useState('');
   const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -23,30 +22,23 @@ function HomeScreen({ navigation, route }) {
       let user
       try {
         user = await AsyncStorage.getItem('user_id')
+        console.log(user);
+        await axios.get(`http://66.42.49.240/api/users/${user}`)
+          .then(response => {
+            console.log(response.data.userData)
+            setData(response.data.userData)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+          .finally(() =>
+            setLoading(false)
+          );
       } catch (error) {
         Alert.alert('Sign in needed')
       }
-      setUserId(user)
     })
-    fetchUserData()
   }, []);
-
-  const fetchUserData = async () => {
-    let isMounted = true
-    await axios.get(`http://66.42.49.240/api/users/${user_id}`)
-      .then(async response => {
-        let data = response.data[0]
-        if (isMounted)
-          setData(data)
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-      .finally(()=>
-        setLoading(false)
-      );
-    return () => { isMounted = false }
-  }
 
   const dimensions = useWindowDimensions();
   const top = useSharedValue(
@@ -95,14 +87,14 @@ function HomeScreen({ navigation, route }) {
           <View>
             <Text style={styles.userText}>Hi, <Text style={{ textTransform: 'capitalize' }}>{data.first_name}</Text>!</Text>
             <Text style={{ fontSize: 10, color: '#BCBCBC' }}>What sports you will choose today?</Text>
-            <View style={{width: '100%', height:'50%', justifyContent: 'center'}}>
+            <View style={{ width: '100%', height: '50%', justifyContent: 'center' }}>
               <View style={{ marginLeft: 0, margin: 7, width: 120, height: 35, backgroundColor: '#fff', borderRadius: 50, alignItems: 'center', justifyContent: 'flex-end', padding: 4, flexDirection: 'row' }}>
                 <View width='27%'>
                   <TrophySVG />
-                  </View>
+                </View>
                 <View style={{ width: '65%', }}>
                   <Text style={{ fontSize: 11, fontWeight: 'bold', color: 'black' }}>Matchs</Text>
-                  <Text style={{ fontSize: 10, color: '#BCBCBC' }}>{data.Match_Played ? 'data' : '0'}</Text>
+                  <Text style={{ fontSize: 10, color: '#BCBCBC' }}>{data.Match_Played ? data.Match_Played : '0'}</Text>
                 </View>
               </View>
             </View>
@@ -164,7 +156,7 @@ function HomeScreen({ navigation, route }) {
             {/* <ComponentBubble></ComponentBubble>
          */}
             {
-                UserBubble()
+              UserBubble()
             }
             <Swiper
               showsButtons={true}

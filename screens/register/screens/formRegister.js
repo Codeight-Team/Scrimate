@@ -100,7 +100,7 @@ const FormRegister = ({ navigation }) => {
                 navigation.navigate('Login');
             })
             .catch(function (error) {
-                console.warn(error);
+                console.warn(error.message);
             });
 
     }
@@ -119,7 +119,7 @@ const FormRegister = ({ navigation }) => {
                             validationSchema={regisValidationSchema}
                             initialValues={{
                                 first_name: '', last_name: '', email: '', phone_number: '',
-                                password: '', confirm_password: '', BOD: new Date(),
+                                password: '', confirm_password: '', DOB: new Date(),
                                 address: {
                                     address_city: '',
                                     address_region: '',
@@ -131,9 +131,7 @@ const FormRegister = ({ navigation }) => {
                             onSubmit={values => {
                                 values.address.address_city = selectedProvince.nama
                                 values.address.address_region = selectedRegion
-                                values.BOD = date;
-                                // console.log(values)
-
+                                values.DOB = date
                                 createUser(values)
                             }
                             }

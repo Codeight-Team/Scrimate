@@ -12,43 +12,31 @@ import Loading from '../../../shared/loading'
 
 function ProfileScreen({navigation}) {
   const [data, setData] = useState([]);
-  const [user_id, setUserId] = useState('');
   const context = useContext(AuthContext)
-  // const [user, setUser] = useState("Default");
-  // const [userName, setUser] = useState("Default");
-  // const [userName, setUser] = useState("Default");
-  // useEffect(() => {
-  //       axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
-  //           console.log(response.data);
-  //         });
-  // })
+ 
   useEffect(() => {
     setTimeout(async () =>{
       let user
       try {
         user = await AsyncStorage.getItem('user_id')
+        fetchUserData(user)
       } catch (error) {
         Alert.alert('Sign in needed')
       }
-      setUserId(user)
-    },3000)
+    })
 
     fetchUserData()
   }, []);
 
-  const fetchUserData = async () => {
-    let isMounted = true
-    await axios.get(`http://66.42.49.240/api/users/${user_id}`).then(response => {
-      let data = response.data[0]
-      if(isMounted)
-      setData(data)
+  const fetchUserData = async (user) => {
+    await axios.get(`http://66.42.49.240/api/users/${user}`).then(response => {
+      console.log(response.data.userData)
+      setData(response.data.userData)
     })
     .catch(function (error) {
         console.log(error)
     });
-    return() => {isMounted = false }
   }
-
 
   const handleSignOut = () =>{
     context.dispatch.signOut()
@@ -89,7 +77,7 @@ function ProfileScreen({navigation}) {
         </View>
         <View style={styles.box}>
           <Text style={styles.submenuText}>Host</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Manage Venue Screen", user_id)}>
+          <TouchableOpacity onPress={() => navigation.navigate("Manage Venue Screen", data.user_id)}>
             <Text>Manage Venue</Text> 
           </TouchableOpacity>
         </View>
