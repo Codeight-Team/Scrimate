@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { StyleSheet, View, Text, Image, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView } from 'react-native';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { AuthContext } from '../../../component/context';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 import axios from'axios'
@@ -14,23 +14,27 @@ function ProfileScreen({navigation}) {
   const [data, setData] = useState([]);
   const context = useContext(AuthContext)
  
-  useEffect(() => {
-    setTimeout(async () =>{
-      let user
-      try {
-        user = await AsyncStorage.getItem('user_id')
-        fetchUserData(user)
-      } catch (error) {
-        Alert.alert('Sign in needed')
-      }
-    })
+  useFocusEffect(
+    React.useCallback(()=> {
+      let isActive = true
+        const fetchUser = async () =>{
+          let user
+          try {
+            user = await AsyncStorage.getItem('user_id')
+          } catch (error) {
+            Alert.alert('Sign in needed')
+          }
+          fetchUserData(user)
+        }
 
-    fetchUserData()
-  }, []);
+        fetchUser()
+        return () =>{isActive = false} 
+    },[])
+  );
 
   const fetchUserData = async (user) => {
     await axios.get(`http://66.42.49.240/api/users/${user}`).then(response => {
-      setData(response.data.userData)
+        setData(response.data.userData)
     })
     .catch(function (error) {
         console.log(error)
@@ -45,14 +49,14 @@ function ProfileScreen({navigation}) {
     <>
     <View style={styles.container}>
         <View style={[styles.box,styles.containerProfile]}>
-            <Image source={{uri:'https://reactnative.dev/img/tiny_logo.png'}} style={styles.profilePicture}/>
+            <Image source={{uri:'http://66.42.49.240/'+data.image}} style={styles.profilePicture}/>
             <View style={styles.innerProfile}>
               <Text style={[styles.white,styles.fontMedium, {textTransform:'capitalize'}]}>{data.first_name} {data.last_name}</Text>
               <View style={{marginLeft: 0, margin: 7, width: 150, height: 35, backgroundColor: '#fff', borderRadius:50, alignItems: 'center',justifyContent:'center', padding:4, flexDirection: 'row'}}>
                 <TrophySVG />
                 <View style={{marginLeft: 10}}>
                   <Text style={{fontSize: 11, fontWeight: 'bold', color: 'black'}}>Match Played</Text>
-                  <Text style={{fontSize: 10, color: '#BCBCBC'}}>{data.Match_Player?'Data':'0'}</Text>
+                  <Text style={{fontSize: 10, color: '#BCBCBC'}}>{data.Match_Played?data.Match_Played:'0'}</Text>
                 </View>
               </View>
             </View>

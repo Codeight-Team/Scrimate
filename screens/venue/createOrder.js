@@ -87,7 +87,7 @@ const CreateOrder = ({ navigation, route }) => {
                     </View>
                 </View>
                 <View style={{ height: '30%', justifyContent: 'center' }}>
-                    <FlatButton text={'Pay'} backgroundColor={'#6C63FF'} width={150} />
+                    <FlatButton text={'Pay'} backgroundColor={'#6C63FF'} width={150} onPress={()=>navigation.navigate('Payment Screen')}/>
                 </View>
             </View>
         </View>

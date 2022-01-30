@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 import { StyleSheet, View, Text, useWindowDimensions, TouchableOpacity, Image, StatusBar, TouchableOpacityComponent } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, } from 'react-native-reanimated';
 import TrophySVG from '../../../assets/icons/trophy.svg';
@@ -16,28 +17,56 @@ function HomeScreen({ navigation, route }) {
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true)
 
-  useEffect(() => {
-    setTimeout(async () => {
-      top.value = (dimensions.height / 1.2)
-      let user
-      try {
-        user = await AsyncStorage.getItem('user_id')
-        console.log(user);
-        await axios.get(`http://66.42.49.240/api/users/${user}`)
-          .then(response => {
-            setData(response.data.userData)
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
-          .finally(() =>
-            setLoading(false)
-          );
-      } catch (error) {
-        Alert.alert('Sign in needed')
-      }
-    },2000)
-  }, []);
+  useFocusEffect(
+    React.useCallback(()=> {
+        top.value = (dimensions.height / 1.2)
+        let isActive = true
+        const fetchUser = async () =>{
+          let user
+          try {
+            user = await AsyncStorage.getItem('user_id')
+          } catch (error) {
+            Alert.alert('Sign in needed')
+          }
+          fetchUserData(user)
+        }
+        fetchUser()
+        return () =>{isActive = false} 
+    },[])
+  );
+
+  // useEffect(() => {
+  //   setTimeout(async () => {
+  //     top.value = (dimensions.height / 1.2)
+  //     let user
+  //     try {
+  //       user = await AsyncStorage.getItem('user_id')
+  //       console.log(user);
+  //       await axios.get(`http://66.42.49.240/api/users/${user}`)
+  //         .then(response => {
+  //           setData(response.data.userData)
+  //         })
+  //         .catch(function (error) {
+  //           console.log(error)
+  //         })
+  //         .finally(() =>
+  //           setLoading(false)
+  //         );
+  //     } catch (error) {
+  //       Alert.alert('Sign in needed')
+  //     }
+  //   },2000)
+  // }, []);
+
+  const fetchUserData = async (user) => {
+    await axios.get(`http://66.42.49.240/api/users/${user}`).then(response => {
+        setData(response.data.userData)
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(()=>setLoading(false))
+  }
 
   const dimensions = useWindowDimensions();
   const top = useSharedValue(
