@@ -80,7 +80,7 @@ function ProfileScreen({navigation}) {
         </View>
         <View style={styles.box}>
           <Text style={styles.submenuText}>Host</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Manage Venue Screen", data.user_id)}>
+          <TouchableOpacity onPress={() => navigation.navigate("Manage Venue Screen",{user_id : data.user_id})}>
             <Text>Manage Venue</Text> 
           </TouchableOpacity>
         </View>

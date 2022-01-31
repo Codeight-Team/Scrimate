@@ -78,10 +78,10 @@ const PickDateTime = ({ navigation, route }) => {
                     <Text style={{ fontWeight: "bold", color: 'black' }}>{route.params.venue_name}</Text>
                 </View>
                 <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#FFFFFF', borderRadius: 20, elevation: 3, alignItems: "center", justifyContent: "center" }}>
-                    <Text style={{ fontWeight: "bold", color: 'black', }}>{route.params.field_name}</Text>
+                    <Text style={{ fontWeight: "bold", color: 'black', }}>{route.params.field.name}</Text>
                 </View>
                 <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#FFFFFF', borderRadius: 20, elevation: 3, alignItems: "center", justifyContent: "center" }}>
-                    <Text style={{ fontWeight: "bold", color: 'black', }}>Rp {route.params.field_price}</Text>
+                    <Text style={{ fontWeight: "bold", color: 'black', }}>Rp {route.params.field.price}</Text>
                 </View>
             </View>
             <View style={{ padding: 20, height: '40%', justifyContent: "center", alignItems: 'flex-start' }}>
@@ -134,7 +134,7 @@ const PickDateTime = ({ navigation, route }) => {
                 )
 
             }
-            <View style={{ padding: 30, height: '50%', borderRadius: 20, backgroundColor: '#6C63FF' }}>
+            <View style={{ padding: 30, height: '52%', backgroundColor: '#6C63FF' }}>
                 <View style={{ height: '70%', width: '100%', flexWrap: 'wrap', flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
                     {
                         RenderAvailableTime()

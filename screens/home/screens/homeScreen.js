@@ -35,28 +35,6 @@ function HomeScreen({ navigation, route }) {
     },[])
   );
 
-  // useEffect(() => {
-  //   setTimeout(async () => {
-  //     top.value = (dimensions.height / 1.2)
-  //     let user
-  //     try {
-  //       user = await AsyncStorage.getItem('user_id')
-  //       console.log(user);
-  //       await axios.get(`http://66.42.49.240/api/users/${user}`)
-  //         .then(response => {
-  //           setData(response.data.userData)
-  //         })
-  //         .catch(function (error) {
-  //           console.log(error)
-  //         })
-  //         .finally(() =>
-  //           setLoading(false)
-  //         );
-  //     } catch (error) {
-  //       Alert.alert('Sign in needed')
-  //     }
-  //   },2000)
-  // }, []);
 
   const fetchUserData = async (user) => {
     await axios.get(`http://66.42.49.240/api/users/${user}`).then(response => {
@@ -142,19 +120,19 @@ function HomeScreen({ navigation, route }) {
     {
       name: "Futsal",
       url: 'Activity Screen',
-      title: "Futsal",
+      sport: "Futsal",
       svg: "futsal"
     },
     {
       name: "Football",
       url: 'Activity Screen',
-      title: "Football",
+      sport: "Football",
       svg: ""
     },
     {
       name: "Badminton",
       url: 'Activity Screen',
-      title: "Badminton",
+      sport: "Badminton",
       svg: "shuttle"
     },
   ]
@@ -162,8 +140,8 @@ function HomeScreen({ navigation, route }) {
   function RenderBubble() {
     return sport.map((item) => {
       return (
-        <TouchableOpacity key={item.title} onPress={() =>
-          navigation.navigate(item.url, { title: item.title })
+        <TouchableOpacity key={item.sport} onPress={() =>
+          navigation.navigate(item.url, { sport: item.sport, user_id: data.user_id })
         }>
           <MenuComponent name={item.name} image={item.svg}></MenuComponent>
         </TouchableOpacity>

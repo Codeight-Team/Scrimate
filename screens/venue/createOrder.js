@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import FlatButton from "../../shared/button";
-import axios from "axios";
 
 const CreateOrder = ({ navigation, route }) => {
     const data = route.params.data;

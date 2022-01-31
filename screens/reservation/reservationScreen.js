@@ -3,25 +3,22 @@ import { StyleSheet, View, Text, Image, TextInput, TouchableWithoutFeedback, Key
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Card from '../../shared/card'
-import CustomHeader from '../../shared/customHeader';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 
 function ReservationScreen({ navigation, route }) {
     useEffect(() => {
-        axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
-            // console.log(response.data);
-        });
-    })
-
-    React.useLayoutEffect(() => {
-        navigation.setOptions({
-            headerTitle: (props) => (
-            <CustomHeader props={props} title={"Reserve Venue"} content={route.params.user_address} onPress={() => console.log('Modal Pop out')}/>
-          ),
-            headerStyle: {
-                backgroundColor: '#6C63FF', //Set Header color
-            },
-        });
-    }, [navigation]);
+        let isActive = true
+        const fetchVenues = async () =>{
+            await axios.get(`http://66.42.49.240/api/venue/get-my-venue/${route.params.user_id}`).then((response) => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error)
+            });
+        }
+        fetchVenues()
+        return () =>{isActive = false} 
+    },[])
 
     const data = [
         {
@@ -116,11 +113,25 @@ function ReservationScreen({ navigation, route }) {
     }
     return (
         <View style={styles.container}>
-            {data?
-                MainContent()
-                :
-                NoDataView()
-            }
+            <View style={{ width: '100%', flexDirection: 'row', backgroundColor: '#fff', padding: 10, elevation: 4 }}>
+                    <View style={{ width: '50%', alignItems: 'flex-start' }}>
+                        <TouchableOpacity style={{ flexDirection: 'row' }}>
+                            <Text style={{ color: '#6C63FF', fontWeight: 'bold' }}>
+                                {route.params.user_address}
+                            </Text>
+                            <View style={{ padding: 4 }}>
+                                <AntDesign name="caretdown" size={10} color="black" />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            <View>
+                {data?
+                    MainContent()
+                    :
+                    NoDataView()
+                }
+            </View>
         </View>
     )
 }

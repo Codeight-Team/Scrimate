@@ -5,12 +5,6 @@ import Card from '../../shared/card';
 import axios from 'axios';
 
 function ActivityScreen({ navigation , route}) {
-    useEffect(() => {
-        // axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
-        //     console.log(response.data);
-        // });
-    })
-
     const data = [
         {
             name:"Reservation",
@@ -36,7 +30,7 @@ function ActivityScreen({ navigation , route}) {
         return data.map((item) => {
             return (
                 <TouchableOpacity style={{width:'100%'}} key={item.title} onPress={() =>
-                    navigation.navigate(item.url, {title: route.params.title, user_address: 'Jakarta Barat'})
+                    navigation.navigate(item.url, {sport: route.params.sport, user_id: route.params.user_id, user_address: 'Jakarta Barat'})
                 }>
                     <Card name={item.name} image={item.svg}/>
                 </TouchableOpacity>
@@ -47,7 +41,7 @@ function ActivityScreen({ navigation , route}) {
     return (
         <View style={styles.container}>
             <View style={styles.titleContainer}>
-                <Text style={{color: 'white', fontWeight:'bold'}}>{route.params.title}</Text>
+                <Text style={{color: 'gray', fontWeight:'bold'}}>{route.params.sport}</Text>
             </View>
             <ScrollView>
             <View>
@@ -71,10 +65,12 @@ const styles = StyleSheet.create({
     },
     titleContainer:{
         width: '100%',
-        height: '5%',
-        backgroundColor: '#6C63FF',
+        height: '6%',
+        paddingHorizontal: '3%',
+        backgroundColor: '#FFFFFF',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'flex-start',
+        elevation: 4
     }
 });
 

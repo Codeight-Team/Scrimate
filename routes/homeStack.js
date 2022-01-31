@@ -14,31 +14,42 @@ import Payment from '../screens/payment-midtrans/payment';
 
 const Stack = createNativeStackNavigator();
 
-function HomeStack(){
-    return(
-            <Stack.Navigator>
-              <Stack.Screen name="Home Screen" component={HomeScreen} 
-                            options={{
-                              headerShown: false,
-              }} />
-              {/* <Stack.Screen name="Profile" component={OTPScreen} 
-                            options={{
-                            headerShown: false,
-              }} /> */}
-              <Stack.Screen name="Activity Screen" component={ActivityScreen} options={{title: 'Choose Feature'}} />
-              <Stack.Screen name="Reservation Screen" component={ReservationScreen} />
-              <Stack.Screen name="Reserve Venue" component={ReserveVenue} />
-              <Stack.Screen name="Choose Field" component={ChooseField} />
-              <Stack.Screen name="Pick Date Time" component={PickDateTime} />
-              <Stack.Screen name="Order Screen" component={CreateOrder} />
-              <Stack.Group>
-                <Stack.Screen name="Forum Stack" component={Match} />
-                <Stack.Screen name="Match Detail" component={MatchDetail} />
-              </Stack.Group>
-              <Stack.Screen name="Create Match" component={CreateMatch} />
-              <Stack.Screen name="Payment Screen" component={Payment} />
-            </Stack.Navigator>
-    );
+function HomeStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Home Screen" component={HomeScreen}
+        options={{
+          headerShown: false,
+        }} />
+      <Stack.Group screenOptions={{
+        headerTitleStyle: {
+          color: '#fff',
+        },
+        headerStyle: {
+          backgroundColor: '#6C63FF',
+        },
+      }}>
+        <Stack.Screen name="Activity Screen" component={ActivityScreen} options={{ title: 'Feature' }} />
+        <Stack.Screen name="Reservation Screen" component={ReservationScreen} options={{
+          title: 'Choose Venue',
+          headerStyle: {
+            backgroundColor: '#6C63FF', //Set Header color
+          },
+        }} />
+        <Stack.Screen name="Reserve Venue" component={ReserveVenue} options={{ title: 'Venue' }} />
+        <Stack.Screen name="Create Match" component={CreateMatch} />
+      </Stack.Group>
+
+      <Stack.Screen name="Choose Field" component={ChooseField} options={{ title: 'Field' }}/>
+      <Stack.Screen name="Pick Date Time" component={PickDateTime} />
+      <Stack.Screen name="Order Screen" component={CreateOrder} />
+      <Stack.Group>
+        <Stack.Screen name="Forum Stack" component={Match} />
+        <Stack.Screen name="Match Detail" component={MatchDetail} />
+      </Stack.Group>
+      <Stack.Screen name="Payment Screen" component={Payment} />
+    </Stack.Navigator>
+  );
 }
 
 export default HomeStack;

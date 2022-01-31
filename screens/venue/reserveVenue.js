@@ -163,12 +163,12 @@ function ReserveVenue({ navigation, route }) {
                     <Text>{route.params.item.address.address_region}</Text>
                     <Text>{route.params.item.address.address_city}</Text> */}
                 </View>
-                <View style={{ width: '100%', height: '50%', borderTopWidth: 0.3, borderColor: "#dedede", flexDirection: 'row', padding: 20, justifyContent: 'center' }}>
+                <View style={{ width: '100%', height: '60%', borderTopWidth: 0.3, borderColor: "#dedede", flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
                     {
                         propsView()
                     }
                 </View>
-                <View style={[styles.descriptionContainer, { alignItems: 'center', justifyContent: 'center', height: '20%', backgroundColor: '' }]}>
+                <View style={[styles.descriptionContainer, { alignItems: 'center', justifyContent: 'center', height: '10%', backgroundColor: '' }]}>
                     <View>
 
                     </View>

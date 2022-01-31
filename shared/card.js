@@ -19,7 +19,7 @@ function Card({ name, image, type, description}) {
     }
     function Small() {
         return (
-            <View style={[styles.menu,{height:100, padding:0}]}>
+            <View style={[styles.menu,{height:100, padding:0, borderWidth: 0}]}>
                 <View style={{width:'36%', padding: 10, alignItems:'center', justifyContent: 'center' }}>
                     {
                         image?
@@ -45,7 +45,7 @@ function Card({ name, image, type, description}) {
         }
     }
     return (
-        <View>
+        <View style={{width: '100%', alignItems: 'center', paddingVertical: 5}}>
             {type === 'small' ?
                 <Small />
                 :
@@ -57,16 +57,17 @@ function Card({ name, image, type, description}) {
 
 const styles = StyleSheet.create({
     menu: {
-        width: '96%',
-        height: 200,
+        width: '95%',
+        height: 210,
         backgroundColor: '#fff',
         borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'flex-start',
         flexDirection: 'row',
         padding: 20,
-        margin: 10,
         elevation: 4,
+        borderWidth: 2,
+        borderColor: 'gray'
     },
     fontMenu: {
         fontSize: 20

@@ -74,7 +74,7 @@ function EditProfile({ navigation, route }) {
     const ImageForm = () => (
         <View style={[styles.centeredView, { width: "100%", height: '80%' }]}>
             {image ? <Image source={{ uri: image }} style={styles.profilePicture} /> :
-                <DefaultPicture />
+                <Image source={{ uri: 'http://66.42.49.240/'+ data.image }} style={styles.profilePicture} />
                 // <Image source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} style={styles.profilePicture} />
             }
             <TouchableOpacity style={{ padding: 10 }} onPress={pickImage}>
@@ -171,8 +171,6 @@ function EditProfile({ navigation, route }) {
         </View>
     )
 
-    const userData = { first_name: "Rafi" }
-
     const ModalUpdate = () => (
         <Modal
             animationType="slide"
@@ -226,7 +224,7 @@ function EditProfile({ navigation, route }) {
                         height: '30%', width: '100%', backgroundColor: 'FFF', justifyContent: 'flex-end', borderRadius: 40, padding: 20,
                         alignItems: 'center'
                     }}>
-                        {image ? <Image source={{ uri: image }} style={styles.profilePicture} /> : <DefaultPicture />}
+                        {data.image ? <Image source={{ uri: 'http://66.42.49.240/'+ data.image }} style={styles.profilePicture} /> : <DefaultPicture />}
                         <TouchableOpacity onPress={() => activateModal('picture')} style={{ width: 25, height: 25, backgroundColor: 'rgba(0,0,0, 0.2)', borderRadius: 50, alignItems: 'center', justifyContent: 'center', margin: 10, paddingBottom: 2 }}>
                             <Pen width={13} height={13} fill={"black"} />
                         </TouchableOpacity>
