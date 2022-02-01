@@ -1,18 +1,18 @@
-import React from "react";
-import { View, Text, TouchableHighlight, StyleSheet, Image, Platform } from 'react-native'
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableHighlight, TouchableOpacity, StyleSheet, Image, Platform, Alert } from 'react-native'
 // import CustomDateTimePicker from "../../shared/CustomDateTimePicker";
 import DateTime from '@react-native-community/datetimepicker'
-import { useState } from "react/cjs/react.development";
 import moment from "moment";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Entypo } from '@expo/vector-icons';
 import FlatButton from "../../shared/button";
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const PickDateTime = ({ navigation, route }) => {
     const [date, setDate] = useState(new Date())
     const [show, setShow] = useState(false)
     const [time, setTime] = useState("Choose Time!")
     const [disabled, setDisabled] = useState(true);
+    const [user_id, setUserId] = useState(true);
 
     const onChange = (e, selectedDate) => {
         const currentDate = selectedDate || date
@@ -46,6 +46,8 @@ const PickDateTime = ({ navigation, route }) => {
         },
     ]
 
+
+
     const RenderAvailableTime = () => {
         return timeArr.map((item) => {
             return (
@@ -70,6 +72,17 @@ const PickDateTime = ({ navigation, route }) => {
         )
     }
 
+    useEffect(()=>{
+        const getUserId = async () => {
+            try {
+                let user_id = await AsyncStorage.getItem('user_id')
+                setUserId(user_id)
+              } catch (error) {
+                Alert.alert('Sign in needed')
+              }
+        }
+        getUserId()
+    },[])
 
     return (
         <View style={styles.container}>
@@ -146,18 +159,31 @@ const PickDateTime = ({ navigation, route }) => {
                         backgroundColor={'#FFFFFF'}
                         disabled={disabled}
                         textStyle={{ color: 'black' }}
-                        text={'Choose'}
-                        onPress={() => navigation.navigate("Order Screen", {
-                            data: {
-                                venue_name: route.params.venue_name,
-                                field_name: route.params.field_name,
-                                field_price: route.params.field_price,
-                                address: route.params.address,
-                                day: moment(date).format('dddd'),
-                                date: moment(date).format('DD-MM-yyyy'),
-                                time: time
-                            }
-                        })} />
+                        text={'Pay'}
+                        onPress={() =>
+
+                            Alert.alert('Ready to Pay?',
+                                'You will be directed to payment, double check your order', [
+                                {
+                                    text: 'Cancel',
+                                },
+                                {
+                                    text: 'OK',
+                                    onPress: () => navigation.navigate("Payment Screen", {
+                                        data: {
+                                            venue_name: route.params.venue_name,
+                                            field_name: route.params.field.name,
+                                            field_price: route.params.field.price,
+                                            address: route.params.address,
+                                            day: moment(date).format('dddd'),
+                                            date: moment(date).format('D MMMM yyyy'),
+                                            time: time,
+                                            user_id: user_id
+                                        }
+                                    })
+                                },
+                            ])
+                        } />
                 </View>
             </View>
         </View >

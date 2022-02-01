@@ -123,7 +123,7 @@ function Posts({ navigation, route }) {
         },
     ]
 
-    const locationFilterArray = ["DKI Jakarta", "Jakarta Barat", "Jakarta Utara", "Jakarta Pusat", "Jakarta Timur", "Jakarta Selatan",]
+    const locationFilterArray = ["DKI Jakarta", "Kota Jakarta Barat", "Kota Jakarta Utara", "Kota Jakarta Pusat", "Kota Jakarta Timur", "Kota Jakarta Selatan",]
 
     const dimensions = useWindowDimensions();
     const top = useSharedValue(
@@ -157,17 +157,6 @@ function Posts({ navigation, route }) {
             }
         }
     });
-
-    React.useLayoutEffect(() => {
-        navigation.setOptions({
-            headerTitle: (props) => (
-                <CustomHeader props={props} title={"Match"} />
-            ),
-            headerStyle: {
-                backgroundColor: '#6C63FF', //Set Header color
-            },
-        });
-    }, [navigation]);
 
     function Svg(sports) {
         if (sports === 'badminton')
@@ -305,24 +294,27 @@ function Posts({ navigation, route }) {
                         shadowRadius: 3.84,
                         elevation: 5,
                         padding: 20,
+                        borderWidth: 1,
+                        borderColor: '#6C63FF',
+                        borderBottomWidth: 0,
                         justifyContent: 'center',
                         alignItems: 'center',
                     },
                         style
                     ]}>
                     <View style={{
-                        justifyContent: 'center',
-                        alignItems: 'center', flexDirection: 'column',
-                        flexWrap: 'nowrap'
+                        flexWrap: 'wrap'
                     }}>
-                        <Text style={{ color: 'grey', fontWeight: 'bold' }}>Location</Text>
-                        {
-                            locationFilterArray.map((item) =>
-                                <TouchableOpacity key={item} onPress={() => [setFilter(item), navigation.navigate('Forum Stack', { user_address: item })]}>
-                                    <Text style={currLocation == item ? { color: '#6C63FF' } : { color: 'black' }}>{item}</Text>
-                                </TouchableOpacity>
-                            )
-                        }
+                        <View style={{ alignItems: 'center' }}>
+                            <Text style={{ color: 'grey'}}>Location</Text>
+                            {
+                                locationFilterArray.map((item) =>
+                                    <TouchableOpacity key={item} onPress={() => [setFilter(item), navigation.navigate('Match', { user_address: item })]}>
+                                        <Text style={[currLocation == item ? { color: '#6C63FF' } : { color: 'black' }, {fontWeight: 'bold' }]}>{item}</Text>
+                                    </TouchableOpacity>
+                                )
+                            }
+                        </View>
                     </View>
                 </Animated.View>
             </PanGestureHandler>

@@ -14,7 +14,7 @@ function ActivityScreen({ navigation , route}) {
           },
           {
             name:"Find Match",
-            url:'Forum Stack',
+            url:'Match',
             title:"Forum",
             svg:"match"
           },
@@ -30,7 +30,7 @@ function ActivityScreen({ navigation , route}) {
         return data.map((item) => {
             return (
                 <TouchableOpacity style={{width:'100%'}} key={item.title} onPress={() =>
-                    navigation.navigate(item.url, {sport: route.params.sport, user_id: route.params.user_id, user_address: 'Jakarta Barat'})
+                    navigation.navigate(item.url, {sport: route.params.sport, user: route.params.user})
                 }>
                     <Card name={item.name} image={item.svg}/>
                 </TouchableOpacity>

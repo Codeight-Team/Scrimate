@@ -1,32 +1,12 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { StyleSheet, View, Text, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Dummy from '../../../../assets/lapangan-dummy.png'
 import FlatButton from '../../../../shared/button';
-import CustomHeader from '../../../../shared/customHeader';
 
 function MatchDetail({ navigation, route }) {
-    useEffect(() => {
-        // axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
-        //     console.log(response.data);
-        // });
-        console.log(route.params)
-    })
-
     const data = route.params.data
-
-    React.useLayoutEffect(() => {
-        navigation.setOptions({
-            headerTitle: (props) => (
-            <CustomHeader props={props} title={"Match Detail"}/>
-          ),
-            headerStyle: {
-                backgroundColor: '#6C63FF', //Set Header color
-            },
-        });
-    }, [navigation]);
-
     const a = [
         {
             id: 1,
@@ -83,7 +63,18 @@ function MatchDetail({ navigation, route }) {
                 </View>
             </View>
             <View style={styles.buttonContainer}>
-                <FlatButton width={150} backgroundColor={'#6C63FF'} text={'Accept'} onPress={() => navigation.navigate('Home')}/>
+                <FlatButton width={150} backgroundColor={'#6C63FF'} text={'Accept'}
+                    onPress={() => Alert.alert('Accept Match?',
+                        'You will be asked for payment if you accept this match',[
+                            {
+                              text: 'Cancel',
+                              onPress: () => console.log('Cancel Pressed'),
+                            },
+                            {
+                              text: 'OK', 
+                              onPress: () => console.log('OK Pressed')
+                            },
+                          ],)} />
             </View>
 
         </View>
@@ -113,8 +104,8 @@ const styles = StyleSheet.create({
         borderRadius: 40,
         elevation: 4,
     },
-    buttonContainer:{
-        height:'30%',
+    buttonContainer: {
+        height: '30%',
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center'

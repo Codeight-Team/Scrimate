@@ -26,14 +26,15 @@ const CreateField = ({ navigation, route }) => {
     const sendField = async (field) => {
         const venue_id = route.params.venue_id
         const formData = new FormData();
+
+        formData.append('field_id', field.field_name)
+        formData.append('field_type', field.field_type)
+        formData.append('field_price', parseInt(field.price))
         formData.append('image', {
             name: '_field.jpg',
             uri: field.image,
             type: 'image/jpg'
         })
-        formData.append('field_id', field.field_name)
-        formData.append('field_type', field.field_type)
-        formData.append('field_price', parseInt(field.price))
 
         const config = {
             headers: {
@@ -41,11 +42,12 @@ const CreateField = ({ navigation, route }) => {
                 Accept: "application/json"
             }
         }
-        console.log(formData, venue_id, config)
 
-        await axios.post(`http://66.42.49.240/api/field/create-field/${venue_id}`, formData, config )
-        .then((response)=> {console.log(response.data)})
-        .error((err)=> {console.warn(err)})
+        await axios.post(`http://66.42.49.240/api/field/create-field/${venue_id}`, formData, config)
+            .then((response) => {
+                 navigation.goBack() 
+                })
+            .catch((err) => { console.warn(err) })
     }
 
     return (

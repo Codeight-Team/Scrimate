@@ -28,7 +28,8 @@ function HomeScreen({ navigation, route }) {
           } catch (error) {
             Alert.alert('Sign in needed')
           }
-          fetchUserData(user)
+          if(isActive)
+            fetchUserData(user)
         }
         fetchUser()
         return () =>{isActive = false} 
@@ -141,7 +142,7 @@ function HomeScreen({ navigation, route }) {
     return sport.map((item) => {
       return (
         <TouchableOpacity key={item.sport} onPress={() =>
-          navigation.navigate(item.url, { sport: item.sport, user_id: data.user_id })
+          navigation.navigate(item.url, { sport: item.sport, user: data })
         }>
           <MenuComponent name={item.name} image={item.svg}></MenuComponent>
         </TouchableOpacity>

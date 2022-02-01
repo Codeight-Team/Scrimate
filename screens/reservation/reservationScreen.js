@@ -9,7 +9,7 @@ function ReservationScreen({ navigation, route }) {
     useEffect(() => {
         let isActive = true
         const fetchVenues = async () =>{
-            await axios.get(`http://66.42.49.240/api/venue/get-my-venue/${route.params.user_id}`).then((response) => {
+            await axios.get(`http://66.42.49.240/api/venue/`).then((response) => {
                 console.log(response.data);
             })
             .catch(error => {

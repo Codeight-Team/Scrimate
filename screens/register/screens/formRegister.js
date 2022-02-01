@@ -79,9 +79,6 @@ const FormRegister = ({ navigation }) => {
     }
 
     const handleProvinceChange = async (value) => {
-        // let pos = province.map(function (e) {
-        //     return e.nama;
-        // }).indexOf(value);
         setSelectedProvince(value)
         await axios.get(`https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=${value.id}`)
             .then((response) => {
@@ -224,6 +221,8 @@ const FormRegister = ({ navigation }) => {
                                             onChangeText={props.handleChange('email')}
                                             onBlur={props.handleBlur('email')}
                                             value={props.values.email}
+                                            autoCapitalize='none'
+                                            keyboardType="email-address"
                                         />
                                     </View>
                                     {(props.errors.email && props.touched.email) &&
@@ -282,6 +281,7 @@ const FormRegister = ({ navigation }) => {
                                             onChangeText={props.handleChange('password')}
                                             onBlur={props.handleBlur('password')}
                                             value={props.values.password}
+                                            autoCapitalize='none'
                                         />
                                     </View>
                                     {(props.errors.password && props.touched.password) &&
@@ -296,6 +296,7 @@ const FormRegister = ({ navigation }) => {
                                             onChangeText={props.handleChange('confirm_password')}
                                             onBlur={props.handleBlur('confirm_password')}
                                             value={props.values.confirm_password}
+                                            autoCapitalize='none'
                                         />
                                     </View>
                                     {(props.errors.confirm_password && props.touched.confirm_password) &&

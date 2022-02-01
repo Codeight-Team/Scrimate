@@ -3,9 +3,9 @@ import { Alert, StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Key
 import { Formik } from 'formik';
 import FlatButton from '../../shared/button';
 import BasketSVG from '../../assets/basketball.svg'
-import axios from 'axios';
 import * as yup from 'yup';
 import { AuthContext } from '../../component/context';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function LoginScreen({ navigation }) {
     const [show, setShow] = useState(true);
@@ -44,6 +44,7 @@ export default function LoginScreen({ navigation }) {
                                         onChangeText={props.handleChange('email')}
                                         value={props.values.email}
                                         autoCapitalize='none'
+                                        keyboardType='email-address'
                                     />
                                 </View>
                                 {(props.errors.email && props.touched.email) &&
@@ -59,19 +60,13 @@ export default function LoginScreen({ navigation }) {
                                         autoCapitalize='none'
                                     />
                                     <TouchableOpacity style={styles.visibleBtn} onPress={() => setShow(!show)}>
-
+                                            <MaterialIcons name={!show?"visibility":"visibility-off"} size={20} color="black" />
                                     </TouchableOpacity>
                                 </View>
                                 {(props.errors.password && props.touched.password) &&
                                     <Text style={styles.errorText}>{props.errors.password}</Text>
                                 }
                                 <View>
-                                    {/* <Button
-                                    onPress={() => console.log("Forgot Password Button Pressed")}
-                                    title='Forgot password?'
-                                    color={'transparent'}
-                                    
-                                    /> */}
                                     <TouchableOpacity onPress={() => navigation.navigate('Forgot Stack')}>
                                         <Text style={styles.txt}>Forgot Password?</Text>
                                     </TouchableOpacity>
@@ -152,6 +147,8 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 0,
     },
     visibleBtn:{
+        alignItems: 'center',
+        justifyContent: 'center',
         borderWidth: 1,
         borderLeftWidth: 0,
         borderColor: '#E8EAF1',

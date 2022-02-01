@@ -10,7 +10,7 @@ import MatchDetail from '../screens/reservation/matchmaking-forum/screens/MatchD
 import ChooseField from '../screens/venue/chooseField';
 import PickDateTime from '../screens/venue/pickDateTime';
 import CreateOrder from '../screens/venue/createOrder';
-import Payment from '../screens/payment-midtrans/payment';
+import Payment from '../screens/payment-midtrans/paymentMethod';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,18 +36,17 @@ function HomeStack() {
             backgroundColor: '#6C63FF', //Set Header color
           },
         }} />
+        <Stack.Screen name="Match" component={Match} options={{ title: "Match" }} />
+        <Stack.Screen name="Match Detail" component={MatchDetail} />
         <Stack.Screen name="Reserve Venue" component={ReserveVenue} options={{ title: 'Venue' }} />
         <Stack.Screen name="Create Match" component={CreateMatch} />
       </Stack.Group>
 
-      <Stack.Screen name="Choose Field" component={ChooseField} options={{ title: 'Field' }}/>
+      <Stack.Screen name="Choose Field" component={ChooseField} options={{ title: 'Field' }} />
       <Stack.Screen name="Pick Date Time" component={PickDateTime} />
       <Stack.Screen name="Order Screen" component={CreateOrder} />
-      <Stack.Group>
-        <Stack.Screen name="Forum Stack" component={Match} />
-        <Stack.Screen name="Match Detail" component={MatchDetail} />
-      </Stack.Group>
-      <Stack.Screen name="Payment Screen" component={Payment} />
+
+      <Stack.Screen name="Payment Screen" component={Payment}  options={{ headerShown: false }}/>
     </Stack.Navigator>
   );
 }
