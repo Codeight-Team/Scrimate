@@ -1,54 +1,62 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, TouchableWithoutFeedback, Alert } from "react-native";
 import FlatButton from "../../shared/button";
 import axios from "axios";
 import moment from "moment";
 import { AntDesign } from '@expo/vector-icons';
+import { useEffect } from "react/cjs/react.development";
+import SelectDropdown from 'react-native-select-dropdown'
 
-const CreateOperational = () => {
-
+const CreateOperational = ({ route, navigation }) => {
+    const venue = route.params.venue
     const day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    const [time, setTime] = useState([
+    const [time, setTime] = useState(
         {
-            operational_day: 1,
-            operational_timeOpen: '09:00',
-            operational_timeClose: '21:00'
+            operational_day: [1, 2, 3, 4, 5, 6, 7],
+            operational_timeOpen: ['09:00', '09:00', '09:00', '09:00', '09:00', '09:00', '09:00'],
+            operational_timeClose: ['21:00', '21:00', '21:00', '21:00', '21:00', '21:00', '21:00']
         },
-        {
-            operational_day: 2,
-            operational_timeOpen: '09:00',
-            operational_timeClose: '21:00'
-        },
-        {
-            operational_day: 3,
-            operational_timeOpen: '09:00',
-            operational_timeClose: '21:00'
-        },
-        {
-            operational_day: 4,
-            operational_timeOpen: '09:00',
-            operational_timeClose: '21:00'
-        },
-        {
-            operational_day: 5,
-            operational_timeOpen: '09:00',
-            operational_timeClose: '21:00'
-        },
-        {
-            operational_day: 6,
-            operational_timeOpen: '09:00',
-            operational_timeClose: '21:00'
-        },
-        {
-            operational_day: 7,
-            operational_timeOpen: '09:00',
-            operational_timeClose: '21:00'
-        },
-    ])
+    )
+
+    const [operational, setOperational] = useState()
+    const [open, setOpen] = useState(true)
+    const timeAvailable = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
+        '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
+
+    const sendOperational = async () => {
+        // await axios.post("http://66.42.49.240/api/venue/create-operationalhour/"+venue.venue_id, time)
+        // .then(()=>{
+            
+        // })
+        // .catch(error=>{
+        //     console.warn(error)
+        // })
+        // console.log(time)
+        Alert.alert(
+            'Operatinal Hour',
+            'Create Success',
+            [
+              {text: 'OK', onPress: () => {navigation.goBack()}},
+        
+            ],
+            { cancelable: false }
+          )
+    }
+
+    const handleSelectClose = (values, index) => {
+        const newItems = time.map((item, i) => {
+            if (index == item.operational_day) {
+                return { ...item, operational_day: item.operational_day, operational_timeOpen: item.operational_timeOpen, operational_timeClose: values }
+            }
+            return item;
+        });
+        setTime(newItems)
+        console.log(time)
+    }
 
     return (
         <View style={styles.container}>
-            <View style={{width: '100%', alignItems: 'center'}}><Text style={{fontSize: 18, fontWeight: 'bold'}}>Set Venue Operational Time Hour</Text></View>
+            <View style={{ width: '100%', alignItems: 'center' }}><Text style={{ fontSize: 18, fontWeight: 'bold' }}>Set Venue Operational Time Hour</Text></View>
             <View style={{ padding: 20, alignItems: "center", width: '100%' }}>
                 <View style={{ width: '100%', justifyContent: 'center' }}>
                     <View style={{ flexDirection: "row", width: '100%', padding: 10 }}>
@@ -71,35 +79,72 @@ const CreateOperational = () => {
                         </View>
                     </View>
                     {
-                        time.map((item, index) => {
+                        day.map((item, index) => {
                             return (
-                                <View key={item.operational_day} style={{ flexDirection: "row", padding: 10, height: 50 }}>
-                                    <View style={{ width: '10%' }}>
-                                        <TouchableOpacity>
-                                            <AntDesign name="closecircleo" size={21} color="black" />
-                                        </TouchableOpacity>
+                                <View key={index} style={{ flexDirection: "row", padding: 10, height: 60 }}>
+                                    <View style={{ width: '10%', justifyContent: "center" }}>
+                                        {
+                                            open ?
+                                                <TouchableOpacity onPress={() => setOpen(false)}>
+                                                    <AntDesign name="checkcircleo" size={21} color="green" />
+                                                </TouchableOpacity>
+                                                :
+                                                <TouchableOpacity onPress={() => setOpen(true)}>
+                                                    <AntDesign name="closecircleo" size={21} color="red" />
+                                                </TouchableOpacity>
+                                        }
                                     </View>
-                                    <View style={{ width: '30%' }}>
+                                    <View style={{ width: '30%', justifyContent: "center" }}>
                                         <Text>
-                                            {day[index]}
+                                            {item}
                                         </Text>
                                     </View>
                                     {
                                         <View style={{ width: '60%', height: '100%', flexDirection: 'row' }}>
                                             <View style={{ width: '49%', height: '100%', alignItems: "center" }}>
-                                                <TouchableOpacity style={styles.datePickForm}>
-                                                    <Text>
-                                                        {item.operational_timeOpen}
-                                                    </Text>
-                                                </TouchableOpacity>
+                                                <SelectDropdown
+                                                    data={timeAvailable}
+                                                    buttonTextStyle={{ fontSize: 15 }}
+                                                    defaultButtonText={time.operational_timeOpen[index]}
+                                                    buttonStyle={[styles.datePickForm]}
+                                                    onSelect={(selectedItem, index) => {
+                                                        console.log(selectedItem, index)
+                                                    }}
+                                                    buttonTextAfterSelection={(selectedItem, index) => {
+                                                        // text represented after item is selected
+                                                        // if data array is an array of objects then return selectedItem.property to render after item is selected
+                                                        return selectedItem
+                                                    }}
+                                                    rowTextForSelection={(item, index) => {
+                                                        // text represented for each item in dropdown
+                                                        // if data array is an array of objects then return item.property to represent item in dropdown
+                                                        return item
+                                                    }}
+                                                />
                                             </View>
                                             <Text>-</Text>
                                             <View style={{ width: '49%', height: '100%', alignItems: "center" }}>
-                                                <TouchableOpacity style={styles.datePickForm}>
-                                                    <Text>
-                                                        {item.operational_timeClose}
-                                                    </Text>
-                                                </TouchableOpacity>
+                                                <View>
+                                                    <SelectDropdown
+                                                        data={timeAvailable}
+                                                        buttonTextStyle={{ fontSize: 15 }}
+                                                        defaultButtonText={time.operational_timeClose[index]}
+                                                        buttonStyle={[styles.datePickForm]}
+                                                        onSelect={(selectedItem, index) => {
+                                                            handleSelectClose(selectedItem, index + 1)
+                                                        }}
+                                                        buttonTextAfterSelection={(selectedItem, index) => {
+                                                            // text represented after item is selected
+                                                            // if data array is an array of objects then return selectedItem.property to render after item is selected
+                                                            return selectedItem
+                                                        }}
+                                                        rowTextForSelection={(item, index) => {
+                                                            // text represented for each item in dropdown
+                                                            // if data array is an array of objects then return item.property to represent item in dropdown
+                                                            return item
+                                                        }}
+                                                    />
+                                                </View>
                                             </View>
                                         </View>
                                     }
@@ -110,7 +155,7 @@ const CreateOperational = () => {
                 </View>
             </View>
             <View style={{ width: '100%', alignItems: "center" }}>
-                <FlatButton width={150} text={'submit'} backgroundColor={'#6C63FF'} />
+                <FlatButton width={150} text={'submit'} backgroundColor={'#6C63FF'} onPress={() => sendOperational()} />
             </View>
         </View>
     );
@@ -125,13 +170,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#F4F8FF",
     },
     datePickForm: {
+        height: 40,
         width: 80,
-        borderWidth: 1,
-        borderRadius: 20,
-        marginHorizontal: 3,
-        backgroundColor: '#FFFFFF',
-        alignItems: "center",
-        justifyContent: "center",
+        backgroundColor: 'white',
+        borderColor: 'gray',
+        borderWidth: StyleSheet.hairlineWidth,
+        borderRadius: 10,
     },
     title: {
         color: '#6C63FF',

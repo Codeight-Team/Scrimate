@@ -16,6 +16,7 @@ const ManageVenue = ({ navigation, route }) => {
             const fetchVenues = async () =>{
                 await axios.get(`http://66.42.49.240/api/venue/get-my-venue/${route.params.user_id}`).then((response) => {
                     setVenue(response.data)
+                    console.log(response.data)
                 })
                 .catch(error => {
                     console.log(error)

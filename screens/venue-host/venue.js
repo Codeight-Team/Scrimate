@@ -107,7 +107,7 @@ const VenueDetail = ({ navigation, route }) => {
                         borderRadius: 10,
                         flexDirection: 'row',
                         alignItems: 'center'
-                    }} onPress={() => navigation.navigate('Create Field Screen', { user_id: route.params.user_id })}>
+                    }} onPress={() => navigation.navigate('Create Field Screen', { venue_id: route.params.venue.venue_id })}>
                         <Entypo name="circle-with-plus" size={24} color="white" />
                         <View style={{ padding: 5, paddingRight: 20, justifyContent: 'center', alignItems: 'center', width: 120 }}>
                             <Text style={{ color: 'white', fontWeight: 'bold' }}>
@@ -125,7 +125,7 @@ const VenueDetail = ({ navigation, route }) => {
                             borderRadius: 10,
                             flexDirection: 'row',
                             alignItems: 'center'
-                        }} onPress={() => navigation.navigate('Create Operational Screen', { user_id: route.params.user_id })}>
+                        }} onPress={() => navigation.navigate('Create Operational Screen', { venue_id: route.params.venue })}>
                             <Entypo name="circle-with-plus" size={24} color="white" />
                             <View style={{ padding: 5, paddingRight: 20, justifyContent: 'center', alignItems: 'center', width: 130 }}>
                                 <Text style={{ color: 'white', fontWeight: 'bold' }}>
@@ -143,7 +143,7 @@ const VenueDetail = ({ navigation, route }) => {
                             borderRadius: 10,
                             flexDirection: 'row',
                             alignItems: 'center'
-                        }} onPress={() => navigation.navigate('Create Operational Screen', { user_id: route.params.user_id })}>
+                        }} onPress={() => navigation.navigate('Create Operational Screen', { venue: route.params.venue })}>
                             <Entypo name="circle-with-plus" size={24} color="white" />
                             <View style={{ padding: 5, paddingRight: 20, justifyContent: 'center', alignItems: 'center', width: 130 }}>
                                 <Text style={{ color: 'white', fontWeight: 'bold' }}>
