@@ -10,7 +10,8 @@ import MatchDetail from '../screens/reservation/matchmaking-forum/screens/MatchD
 import ChooseField from '../screens/venue/chooseField';
 import PickDateTime from '../screens/venue/pickDateTime';
 import CreateOrder from '../screens/venue/createOrder';
-import Payment from '../screens/payment-midtrans/paymentMethod';
+import PaymentMethod from '../screens/payment-midtrans/paymentMethod';
+import Payment from '../screens/payment-midtrans/payment';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,11 +42,10 @@ function HomeStack() {
         <Stack.Screen name="Reserve Venue" component={ReserveVenue} options={{ title: 'Venue' }} />
         <Stack.Screen name="Create Match" component={CreateMatch} />
       </Stack.Group>
-
       <Stack.Screen name="Choose Field" component={ChooseField} options={{ title: 'Field' }} />
       <Stack.Screen name="Pick Date Time" component={PickDateTime} />
       <Stack.Screen name="Order Screen" component={CreateOrder} />
-
+      <Stack.Screen name="Payment Method Screen" component={PaymentMethod}  options={{ headerShown: false }}/>
       <Stack.Screen name="Payment Screen" component={Payment}  options={{ headerShown: false }}/>
     </Stack.Navigator>
   );

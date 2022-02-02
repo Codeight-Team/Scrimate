@@ -77,7 +77,6 @@ function CreateMatchScreen({ navigation, route}) {
                                 <View style={styles.formUser}>
                                     <FlatButton 
                                     text='Choose Venue' 
-                                    onPress={() => console.log("Modal Pop Up")} 
                                     backgroundColor={show==true?'#6C63FF':'#ececed'}
                                     layoutStyle={{borderRadius:20}}
                                     width={250}/>

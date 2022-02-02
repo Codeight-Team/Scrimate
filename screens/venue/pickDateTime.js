@@ -169,7 +169,7 @@ const PickDateTime = ({ navigation, route }) => {
                                 },
                                 {
                                     text: 'OK',
-                                    onPress: () => navigation.navigate("Payment Screen", {
+                                    onPress: () => navigation.navigate("Payment Method Screen", {
                                         data: {
                                             venue_name: route.params.venue_name,
                                             field_name: route.params.field.name,
