@@ -7,6 +7,9 @@ import CreateField from '../screens/venue-host/createField';
 import ManageVenue from '../screens/venue-host/manageVenue';
 import VenueDetail from '../screens/venue-host/venue';
 import CreateOperational from '../screens/venue-host/createOperational';
+import PaymentMethod from '../screens/payment-midtrans/paymentMethod';
+import Payment from '../screens/payment-midtrans/payment';
+import MyOrder from '../screens/my-activity/my-order/myOrder';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +30,12 @@ function ProfileStack() {
         <Stack.Screen name="Create Field Screen" component={CreateField}
         />
         <Stack.Screen name="Create Operational Screen" component={CreateOperational}
+        />
+        <Stack.Screen name="My Order" component={MyOrder}
+        />
+        <Stack.Screen name="Payment Method" component={PaymentMethod}
+        />
+        <Stack.Screen name="Payment" component={Payment}
         />
       </Stack.Group>
     </Stack.Navigator>

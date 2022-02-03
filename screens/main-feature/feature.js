@@ -10,7 +10,7 @@ function ActivityScreen({ navigation, route }) {
         {
             name: "Reservation",
             url: 'Reservation Screen',
-            title: "Reserve",
+            title: "Single",
             svg: "soccer"
         },
         {
@@ -21,8 +21,8 @@ function ActivityScreen({ navigation, route }) {
         },
         {
             name: "Create Match",
-            url: 'Create Match',
-            title: "Create",
+            url: 'Reservation Screen',
+            title: "Match",
             svg: "field"
         }
     ]
@@ -32,22 +32,10 @@ function ActivityScreen({ navigation, route }) {
             return (
                     
                     // console.log(route.params.user)
-                    <Card key={item.name} name={item.name} image={item.svg} onPress={()=> navigation.navigate(item.url, { sport: route.params.sport, user: route.params.user, address: address_user })} />
+                    <Card key={item.name} name={item.name} image={item.svg} onPress={()=> navigation.navigate(item.url, { sport: route.params.sport, user: route.params.user, title: item.title, address: address_user })} />
             )
         });
     }
-
-    useEffect(() => {
-        const getAddress = async () => {
-            await axios.get(`http://66.42.49.240/api/address/${route.params.user.address_id}`).then((response) => {
-                console.log(response.data)
-            })
-                .catch(error => {
-                    console.log(error)
-                });
-        }
-        getAddress()
-    }, [])
 
     return (
         <View style={styles.container}>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, TouchableWithoutFeedback } from 'react-native'
 import { useEffect } from "react/cjs/react.development";
-import FlatButton from "../../shared/button";
+import FlatButton from "../../../../shared/button";
 
 function ChooseField({ navigation, route }) {
     const [data, setData] = useState({});

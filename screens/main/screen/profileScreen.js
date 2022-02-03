@@ -64,8 +64,8 @@ function ProfileScreen({ navigation }) {
 
         <View style={styles.box}>
           <Text style={styles.submenuText}>Activity</Text>
-          <TouchableOpacity onPress={() => console.log("Forgot Password Button Pressed")}>
-            <Text>Match History</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('My Order')}>
+            <Text>My Order</Text>
           </TouchableOpacity>
         </View>
 

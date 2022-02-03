@@ -111,9 +111,21 @@ function HomeScreen({ navigation, route }) {
       </View>
     )
   }
-  const ComponentBubble = ({ color, title }) => {
-    return <View style={[styles.bubbleContainer, color]}>
+  const ComponentBubble = ({ color, title, data, type }) => {
+    return <View style={[styles.bubbleContainer, color, {flexDirection: 'column'}]}>
       <Text style={styles.userText}>{title}</Text>
+      {!data?
+        <View>
+          {type=="match"?
+            <Text style={{color: '#BCBCBC'}}>You haven't joined a game yet</Text>
+            :
+            <Text style={{color: '#a3a3a3'}}>You have no upcoming games</Text>
+          }
+        </View>
+        :
+        <View>
+        </View>
+      }
     </View>
   }
 
@@ -173,11 +185,12 @@ function HomeScreen({ navigation, route }) {
               prevButton={<Text style={styles.button}>‹</Text>}
             >
               <View style={styles.slide}>
-                <ComponentBubble color={red} title={"Match"} />
-              </View>
-              <View style={styles.slide}>
                 <ComponentBubble color={orange} title={"Upcoming Order"} />
               </View>
+              <View style={styles.slide}>
+                <ComponentBubble color={red} title={"Match History"} type={"match"} />
+              </View>
+              
             </Swiper>
           </View>
           <PanGestureHandler onGestureEvent={gestureHandler}>

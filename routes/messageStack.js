@@ -12,11 +12,11 @@ function MessageStack(){
                             options={{
                               title: 'Message',
               }} />
-              {/* <Stack.Screen name="Profile" component={OTPScreen} 
+              {/* <Stack.Screen name="Profile" component={OTPScreen}  
                             options={{
                             headerShown: false,
               }} /> */}
-              <Stack.Screen name="Message Focus" component={MessageFocus} />
+              <Stack.Screen name="Message Focus" component={MessageFocus} options={{headerShown:false}}/>
             </Stack.Navigator>
     );
 }

@@ -21,7 +21,7 @@ const Payment = ({ navigation, route }) => {
         <View style={styles.container}>
             <View style={styles.inner}>
                 <CustomHeader title={"Payment Summary"} onPressBackButton={() => navigation.goBack()} backButtonModel={"close"} />
-                <View style={{ backgroundColor: '#dbe8ff', width: '100%', height: '85%' }}>
+                <View style={{ backgroundColor: '#dbe8ff', width: '100%' }}>
                     <View style={{ width: '100%', height: '30%', padding: 10 }}>
                         <View style={{ width: '100%', height: '100%', backgroundColor: '#FFF', padding: 20, borderRadius: 20, elevation: 5 }}>
                             <View style={{ borderRadius: 10, padding: 5, flexDirection: 'row', borderBottomWidth: 1, borderColor: 'gray' }}>

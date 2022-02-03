@@ -52,7 +52,7 @@ const PickDateTime = ({ navigation, route }) => {
         return timeArr.map((item) => {
             return (
                 <View key={item.time} style={{ height: 50, width: "33%" }}>
-                    <TouchableOpacity onPress={() => setTimeBtn(item.time)} style={
+                    <TouchableOpacity onPress={() => setTimeBtn(item.time)} style={[
                         {
                             height: "90%",
                             width: "90%",
@@ -61,8 +61,9 @@ const PickDateTime = ({ navigation, route }) => {
                             borderRadius: 10,
                             justifyContent: 'center',
                             alignItems: 'center'
-                        }
-                    }>
+                        },
+                        item.time=="09:00 - 10:00"&&{backgroundColor: 'gray'}
+                    ]}>
                         <Text style={{ fontWeight: 'bold' }}>{item.time}</Text>
                     </TouchableOpacity>
                 </View>
@@ -72,17 +73,17 @@ const PickDateTime = ({ navigation, route }) => {
         )
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         const getUserId = async () => {
             try {
                 let user_id = await AsyncStorage.getItem('user_id')
                 setUserId(user_id)
-              } catch (error) {
+            } catch (error) {
                 Alert.alert('Sign in needed')
-              }
+            }
         }
         getUserId()
-    },[])
+    }, [])
 
     return (
         <View style={styles.container}>

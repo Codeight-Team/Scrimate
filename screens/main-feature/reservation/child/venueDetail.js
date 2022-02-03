@@ -2,9 +2,9 @@ import * as React from 'react';
 import { StyleSheet, View, Text, TouchableWithoutFeedback, Keyboard, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Star from '../../assets/icons/star.svg'
-import NotFound from '../../assets/image-not-found.svg';
-import FlatButton from '../../shared/button';
+import NotFound from '../../../../assets/image-not-found.svg';
+import FlatButton from '../../../../shared/button';
+import { FontAwesome } from '@expo/vector-icons';
 
 
 function ReserveVenue({ navigation, route }) {
@@ -83,7 +83,7 @@ function ReserveVenue({ navigation, route }) {
             return (
                 <View style={{ flexDirection: 'row' }} key={item.id}>
                     <View style={{ width: 150 }}>
-                        <Text style={[!timeOpen[index]?{color: 'red'}:{ color: 'black'}, {fontWeight: 'bold' }]}>
+                        <Text style={[!timeOpen[index] ? { color: '#a50000' } : { color: 'black' }, { fontWeight: 'bold' }]}>
                             {
                                 item.name
                             }
@@ -94,8 +94,8 @@ function ReserveVenue({ navigation, route }) {
                             {timeOpen[index].operational_timeOpen} - {timeOpen[index].operational_timeClosed}
                         </Text>
                         :
-                        <View style={{width: 80, alignItems: 'center'}}>
-                            <Text style={{color: 'red'}}>
+                        <View style={{ width: 80, alignItems: 'center' }}>
+                            <Text style={{ color: '#8b0000' }}>
                                 Closed
                             </Text>
                         </View>
@@ -107,11 +107,23 @@ function ReserveVenue({ navigation, route }) {
         )
     }
 
+    const renderRating = () => {
+        let avg_rating = 1
+        const rating = [];
+        for (let i = 0; i < avg_rating; i++) {
+            rating.push(<FontAwesome key={i} name="star" size={20} color="orange" />)
+        }
+        for (let i = 0; i < (5 - avg_rating); i++) {
+            rating.push(<FontAwesome name="star-o" size={20} color="orange" />)
+        }
+        return rating;
+    }
+
     const propsView = () => {
         return (
-            <View>
+            <View style={{width: '100%'}}>
                 {flag == 1 ?
-                    <View style={{ flexDirection: 'column' }}>
+                    <View style={{ flexDirection: 'column', width: '100%', alignItems: 'center' }}>
                         {
                             renderTimeOpen()
                         }
@@ -123,7 +135,29 @@ function ReserveVenue({ navigation, route }) {
                             <Text>{data.address.address_region}</Text>
                         </View>
                         :
-                        <Text>Empty</Text>
+                        <View style={{width: '100%'}}>
+                            <View style={{ flexDirection: 'row', paddingBottom: 20 }}>
+                                <Text style={{ paddingEnd: 20, fontWeight: 'bold' }}>
+                                    Rating
+                                </Text>
+                                <View style={{ flexDirection: 'row' }}>
+                                    {
+                                        renderRating()
+                                    }
+                                </View>
+                                <Text style={{ paddingHorizontal: 5 }}>(15)</Text>
+                            </View>
+                            <View>
+                                <Text>Comment</Text>
+                            </View>
+                            <ScrollView style={{width: '100%'}}>
+                                {/* <Text>LoremIpsum</Text>
+                                <Text>LoremIpsum</Text>
+                                <Text>LoremIpsum</Text>
+                                <Text>LoremIpsum</Text>
+                                <Text>LoremIpsum</Text> */}
+                            </ScrollView>
+                        </View>
                 }
             </View>
 
@@ -149,12 +183,12 @@ function ReserveVenue({ navigation, route }) {
                 <View style={{ height: '10%' }}>
                     <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{data.name}</Text>
                 </View>
-                <View style={{ width: '100%', height: '9%', flexDirection: 'row' }}>
+                <View style={{ width: '100%', height: '9%', flexDirection: 'row', }}>
                     {
                         tabData.map((item) => (
-                            <TouchableOpacity key={item.id} onPress={() => setFlag(item.id)} style={{ width: '33%', alignItems: 'center', justifyContent: 'center' }}>
+                            <TouchableOpacity key={item.id} onPress={() => setFlag(item.id)} style={{ width: '33%', alignItems: 'center', justifyContent: 'center', }}>
                                 <Text>{item.name}</Text>
-                                <View style={flag == item.id ? { backgroundColor: '#6C63FF', height: '10%', width: '100%', borderRadius: 40 } : { height: '10%', width: '50%' }}></View>
+                                <View style={[flag == item.id ? { backgroundColor: '#6C63FF', height: '10%', width: '100%', borderRadius: 40 } : { height: '10%', width: '100%', borderBottomWidth: 1, borderColor: "#dedede" }]}></View>
                             </TouchableOpacity>
                         )
                         )
@@ -163,15 +197,12 @@ function ReserveVenue({ navigation, route }) {
                     <Text>{route.params.item.address.address_region}</Text>
                     <Text>{route.params.item.address.address_city}</Text> */}
                 </View>
-                <View style={{ width: '100%', height: '60%', borderTopWidth: 0.3, borderColor: "#dedede", flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
+                <View style={[{ width: '100%', height: '50%', flexDirection: 'row', padding: 20 }, flag == 1 && { justifyContent: 'center' }]}>
                     {
                         propsView()
                     }
                 </View>
-                <View style={[styles.descriptionContainer, { alignItems: 'center', justifyContent: 'center', height: '10%', backgroundColor: '' }]}>
-                    <View>
-
-                    </View>
+                <View style={[styles.descriptionContainer, { alignItems: 'center', justifyContent: 'center', height: '31%' }]}>
                     <FlatButton text='choose'
                         // disabled={!props.isValid} 
                         onPress={() => navigation.navigate('Choose Field', { field: data.field, venue_name: data.name, venue_image: data.images, address: data.address })} backgroundColor={'#6C63FF'} width={199} />

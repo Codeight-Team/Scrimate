@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Image, useWindowDimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import Badminton from '../../../../assets/icons/shuttlecock.svg';
-import Futsal from '../../../../assets/icons/futsal.svg';
-import Football from '../../../../assets/soccer-ball.svg';
-import Dummy from '../../../../assets/lapangan-dummy.png';
+import Badminton from '../../../assets/icons/shuttlecock.svg';
+import Futsal from '../../../assets/icons/futsal.svg';
+import Football from '../../../assets/soccer-ball.svg';
+import Dummy from '../../../assets/lapangan-dummy.png';
 import axios from 'axios';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, } from 'react-native-reanimated';
@@ -12,7 +12,7 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 
 
 
-function Posts({ navigation, route }) {
+function MatchPost({ navigation, route }) {
     const [address_user, setAddress] = useState("Kota Jakarta Barat") //route.params.address
     const [myMatch, setMyMatch] = useState(false)
     const [data, setData] = useState(postArray)
@@ -363,4 +363,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Posts;
+export default MatchPost;

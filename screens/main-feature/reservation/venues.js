@@ -2,21 +2,26 @@ import * as React from 'react';
 import { StyleSheet, View, Text, Image, TextInput, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView } from 'react-native';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Card from '../../shared/card'
+import Card from '../../../shared/card'
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 
 function ReservationScreen({ navigation, route }) {
+
+    const title = route.params.title
+    const address_user = route.params.address
+
     useEffect(() => {
+        console.log(title)
         let isActive = true
-        const fetchVenues = async () =>{
-            await axios.get(`http://66.42.49.240/api/venue/`).then((response) => {
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.log(error)
-            });
-        }
-        fetchVenues()
+        // const fetchVenues = async () =>{
+        //     await axios.get(`http://66.42.49.240/api/venue/`).then((response) => {
+        //         console.log(response.data);
+        //     })
+        //     .catch(error => {
+        //         console.log(error)
+        //     });
+        // }
+        // fetchVenues()
         return () =>{isActive = false} 
     },[])
 
@@ -114,14 +119,21 @@ function ReservationScreen({ navigation, route }) {
     return (
         <View style={styles.container}>
             <View style={{ width: '100%', flexDirection: 'row', backgroundColor: '#fff', padding: 10, elevation: 4 }}>
-                    <View style={{ width: '50%', alignItems: 'flex-start' }}>
-                        <TouchableOpacity style={{ flexDirection: 'row' }}>
-                            <Text style={{ color: '#6C63FF', fontWeight: 'bold' }}>
-                                {route.params.user_address}
-                            </Text>
+                    <View style={{ width: '50%', }}>
+                        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => console.log('Yeah')}>
+                            <Text style={[{ color: 'gray' }, { fontWeight: 'bold' }]}>{route.params.sport}, {title}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ width: '50%', alignItems: 'flex-end' }}>
+                        <TouchableOpacity onPress={() => top.value = dimensions.height / 2
+                        } style={{ flexDirection: 'row' }}>
                             <View style={{ padding: 4 }}>
                                 <AntDesign name="caretdown" size={10} color="black" />
                             </View>
+                            <Text style={{ color: '#6C63FF', fontWeight: 'bold' }}>
+                                {address_user ? address_user : "Kota Jakarta Barat"}
+                            </Text>
+
                         </TouchableOpacity>
                     </View>
                 </View>
