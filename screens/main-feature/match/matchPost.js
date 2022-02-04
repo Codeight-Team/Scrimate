@@ -16,7 +16,8 @@ function MatchPost({ navigation, route }) {
     const [address_user, setAddress] = useState("Kota Jakarta Barat") //route.params.address
     const [myMatch, setMyMatch] = useState(false)
     const [data, setData] = useState(postArray)
-
+    const locationFilterArray = ["Kota Jakarta Barat", "Kota Jakarta Utara", "Kota Jakarta Pusat", "Kota Jakarta Timur", "Kota Jakarta Selatan",]
+    
     const postArray = [
         {
             id: 1,
@@ -132,7 +133,6 @@ function MatchPost({ navigation, route }) {
         counter()
     }, [address_user, myMatch])
 
-    const locationFilterArray = ["Kota Jakarta Barat", "Kota Jakarta Utara", "Kota Jakarta Pusat", "Kota Jakarta Timur", "Kota Jakarta Selatan",]
 
     const dimensions = useWindowDimensions();
     const top = useSharedValue(
@@ -146,7 +146,7 @@ function MatchPost({ navigation, route }) {
 
     const SPRING_CONFIG = {
         damping: 80,
-        overshootClamping: true,
+        overshootClamping: false,
         restDisplacementThreshold: 0.1,
         restSpeedThreshold: 0.1,
         stiffness: 1000,

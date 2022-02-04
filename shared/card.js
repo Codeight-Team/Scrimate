@@ -27,7 +27,7 @@ function Card({ name, image, type, description, png, onPress }) {
                 <View style={{ width: '30%', alignItems: 'center', justifyContent: 'center' }}>
                     {
                         image ?
-                            <Image style={{ height: '100%', backgroundColor: 'black', width: '100%', borderRadius: 10 }} source={png ? png : { uri: image }} />
+                            <Image style={{ height: '100%', backgroundColor: 'black', width: '100%', borderRadius: 10 }} source={png ? png : { uri: "http://66.42.49.240/"+ image }} />
                             :
                             png ?
                                 <Image style={{ height: '100%', backgroundColor: '#FFF', width: '100%', borderRadius: 10 }} source={png} />

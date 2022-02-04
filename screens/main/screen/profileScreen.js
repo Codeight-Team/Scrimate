@@ -74,15 +74,15 @@ function ProfileScreen({ navigation }) {
           <TouchableOpacity onPress={() => navigation.navigate("Edit Profile Screen", data)}>
             <Text>Update Profile</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => console.log("Location Button Pressed")}>
+          <TouchableOpacity onPress={() => navigation.navigate('Edit Address')}>
             <Text>Location / Address Settings</Text>
           </TouchableOpacity>
         </View>
-        {data.user_role?
+        {!data.user_role?
           <View style={styles.box}>
             <Text style={styles.submenuText}>Host</Text>
             <TouchableOpacity onPress={() => navigation.navigate("Manage Venue Screen", { user_id: data.user_id })}>
-              <Text>{data.user_role}</Text>
+              <Text>Manage My Venue</Text>
             </TouchableOpacity>
           </View>
           :

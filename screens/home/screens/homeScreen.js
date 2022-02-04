@@ -39,6 +39,7 @@ function HomeScreen({ navigation, route }) {
 
   const fetchUserData = async (user) => {
     await axios.get(`http://66.42.49.240/api/users/${user}`).then(response => {
+      console.log(response.data.userData)
         setData(response.data.userData)
     })
     .catch(function (error) {

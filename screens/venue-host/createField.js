@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, Image, TextInput, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, Image, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useState } from "react/cjs/react.development";
 import * as ImagePicker from 'expo-image-picker';
 import { Formik } from "formik";
@@ -8,6 +8,7 @@ import axios from "axios";
 
 const CreateField = ({ navigation, route }) => {
     const [image, setImage] = useState(null)
+    const venue_id = route.params.venue_id
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
@@ -19,33 +20,43 @@ const CreateField = ({ navigation, route }) => {
         });
         if (!result.cancelled)
             setImage(result.uri)
-        // setField(newItems);
-        // if (!result.cancelled) 
+        
     };
 
-    const sendField = async (field) => {
-        const venue_id = route.params.venue_id
+    const appendValues = (values) => {
         const formData = new FormData();
 
-        formData.append('field_id', field.field_name)
-        formData.append('field_type', field.field_type)
-        formData.append('field_price', parseInt(field.price))
+        formData.append('field_name', values.field_name)
+        formData.append('field_type', values.field_type)
+        formData.append('field_price', values.price)
         formData.append('image', {
             name: '_field.jpg',
-            uri: field.image,
+            uri: values.image,
             type: 'image/jpg'
         })
+        sendFieldData(formData)
+        console.log(formData);
+    }
 
+    const sendFieldData = async (data) =>{
         const config = {
             headers: {
                 "Content-Type": 'multipart/form-data',
                 Accept: "application/json"
             }
         }
-
-        await axios.post(`http://66.42.49.240/api/field/create-field/${venue_id}`, formData, config)
+        await axios.post(`http://66.42.49.240/api/field/create-field/${venue_id}`, data, config)
             .then((response) => {
-                 navigation.goBack() 
+                Alert.alert("Field Created",
+                response.message,
+                [
+                    {
+                        text: "OK",
+                        onPress: () => setTimeout(() => navigation.goBack(), 1000),
+                        style: "cancel",
+                    },
+                ]
+                );
                 })
             .catch((err) => { console.warn(err) })
     }
@@ -57,8 +68,7 @@ const CreateField = ({ navigation, route }) => {
                     initialValues={{ field_name: '', image: null, field_type: '', price: '' }}
                     onSubmit={values => {
                         values.image = image
-                        sendField(values)
-                        // navigation.navigate('Manage Venue Screen', { venue: values })
+                        appendValues(values)
                     }}
                 >
                     {({ handleChange, handleBlur, handleSubmit, values }) => (

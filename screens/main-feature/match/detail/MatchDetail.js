@@ -42,6 +42,16 @@ function MatchDetail({ navigation, route }) {
         )
     }
 
+    const fetchDetailMatch = async() => {
+        await axios.get('Detail')
+        .then(response=> {
+
+        })
+        .catch(error=>{
+            console.log(error)
+        })
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.ImageContainer}>

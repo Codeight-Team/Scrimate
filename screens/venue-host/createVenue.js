@@ -88,8 +88,6 @@ const CreateVenue = ({ navigation, route }) => {
         formData.append('address_postalcode', values.address_postalcode)
         formData.append('sport_name', values.sport_name)
 
-        console.log(formData)
-
         const config = {
             headers: {
                 Accept: 'application/json',

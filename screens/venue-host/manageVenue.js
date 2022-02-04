@@ -1,31 +1,34 @@
 import React, { useState } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, Image, Alert } from 'react-native'
 import { Entypo } from '@expo/vector-icons';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 
 const ManageVenue = ({ navigation, route }) => {
     const [venue, setVenue] = useState([])
+    const [isUpdate, setIsUpdate] = useState("Not Updated")
+
 
     const user_id = route.params.user_id
 
     useFocusEffect(
-        React.useCallback(()=> {
+        React.useCallback(() => {
             let isActive = true
-            const fetchVenues = async () =>{
+            const fetchVenues = async () => {
                 await axios.get(`http://66.42.49.240/api/venue/get-my-venue/${route.params.user_id}`).then((response) => {
                     setVenue(response.data)
-                    console.log(response.data)
                 })
-                .catch(error => {
-                    console.log(error)
-                });
+                    .catch(error => {
+                        console.log(error)
+                    });
             }
             fetchVenues()
-            return () =>{isActive = false} 
-        },[])
-      );
+            return () => { isActive = false }
+        })
+    ),[];
+
+
 
     const renderVenue = () => {
         return venue.map(item => (
@@ -34,7 +37,8 @@ const ManageVenue = ({ navigation, route }) => {
                 height: 120,
                 padding: 5,
             }}>
-                <TouchableOpacity onPress={()=> navigation.navigate('Venue Detail Screen', {venue:item, user_id: user_id})} style={{
+
+                <TouchableOpacity onPress={() => navigation.navigate('Venue Detail Screen', { venue: item.venue_id, user_id: user_id })} style={{
                     flex: 1,
                     backgroundColor: '#ffffff',
                     alignItems: 'flex-start',
@@ -43,27 +47,47 @@ const ManageVenue = ({ navigation, route }) => {
                     elevation: 4,
                     flexDirection: 'row'
                 }}>
-                    <View style={{width: "30%",
-                        padding: 5,
-                        height: "100%",
-                        alignItems: 'center',
-                        justifyContent: 'center'}}>
-                        <Image style={{ height: '100%', width: '100%', borderRadius: 10 }} source={{uri: 'http://66.42.49.240/' + item.image}}/>
-                    </View>
-                    <View style={{width: '70%', padding: 10}}>
-                        <View>
-                            <Text style={{fontWeight: 'bold', fontSize: 18}}>
-                                {item.venue_name}
-                            </Text>
-                            <Text>
-                                {item.address.address_street}
-                            </Text>
-                            <Text>
-                                {item.address.address_region}
-                            </Text>
+                    <View style={{ width: '70%', flexDirection: 'row' }} >
+                        <View style={{
+                            width: "50%",
+                            padding: 5,
+                            height: "100%",
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}>
+                            <Image style={{ height: '100%', width: '100%', borderRadius: 10 }} source={{ uri: 'http://66.42.49.240/' + item.image }} />
+                        </View>
+                        <View style={{ width: '60%', padding: 10 }}>
+                            <View>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={{ fontWeight: 'bold', fontSize: 18, width: '50%' }}>
+                                        {item.venue_name}
+                                    </Text>
+
+                                </View>
+                                <Text>
+                                    {item.address.address_street}
+                                </Text>
+                                <Text>
+                                    {item.address.address_region}
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={{width: '35%', height: '100%', justifyContent: 'center', alignItems: 'center', padding: 15 }}>
+                            {!item.isOpen ?
+                                <Text style={{ fontWeight: 'bold', color: 'red' }}>
+                                    CLOSED
+                                </Text>
+                                :
+                                <Text style={{ fontWeight: 'bold', color: '#6C63FF' }}>
+                                    OPEN
+                                </Text>
+                            }
                         </View>
                     </View>
+
                 </TouchableOpacity>
+
             </View>
         ))
     }
@@ -73,14 +97,13 @@ const ManageVenue = ({ navigation, route }) => {
             <View style={styles.venueContainer}>
                 <View style={{ height: '90%', width: '100%', paddingVertical: 20 }}>
                     {venue.length != 0 ?
-                        <View style={{ height: '100%', width: '100%'}}>
+                        <View style={{ height: '100%', width: '100%' }}>
                             <ScrollView>
-                                <View style={{flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'center'}}>
+                                <View style={{ flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'center' }}>
                                     {
                                         renderVenue()
                                     }
                                 </View>
-
                             </ScrollView>
 
                         </View>

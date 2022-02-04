@@ -64,19 +64,19 @@ const FormRegister = ({ navigation }) => {
             .oneOf([yup.ref('password')], 'Passwords does not match'),
     })
 
-    const getProvince = async () => {
-        let isMounted = true;
-        await axios.get(`https://dev.farizdotid.com/api/daerahindonesia/provinsi`)
-            .then((response) => {
-                const res = response.data.provinsi
-                if (isMounted)
-                    setProvince(res)
-            })
-            .catch(function (error) {
-                console.warn(error);
-            });
-        return () => { isMounted = false };
-    }
+    // const getProvince = async () => {
+    //     let isMounted = true;
+    //     await axios.get(`https://dev.farizdotid.com/api/daerahindonesia/provinsi`)
+    //         .then((response) => {
+    //             const res = response.data.provinsi
+    //             if (isMounted)
+    //                 setProvince(res)
+    //         })
+    //         .catch(function (error) {
+    //             console.warn(error);
+    //         });
+    //     return () => { isMounted = false };
+    // }
 
     const handleProvinceChange = async (value) => {
         setSelectedProvince(value)
@@ -257,22 +257,6 @@ const FormRegister = ({ navigation }) => {
                                     {(props.errors.phone_number && props.touched.phone_number) &&
                                         <Text style={styles.errorText}>{props.errors.phone_number}</Text>
                                     }
-                                    {/* <View style={styles.formUser}>
-                                    <View style={styles.input}>
-                                        {
-                                            DropdownCountries("City", HandleData, province.map((e) => {
-                                                return e.nama
-                                            }))
-                                        }
-                                    </View>
-                                    <View style={styles.input}>
-                                        {
-                                            DropdownCountries("State", HandleSelect, state.map((e) => {
-                                                return e.nama
-                                            }))
-                                        }
-                                    </View>
-                                </View> */}
                                     <View style={styles.formUser}>
                                         <TextInput
                                             style={styles.input}
@@ -302,11 +286,6 @@ const FormRegister = ({ navigation }) => {
                                     {(props.errors.confirm_password && props.touched.confirm_password) &&
                                         <Text style={styles.errorText}>{props.errors.confirm_password}</Text>
                                     }
-                                    {/* <Field as="select" name="color">
-                                    <option value="red">Red</option>
-                                    <option value="green">Green</option>
-                                    <option value="blue">Blue</option>
-                                </Field> */}
                                     <View style={styles.buttonContainer}>
                                         <View style={styles.button}>
                                             <FlatButton

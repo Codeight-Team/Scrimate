@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, TouchableWithoutFeedback, Alert } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
 import FlatButton from "../../shared/button";
 import axios from "axios";
 import moment from "moment";
@@ -11,47 +11,87 @@ const CreateOperational = ({ route, navigation }) => {
     const venue = route.params.venue
     const day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     const [time, setTime] = useState(
-        {
-            operational_day: [1, 2, 3, 4, 5, 6, 7],
-            operational_timeOpen: ['09:00', '09:00', '09:00', '09:00', '09:00', '09:00', '09:00'],
-            operational_timeClose: ['21:00', '21:00', '21:00', '21:00', '21:00', '21:00', '21:00']
-        },
+        [
+            {
+                operational_day: 1,
+                operational_timeOpen: '09:00',
+                operational_timeClose: '21:00'
+            },
+            {
+                operational_day: 2,
+                operational_timeOpen: '09:00',
+                operational_timeClose: '21:00'
+            },
+            {
+                operational_day: 3,
+                operational_timeOpen: '09:00',
+                operational_timeClose: '21:00'
+            },
+            {
+                operational_day: 4,
+                operational_timeOpen: '09:00',
+                operational_timeClose: '21:00'
+            },
+            {
+                operational_day: 5,
+                operational_timeOpen: '09:00',
+                operational_timeClose: '21:00'
+            },
+            {
+                operational_day: 6,
+                operational_timeOpen: '09:00',
+                operational_timeClose: '21:00'
+            },
+            {
+                operational_day: 7,
+                operational_timeOpen: '09:00',
+                operational_timeClose: '21:00'
+            }
+        ]
     )
 
     const [operational, setOperational] = useState()
-    const [open, setOpen] = useState(true)
+    const [open, setOpen] = useState([true, true, true, true, true, true, true])
     const timeAvailable = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
         '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
 
     const sendOperational = async () => {
-        // await axios.post("http://66.42.49.240/api/venue/create-operationalhour/"+venue.venue_id, time)
-        // .then(()=>{
-            
-        // })
-        // .catch(error=>{
-        //     console.warn(error)
-        // })
-        // console.log(time)
-        Alert.alert(
-            'Operatinal Hour',
-            'Create Success',
-            [
-              {text: 'OK', onPress: () => {navigation.goBack()}},
-        
-            ],
-            { cancelable: false }
-          )
+        await axios.post("http://66.42.49.240/api/venue/create-operationalhour/"+ venue, time)
+        .then(()=>{
+            Alert.alert(
+                'Operational Hour',
+                'Create Success',
+                [
+                    { text: 'OK', onPress: () => { navigation.goBack() } },
+    
+                ],
+                { cancelable: false }
+            )
+        })
+        .catch(error=>{
+            console.log(error)
+        })
     }
 
-    const handleSelectClose = (values, index) => {
+    const handeOpen = (index) => {
+        const newArr = open.map((item, i) => {
+            if (index == i) {
+                return !item
+            }
+            return item;
+        });
+        setOpen(newArr)
+    }
+
+    const handleSelectClose = (values, initial) => {
         const newItems = time.map((item, i) => {
-            if (index == item.operational_day) {
+            if (initial == item.operational_day) {
                 return { ...item, operational_day: item.operational_day, operational_timeOpen: item.operational_timeOpen, operational_timeClose: values }
             }
             return item;
         });
         setTime(newItems)
-        console.log(time)
+        console.log(newItems);
     }
 
     return (
@@ -79,36 +119,36 @@ const CreateOperational = ({ route, navigation }) => {
                         </View>
                     </View>
                     {
-                        day.map((item, index) => {
+                        time.map((item, index) => {
                             return (
                                 <View key={index} style={{ flexDirection: "row", padding: 10, height: 60 }}>
                                     <View style={{ width: '10%', justifyContent: "center" }}>
                                         {
-                                            open ?
-                                                <TouchableOpacity onPress={() => setOpen(false)}>
+                                            open[index] ?
+                                                <TouchableOpacity onPress={() => handeOpen(index)}>
                                                     <AntDesign name="checkcircleo" size={21} color="green" />
                                                 </TouchableOpacity>
                                                 :
-                                                <TouchableOpacity onPress={() => setOpen(true)}>
+                                                <TouchableOpacity onPress={() => handeOpen(index)}>
                                                     <AntDesign name="closecircleo" size={21} color="red" />
                                                 </TouchableOpacity>
                                         }
                                     </View>
                                     <View style={{ width: '30%', justifyContent: "center" }}>
                                         <Text>
-                                            {item}
+                                            {day[index]}
                                         </Text>
                                     </View>
-                                    {
+                                    {open[index] ?
                                         <View style={{ width: '60%', height: '100%', flexDirection: 'row' }}>
                                             <View style={{ width: '49%', height: '100%', alignItems: "center" }}>
                                                 <SelectDropdown
                                                     data={timeAvailable}
                                                     buttonTextStyle={{ fontSize: 15 }}
-                                                    defaultButtonText={time.operational_timeOpen[index]}
+                                                    defaultButtonText={item.operational_timeOpen}
                                                     buttonStyle={[styles.datePickForm]}
-                                                    onSelect={(selectedItem, index) => {
-                                                        console.log(selectedItem, index)
+                                                    onSelect={(selectedItem) => {
+                                                        handleSelectClose(selectedItem, item.operational_day)
                                                     }}
                                                     buttonTextAfterSelection={(selectedItem, index) => {
                                                         // text represented after item is selected
@@ -122,16 +162,18 @@ const CreateOperational = ({ route, navigation }) => {
                                                     }}
                                                 />
                                             </View>
-                                            <Text>-</Text>
+                                            <View style={{justifyContent: "center"}}>
+                                                <Text>-</Text>
+                                            </View>
                                             <View style={{ width: '49%', height: '100%', alignItems: "center" }}>
                                                 <View>
                                                     <SelectDropdown
                                                         data={timeAvailable}
                                                         buttonTextStyle={{ fontSize: 15 }}
-                                                        defaultButtonText={time.operational_timeClose[index]}
+                                                        defaultButtonText={item.operational_timeClose}
                                                         buttonStyle={[styles.datePickForm]}
-                                                        onSelect={(selectedItem, index) => {
-                                                            handleSelectClose(selectedItem, index + 1)
+                                                        onSelect={(selectedItem) => {
+                                                            handleSelectClose(selectedItem, item.operational_day)
                                                         }}
                                                         buttonTextAfterSelection={(selectedItem, index) => {
                                                             // text represented after item is selected
@@ -146,6 +188,10 @@ const CreateOperational = ({ route, navigation }) => {
                                                     />
                                                 </View>
                                             </View>
+                                        </View>
+                                        :
+                                        <View style={{ width: '60%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+                                            <Text style={{ fontSize: 16, color: 'red', fontWeight: 'bold' }}>CLOSED</Text>
                                         </View>
                                     }
                                 </View>
