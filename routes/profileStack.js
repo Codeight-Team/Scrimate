@@ -10,7 +10,7 @@ import CreateOperational from '../screens/venue-host/createOperational';
 import PaymentMethod from '../screens/payment-midtrans/paymentMethod';
 import Payment from '../screens/payment-midtrans/payment';
 import MyOrder from '../screens/my-activity/my-order/myOrder';
-import EditAddress from '../screens/user-profile/editAddress';
+import EditAddress from '../screens/user-profile/editLocation';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +21,7 @@ function ProfileStack() {
       />
       <Stack.Screen name="Edit Profile Screen" component={EditProfile}
       />
-      <Stack.Screen name="Edit Address" component={EditAddress}
+      <Stack.Screen name="Edit Location Screen" component={EditAddress}
       />
       <Stack.Group>
         <Stack.Screen name="Manage Venue Screen" component={ManageVenue}

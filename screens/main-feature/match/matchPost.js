@@ -19,107 +19,42 @@ function MatchPost({ navigation, route }) {
     const locationFilterArray = ["Kota Jakarta Barat", "Kota Jakarta Utara", "Kota Jakarta Pusat", "Kota Jakarta Timur", "Kota Jakarta Selatan",]
     
     const postArray = [
-        {
-            id: 1,
-            matchname: 'Cupu Lu Semua',
-            venue: { name: "Champions", address: { street: "Jl. Andara Raya", country: "Jakarta Selatan" }, rating: "5" },
-            name: 'Bocah Satu',
-            sports: {
-                name: 'badminton'
-            },
-            schedule: {
-                date: '25-1-2022',
-                time: '07.00 WIB'
-            }
-        },
+        // {
+        //     id: 1,
+        //     venue: { name: "Badminton 77", address: { street: "Jl. Andara Raya", country: "Jakarta Selatan" }, rating: "5" },
+        //     name: 'Firhan Reynaldo',
+        //     sports: {
+        //         name: 'badminton'
+        //     },
+        //     schedule: {
+        //         date: '25-1-2022',
+        //         time: '07.00 WIB'
+        //     }
+        // },
         {
             id: 2,
-            matchname: 'Main bola',
             venue: { name: "La Futsal", address: { street: "Jl. Andara Raya", country: "Jakarta Selatan" }, rating: "5" },
-            name: 'Krinj Dek',
+            name: 'Cool FC',
             sports: {
                 name: 'futsal'
             },
             schedule: {
-                date: '25-1-2022',
-                time: '07.00 WIB'
+                date: '05-2-2022',
+                timeStart: '07.00 WIB',
+                timeEnd: '08.00 WIB'
             }
         },
         {
             id: 3,
-            venue: "",
-            matchname: 'bersama main',
-            name: 'Angel Bos',
+            venue: { name: "La Futsal", address: { street: "Jl. Andara Raya", country: "Jakarta Selatan" }, rating: "5" },
+            name: 'Scar FC',
             sports: {
-                name: 'badminton'
+                name: 'futsal'
             },
             schedule: {
-                date: '25-1-2022',
-                time: '07.00 WIB'
-            }
-        },
-        {
-            id: 12,
-            matchname: 'Cupu Lu Semua',
-            venue: { name: "Lapangan Si Boy", address: { street: "Jl. Andara Raya", country: "Jakarta Selatan" }, rating: "5" },
-            name: 'Para men',
-            sports: {
-                name: 'badminton'
-            },
-            schedule: {
-                date: '25-1-2022',
-                time: '07.00 WIB'
-            }
-        },
-        {
-            id: 43,
-            matchname: 'Cupu Lu Semua',
-            venue: { name: "Lapangan Banteng", address: { street: "Jl. Andara Raya", country: "Jakarta Selatan" }, rating: "5" },
-            name: 'hei5',
-            sports: {
-                name: 'football'
-            },
-            schedule: {
-                date: '25-1-2022',
-                time: '07.00 WIB'
-            }
-        },
-        {
-            id: 5,
-            venue: { name: "Lapangan Si Boy", address: { street: "Jl. Andara Raya", country: "Jakarta Selatan" }, rating: "5" },
-            matchname: 'Cupu Lu Semua',
-            name: 'hei6',
-            sports: {
-                name: 'badminton'
-            },
-            schedule: {
-                date: '25-1-2022',
-                time: '07.00 WIB'
-            }
-        }, {
-            id: 23,
-            matchname: 'Cupu Lu Semua',
-            venue: { name: "Lapangan Banteng", address: { street: "Jl. Andara Raya", country: "Jakarta Selatan" }, rating: "5" },
-            name: 'hei5',
-            sports: {
-                name: 'football'
-            },
-            schedule: {
-                date: '25-1-2022',
-                time: '07.00 WIB'
-            }
-        },
-        {
-            id: 11,
-            venue: { name: "Lapangan Si Boy", address: { street: "Jl. Andara Raya", country: "Jakarta Selatan" }, rating: "5" },
-            matchname: 'Cupu Lu Semua',
-            name: 'hei6',
-            sports: {
-                name: 'badminton'
-            },
-            schedule: {
-                date: '25-1-2022',
-                time: '07.00 WIB'
+                date: '28-2-2022',
+                timeStart: '15.00 WIB',
+                timeEnd: '16.00 WIB'
             }
         },
     ]
@@ -209,7 +144,7 @@ function MatchPost({ navigation, route }) {
                                     {item.schedule.date}
                                 </Text>
                                 <Text style={styles.fontDetail}>
-                                    {item.schedule.time}
+                                    {item.schedule.timeStart} - {item.schedule.timeEnd}
                                 </Text>
                                 <Text style={styles.fontDetail}>
                                     Venue:
@@ -236,7 +171,7 @@ function MatchPost({ navigation, route }) {
 
     return (
         <>
-            <View>
+            <View style={styles.container}>
                 <View style={{ width: '100%', flexDirection: 'row', backgroundColor: '#fff', padding: 10, elevation: 4 }}>
                     <View style={{ width: '50%', }}>
                         <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => setMyMatch(!myMatch)}>
@@ -330,6 +265,7 @@ function MatchPost({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#F4F8FF'
     },
     subContainer: {
         width: '100%',

@@ -74,7 +74,7 @@ function ProfileScreen({ navigation }) {
           <TouchableOpacity onPress={() => navigation.navigate("Edit Profile Screen", data)}>
             <Text>Update Profile</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Edit Address')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Edit Location Screen')}>
             <Text>Location / Address Settings</Text>
           </TouchableOpacity>
         </View>
