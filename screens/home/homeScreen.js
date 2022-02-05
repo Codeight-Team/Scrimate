@@ -6,11 +6,11 @@ import { useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, } from 'react-native-reanimated';
-import TrophySVG from '../../../assets/icons/trophy.svg';
+import TrophySVG from '../../assets/icons/trophy.svg';
 import Swiper from 'react-native-swiper';
-import MenuComponent from '../../../shared/menu';
+import MenuComponent from '../../shared/menu';
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import Loading from '../../../shared/loading';
+import Loading from '../../shared/loading';
 import axios from 'axios'
 
 function HomeScreen({ navigation, route }) {
