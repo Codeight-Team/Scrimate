@@ -6,13 +6,17 @@ import Futsal from '../assets/icons/futsal.svg';
 import Football from '../assets/soccer-ball.svg';
 import Badminton from '../assets/icons/shuttlecock.svg';
 import Soccer from '../assets/soccer.svg';
+import { Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 function MenuComp({ name, image }) {
     function Svg(){
         if( image === 'futsal'){
           return <Futsal width={50} height={50}/>
         } else if(image === 'shuttle'){
-          return <Badminton marginBottom={5} marginRight={5}/>
+          return <MaterialCommunityIcons name="badminton" size={40} color="#6C63FF" />
+        } else if(image == 'basket'){
+            return <Ionicons name="basketball-sharp" size={40} color="#6C63FF" />
         } else{
           return <Football width={35} height={35} marginBottom={5}/>
         }
