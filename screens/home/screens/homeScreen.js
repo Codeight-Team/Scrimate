@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 import { StyleSheet, View, Text, useWindowDimensions, TouchableOpacity, Image, StatusBar, TouchableOpacityComponent } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, } from 'react-native-reanimated';
 import TrophySVG from '../../../assets/icons/trophy.svg';
@@ -14,38 +15,36 @@ import axios from 'axios'
 
 function HomeScreen({ navigation, route }) {
   const [data, setData] = useState([]);
-  const [user_id, setUserId] = useState('');
   const [isLoading, setLoading] = useState(true)
 
-  useEffect(() => {
-    top.value = (dimensions.height / 1.2)
-    setTimeout(async () => {
-      let user
-      try {
-        user = await AsyncStorage.getItem('user_id')
-      } catch (error) {
-        Alert.alert('Sign in needed')
-      }
-      setUserId(user)
-    })
-    fetchUserData()
-  }, []);
+  useFocusEffect(
+    React.useCallback(()=> {
+        top.value = (dimensions.height / 1.2)
+        let isActive = true
+        const fetchUser = async () =>{
+          let user
+          try {
+            user = await AsyncStorage.getItem('user_id')
+          } catch (error) {
+            Alert.alert('Sign in needed')
+          }
+          if(isActive)
+            fetchUserData(user)
+        }
+        fetchUser()
+        return () =>{isActive = false} 
+    },[])
+  );
 
-  const fetchUserData = async () => {
-    let isMounted = true
-    await axios.get(`http://66.42.49.240/api/users/${user_id}`)
-      .then(async response => {
-        let data = response.data[0]
-        if (isMounted)
-          setData(data)
-      })
-      .catch(function (error) {
+
+  const fetchUserData = async (user) => {
+    await axios.get(`http://66.42.49.240/api/users/${user}`).then(response => {
+        setData(response.data.userData)
+    })
+    .catch(function (error) {
         console.log(error)
-      })
-      .finally(()=>
-        setLoading(false)
-      );
-    return () => { isMounted = false }
+    })
+    .finally(()=>setLoading(false))
   }
 
   const dimensions = useWindowDimensions();
@@ -95,14 +94,14 @@ function HomeScreen({ navigation, route }) {
           <View>
             <Text style={styles.userText}>Hi, <Text style={{ textTransform: 'capitalize' }}>{data.first_name}</Text>!</Text>
             <Text style={{ fontSize: 10, color: '#BCBCBC' }}>What sports you will choose today?</Text>
-            <View style={{width: '100%', height:'50%', justifyContent: 'center'}}>
+            <View style={{ width: '100%', height: '50%', justifyContent: 'center' }}>
               <View style={{ marginLeft: 0, margin: 7, width: 120, height: 35, backgroundColor: '#fff', borderRadius: 50, alignItems: 'center', justifyContent: 'flex-end', padding: 4, flexDirection: 'row' }}>
                 <View width='27%'>
                   <TrophySVG />
-                  </View>
+                </View>
                 <View style={{ width: '65%', }}>
                   <Text style={{ fontSize: 11, fontWeight: 'bold', color: 'black' }}>Matchs</Text>
-                  <Text style={{ fontSize: 10, color: '#BCBCBC' }}>{data.Match_Played ? 'data' : '0'}</Text>
+                  <Text style={{ fontSize: 10, color: '#BCBCBC' }}>{data.Match_Played ? data.Match_Played : '0'}</Text>
                 </View>
               </View>
             </View>
@@ -112,9 +111,21 @@ function HomeScreen({ navigation, route }) {
       </View>
     )
   }
-  const ComponentBubble = ({ color, title }) => {
-    return <View style={[styles.bubbleContainer, color]}>
+  const ComponentBubble = ({ color, title, data, type }) => {
+    return <View style={[styles.bubbleContainer, color, {flexDirection: 'column'}]}>
       <Text style={styles.userText}>{title}</Text>
+      {!data?
+        <View>
+          {type=="match"?
+            <Text style={{color: '#BCBCBC'}}>You haven't joined a game yet</Text>
+            :
+            <Text style={{color: '#a3a3a3'}}>You have no upcoming games</Text>
+          }
+        </View>
+        :
+        <View>
+        </View>
+      }
     </View>
   }
 
@@ -122,19 +133,19 @@ function HomeScreen({ navigation, route }) {
     {
       name: "Futsal",
       url: 'Activity Screen',
-      title: "Futsal",
+      sport: "Futsal",
       svg: "futsal"
     },
     {
       name: "Football",
       url: 'Activity Screen',
-      title: "Football",
+      sport: "Football",
       svg: ""
     },
     {
       name: "Badminton",
       url: 'Activity Screen',
-      title: "Badminton",
+      sport: "Badminton",
       svg: "shuttle"
     },
   ]
@@ -142,8 +153,8 @@ function HomeScreen({ navigation, route }) {
   function RenderBubble() {
     return sport.map((item) => {
       return (
-        <TouchableOpacity key={item.title} onPress={() =>
-          navigation.navigate(item.url, { title: item.title })
+        <TouchableOpacity key={item.sport} onPress={() =>
+          navigation.navigate(item.url, { sport: item.sport, user: data })
         }>
           <MenuComponent name={item.name} image={item.svg}></MenuComponent>
         </TouchableOpacity>
@@ -164,7 +175,7 @@ function HomeScreen({ navigation, route }) {
             {/* <ComponentBubble></ComponentBubble>
          */}
             {
-                UserBubble()
+              UserBubble()
             }
             <Swiper
               showsButtons={true}
@@ -174,11 +185,12 @@ function HomeScreen({ navigation, route }) {
               prevButton={<Text style={styles.button}>‹</Text>}
             >
               <View style={styles.slide}>
-                <ComponentBubble color={red} title={"Match"} />
-              </View>
-              <View style={styles.slide}>
                 <ComponentBubble color={orange} title={"Upcoming Order"} />
               </View>
+              <View style={styles.slide}>
+                <ComponentBubble color={red} title={"Match History"} type={"match"} />
+              </View>
+              
             </Swiper>
           </View>
           <PanGestureHandler onGestureEvent={gestureHandler}>

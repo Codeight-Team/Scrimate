@@ -1,42 +1,52 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/home/screens/homeScreen';
-import ReservationScreen from '../screens/reservation/reservationScreen';
-import ActivityScreen from '../screens/reservation/activityScreen';
-import CreateMatch from '../screens/reservation/createMatch';
-import ReserveVenue from '../screens/venue/reserveVenue';
-import Match from '../screens/reservation/matchmaking-forum/components/posts';
-import MatchDetail from '../screens/reservation/matchmaking-forum/screens/MatchDetail';
-import ChooseField from '../screens/venue/chooseField';
+import ReservationScreen from '../screens/main-feature/reservation/venues';
+import ActivityScreen from '../screens/main-feature/feature';
+import ReserveVenue from '../screens/main-feature/reservation/child/venueDetail';
+import Match from '../screens/main-feature/match/matchPost';
+import MatchDetail from '../screens/main-feature/match/detail/MatchDetail';
+import ChooseField from '../screens/main-feature/reservation/child/fields';
 import PickDateTime from '../screens/venue/pickDateTime';
-import CreateOrder from '../screens/venue/createOrder';
+// import CreateOrder from '../screens/venue/createOrder';
+import PaymentMethod from '../screens/payment-midtrans/paymentMethod';
+import Payment from '../screens/payment-midtrans/payment';
 
 const Stack = createNativeStackNavigator();
 
-function HomeStack(){
-    return(
-            <Stack.Navigator>
-              <Stack.Screen name="Home Screen" component={HomeScreen} 
-                            options={{
-                              headerShown: false,
-              }} />
-              {/* <Stack.Screen name="Profile" component={OTPScreen} 
-                            options={{
-                            headerShown: false,
-              }} /> */}
-              <Stack.Screen name="Activity Screen" component={ActivityScreen} options={{title: 'Choose Feature'}} />
-              <Stack.Screen name="Reservation Screen" component={ReservationScreen} />
-              <Stack.Screen name="Reserve Venue" component={ReserveVenue} />
-              <Stack.Screen name="Choose Field" component={ChooseField} />
-              <Stack.Screen name="Pick Date Time" component={PickDateTime} />
-              <Stack.Screen name="Order Screen" component={CreateOrder} />
-              <Stack.Group>
-                <Stack.Screen name="Forum Stack" component={Match} />
-                <Stack.Screen name="Match Detail" component={MatchDetail} />
-              </Stack.Group>
-              <Stack.Screen name="Create Match" component={CreateMatch} />
-            </Stack.Navigator>
-    );
+function HomeStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Home Screen" component={HomeScreen}
+        options={{
+          headerShown: false,
+        }} />
+      <Stack.Group screenOptions={{
+        headerTitleStyle: {
+          color: '#fff',
+        },
+        headerStyle: {
+          backgroundColor: '#6C63FF',
+        },
+      }}>
+        <Stack.Screen name="Activity Screen" component={ActivityScreen} options={{ title: 'Feature' }} />
+        <Stack.Screen name="Reservation Screen" component={ReservationScreen} options={{
+          title: 'Choose Venue',
+          headerStyle: {
+            backgroundColor: '#6C63FF', //Set Header color
+          },
+        }} />
+        <Stack.Screen name="Match" component={Match} options={{ title: "Match" }} />
+        <Stack.Screen name="Match Detail" component={MatchDetail} />
+        <Stack.Screen name="Reserve Venue" component={ReserveVenue} options={{ title: 'Venue' }} />
+      </Stack.Group>
+      <Stack.Screen name="Choose Field" component={ChooseField} options={{ title: 'Field' }} />
+      <Stack.Screen name="Pick Date Time" component={PickDateTime} />
+      {/* <Stack.Screen name="Order Screen" component={CreateOrder} /> */}
+      <Stack.Screen name="Payment Method Screen" component={PaymentMethod}  options={{ headerShown: false }}/>
+      <Stack.Screen name="Payment Screen" component={Payment}  options={{ headerShown: false }}/>
+    </Stack.Navigator>
+  );
 }
 
 export default HomeStack;

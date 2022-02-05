@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, TouchableOpacity, Image, Modal, ScrollView } from 'react-native';
-import { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, TouchableOpacity, Image, Modal, ScrollView, Platform } from 'react-native';
+import { useState } from 'react';
 import Moment from 'moment';
 import Pen from '../../assets/icons/pencil.svg'
 import * as ImagePicker from 'expo-image-picker';
@@ -11,7 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Formik } from 'formik'
 import axios from 'axios';
 
-function EditProfile({ route }) {
+function EditProfile({ navigation, route }) {
     const [data, setData] = useState(route.params)
     const [image, setImage] = useState(null);
     const [modal, setModal] = useState(false);
@@ -32,44 +32,37 @@ function EditProfile({ route }) {
         }
     };
 
-    const uploadImage = () => {
-        console.log(data.user_id);
+    const uploadImage = async () => {
         const formData = new FormData();
-        formData.append('profile', {
-            name: new Date() + "_profile",
-            uri: image,
+        formData.append('image', {
+            name: "_profile.jpg",
+            uri: Platform.OS === "android" ? image : image.replace("file://", ""),
             type: 'image/jpg'
         })
         const config = {
             headers: {
-                'Content-Type': 'multipart/form-data'
+                Accept: 'application/json',
+                "Content-Type": "multipart/form-data",
             }
         }
 
-        console.log(formData)
-        // axios.put(`http://66.42.49.240/api/users/${data.user_id}`, formData, config).then(response => {
-        // let data = response.data[0]
-        // if(isMounted)
-        // setData(data)
-        //     console.log(response.data);
-        //     setSuccess(true)
-        // })
-        // .catch(function (error) {
-        //     console.log(error)
-        // });
+        await axios.put(`http://66.42.49.240/api/users/${data.user_id}`, formData, config).then(() => {
+            setSuccess(true)
+            setTimeout(() => { navigation.navigate('Profile Screen') }, 1000)
+        })
+            .catch(error => {
+                console.log(error)
+            });
     }
 
-    const updateForm = (values) => {
-        // axios.put(`http://66.42.49.240/api/users/${data.user_id}`, values).then(response => {
-        //     let data = response.data[0]
-        //     // setData(data)
-        //     console.log(response.data);
-        //     setSuccess(true)
-        // })
-        //     .catch(function (error) {
-        //         console.log(error)
-        //     });
-        console.log(data);
+    const updateForm = async (values) => {
+        await axios.put(`http://66.42.49.240/api/users/${data.user_id}`, values).then(response => {
+            setSuccess(true)
+            setTimeout(() => { navigation.navigate('Profile Screen') }, 1000)
+        })
+            .catch(function (error) {
+                console.log(error)
+            });
     }
 
 
@@ -81,7 +74,7 @@ function EditProfile({ route }) {
     const ImageForm = () => (
         <View style={[styles.centeredView, { width: "100%", height: '80%' }]}>
             {image ? <Image source={{ uri: image }} style={styles.profilePicture} /> :
-                <DefaultPicture />
+                <Image source={{ uri: 'http://66.42.49.240/'+ data.image }} style={styles.profilePicture} />
                 // <Image source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} style={styles.profilePicture} />
             }
             <TouchableOpacity style={{ padding: 10 }} onPress={pickImage}>
@@ -178,8 +171,6 @@ function EditProfile({ route }) {
         </View>
     )
 
-    const userData = { first_name: "Rafi" }
-
     const ModalUpdate = () => (
         <Modal
             animationType="slide"
@@ -215,7 +206,7 @@ function EditProfile({ route }) {
                                     :
                                     type == 'picture' ? <ImageForm />
                                         : type == 'name' ? <NameForm />
-                                            : type == 'email' ? <EmailForm /> : <PhoneForm/>
+                                            : type == 'email' ? <EmailForm /> : <PhoneForm />
                             }
                         </View>
                         <View style={{ width: "100%", height: '10%' }} />
@@ -233,7 +224,7 @@ function EditProfile({ route }) {
                         height: '30%', width: '100%', backgroundColor: 'FFF', justifyContent: 'flex-end', borderRadius: 40, padding: 20,
                         alignItems: 'center'
                     }}>
-                        {image ? <Image source={{ uri: image }} style={styles.profilePicture} /> : <DefaultPicture />}
+                        {data.image ? <Image source={{ uri: 'http://66.42.49.240/'+ data.image }} style={styles.profilePicture} /> : <DefaultPicture />}
                         <TouchableOpacity onPress={() => activateModal('picture')} style={{ width: 25, height: 25, backgroundColor: 'rgba(0,0,0, 0.2)', borderRadius: 50, alignItems: 'center', justifyContent: 'center', margin: 10, paddingBottom: 2 }}>
                             <Pen width={13} height={13} fill={"black"} />
                         </TouchableOpacity>
@@ -268,7 +259,7 @@ function EditProfile({ route }) {
                                 Birth Date
                             </Text>
                             <Text style={styles.fontLarge}>
-                                {Moment(data.DOB).format(' MM YYYY')}
+                                {Moment(data.DOB).format('DD MM YYYY')}
                             </Text>
                         </View>
                         <View style={{ paddingBottom: 15 }}>

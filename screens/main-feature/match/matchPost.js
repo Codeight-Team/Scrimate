@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Image, useWindowDimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import Badminton from '../../../../assets/icons/shuttlecock.svg';
-import Futsal from '../../../../assets/icons/futsal.svg';
-import Football from '../../../../assets/soccer-ball.svg';
-import Dummy from '../../../../assets/lapangan-dummy.png';
-import CustomHeader from '../../../../shared/customHeader';
+import Badminton from '../../../assets/icons/shuttlecock.svg';
+import Futsal from '../../../assets/icons/futsal.svg';
+import Football from '../../../assets/soccer-ball.svg';
+import Dummy from '../../../assets/lapangan-dummy.png';
+import axios from 'axios';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, } from 'react-native-reanimated';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 
 
 
-function Posts({ navigation, route }) {
-    const [currLocation, setFilter] = useState(route.params.user_address)
+function MatchPost({ navigation, route }) {
+    const [address_user, setAddress] = useState("Kota Jakarta Barat") //route.params.address
     const [myMatch, setMyMatch] = useState(false)
     const [data, setData] = useState(postArray)
-
+    const locationFilterArray = ["Kota Jakarta Barat", "Kota Jakarta Utara", "Kota Jakarta Pusat", "Kota Jakarta Timur", "Kota Jakarta Selatan",]
+    
     const postArray = [
         {
             id: 1,
@@ -122,8 +123,16 @@ function Posts({ navigation, route }) {
             }
         },
     ]
+    const [count, setCount] = useState(0);
 
-    const locationFilterArray = ["DKI Jakarta", "Jakarta Barat", "Jakarta Utara", "Jakarta Pusat", "Jakarta Timur", "Jakarta Selatan",]
+    useEffect(() => {
+        const counter = () => {
+            setCount((count) => count + 1);
+            // console.log(count)
+        }
+        counter()
+    }, [address_user, myMatch])
+
 
     const dimensions = useWindowDimensions();
     const top = useSharedValue(
@@ -137,7 +146,7 @@ function Posts({ navigation, route }) {
 
     const SPRING_CONFIG = {
         damping: 80,
-        overshootClamping: true,
+        overshootClamping: false,
         restDisplacementThreshold: 0.1,
         restSpeedThreshold: 0.1,
         stiffness: 1000,
@@ -158,17 +167,6 @@ function Posts({ navigation, route }) {
         }
     });
 
-    React.useLayoutEffect(() => {
-        navigation.setOptions({
-            headerTitle: (props) => (
-                <CustomHeader props={props} title={"Match"} />
-            ),
-            headerStyle: {
-                backgroundColor: '#6C63FF', //Set Header color
-            },
-        });
-    }, [navigation]);
-
     function Svg(sports) {
         if (sports === 'badminton')
             return <Badminton width={20} height={20} />
@@ -183,7 +181,6 @@ function Posts({ navigation, route }) {
             return (
                 <TouchableOpacity key={item.id} onPress={() => {
                     navigation.navigate("Match Detail", { data: item })
-                    console.log(route.params)
                 }
 
                 }>
@@ -230,16 +227,11 @@ function Posts({ navigation, route }) {
                                     by <Text style={{ color: '#6C63FF', fontWeight: 'bold' }}>{item.name}</Text>
                                 </Text>
                             </View>
-
                         </View>
                     </View>
                 </TouchableOpacity>
             );
         });
-    }
-
-    const noData = () => {
-        <Text style={{ color: 'black', fontSize: 20 }}>No Data</Text>
     }
 
     return (
@@ -266,13 +258,15 @@ function Posts({ navigation, route }) {
                                 <AntDesign name="caretdown" size={10} color="black" />
                             </View>
                             <Text style={{ color: '#6C63FF', fontWeight: 'bold' }}>
-                                {route.params.user_address}
+                                {address_user ? address_user : "DKI Jakarta"}
                             </Text>
 
                         </TouchableOpacity>
                     </View>
                 </View>
-                <       ScrollView>
+                <ScrollView contentContainerStyle={{
+                    backgroundColor: '#F4F8FF',
+                }}>
                     <View style={styles.container}>
                         <View style={styles.subContainer}>
                             {
@@ -305,24 +299,27 @@ function Posts({ navigation, route }) {
                         shadowRadius: 3.84,
                         elevation: 5,
                         padding: 20,
+                        borderWidth: 1,
+                        borderColor: '#6C63FF',
+                        borderBottomWidth: 0,
                         justifyContent: 'center',
                         alignItems: 'center',
                     },
                         style
                     ]}>
                     <View style={{
-                        justifyContent: 'center',
-                        alignItems: 'center', flexDirection: 'column',
-                        flexWrap: 'nowrap'
+                        flexWrap: 'wrap'
                     }}>
-                        <Text style={{ color: 'grey', fontWeight: 'bold' }}>Location</Text>
-                        {
-                            locationFilterArray.map((item) =>
-                                <TouchableOpacity key={item} onPress={() => [setFilter(item), navigation.navigate('Forum Stack', { user_address: item })]}>
-                                    <Text style={currLocation == item ? { color: '#6C63FF' } : { color: 'black' }}>{item}</Text>
-                                </TouchableOpacity>
-                            )
-                        }
+                        <View style={{ alignItems: 'center' }}>
+                            <Text style={{ color: 'grey' }}>Location</Text>
+                            {
+                                locationFilterArray.map((item) =>
+                                    <TouchableOpacity key={item} onPress={() => [setAddress(item)]}>
+                                        <Text style={[address_user == item ? { color: '#6C63FF' } : { color: 'black' }, { fontWeight: 'bold' }]}>{item}</Text>
+                                    </TouchableOpacity>
+                                )
+                            }
+                        </View>
                     </View>
                 </Animated.View>
             </PanGestureHandler>
@@ -336,12 +333,10 @@ const styles = StyleSheet.create({
     },
     subContainer: {
         width: '100%',
-        height: '85%',
         padding: 5,
         flexDirection: 'row',
         flexWrap: 'wrap',
-        backgroundColor: '#F4F8FF',
-        marginBottom: 90
+        paddingBottom: 44
     },
     box: {
         width: 200,
@@ -368,4 +363,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Posts;
+export default MatchPost;

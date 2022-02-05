@@ -3,36 +3,44 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import Match from '../assets/icons/multi.svg';
 import Field from '../assets/icons/field.svg';
 import Soccer from '../assets/soccer.svg';
-import NotFound from '../assets/image-not-found.svg';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-function Card({ name, image, type, description}) {
+function Card({ name, image, type, description, png, onPress }) {
     function Large() {
         return (
-            <View style={styles.menu}>
+            <TouchableOpacity onPress={onPress} style={styles.menu}>
                 <View style={{ padding: 20 }}>
                     <Svg />
                 </View>
-                <View style={{ padding: 20 }}><Text style={[styles.fontMenu, styles.bold]}>{name}</Text>
+                <View style={{ padding: 20 }}>
+                    <View style={{width: 200}}>
+                        <Text style={[styles.fontMenu, styles.bold]}>{name}</Text>
+                    </View>
+                    <Text style={[styles.fontDescription, styles.bold]}>{description}</Text>
                 </View>
-            </View>
+            </TouchableOpacity>
         )
     }
     function Small() {
         return (
-            <View style={[styles.menu,{height:100, padding:0}]}>
-                <View style={{width:'36%', padding: 10, alignItems:'center', justifyContent: 'center' }}>
+            <TouchableOpacity style={[styles.menu, { height: 100, padding: 5, borderRadius: 10 }]} onPress={onPress}>
+                <View style={{ width: '30%', alignItems: 'center', justifyContent: 'center' }}>
                     {
-                        image?
-                        <Image style={{height:85, width: 110, borderRadius:20}} source={{uri: image}}/>
-                        :
-                        <NotFound width={80} height={80} fill={'gray'}/>
+                        image ?
+                            <Image style={{ height: '100%', backgroundColor: 'black', width: '100%', borderRadius: 10 }} source={png ? png : { uri: "http://66.42.49.240/"+ image }} />
+                            :
+                            png ?
+                                <Image style={{ height: '100%', backgroundColor: '#FFF', width: '100%', borderRadius: 10 }} source={png} />
+                                :
+                                <View style={{ height: '100%', backgroundColor: 'gray', width: '100%', borderRadius: 10 }}>
+                                </View>
                     }
                 </View>
-                <View style={{ width: '64%',padding: 5 }}>
+                <View style={{ width: '70%', padding: 15 }}>
                     <Text style={[styles.fontSmall, styles.bold]}>{name}</Text>
                     <Text style={styles.fontSmall}>{description}</Text>
                 </View>
-            </View>
+            </TouchableOpacity>
         )
     }
     function Svg() {
@@ -45,7 +53,7 @@ function Card({ name, image, type, description}) {
         }
     }
     return (
-        <View>
+        <View style={{ width: '100%', alignItems: 'center', paddingVertical: 5 }}>
             {type === 'small' ?
                 <Small />
                 :
@@ -57,22 +65,24 @@ function Card({ name, image, type, description}) {
 
 const styles = StyleSheet.create({
     menu: {
-        width: '96%',
-        height: 200,
+        height: 210,
         backgroundColor: '#fff',
         borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'flex-start',
         flexDirection: 'row',
-        padding: 20,
-        margin: 10,
+        padding: 5,
         elevation: 4,
+        marginHorizontal: 10
     },
     fontMenu: {
         fontSize: 20
     },
-    bold:{
+    bold: {
         fontWeight: 'bold',
+    },
+    fontDescription: {
+
     }
 })
 

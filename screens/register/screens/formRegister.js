@@ -64,24 +64,21 @@ const FormRegister = ({ navigation }) => {
             .oneOf([yup.ref('password')], 'Passwords does not match'),
     })
 
-    const getProvince = async () => {
-        let isMounted = true;
-        await axios.get(`https://dev.farizdotid.com/api/daerahindonesia/provinsi`)
-            .then((response) => {
-                const res = response.data.provinsi
-                if (isMounted)
-                    setProvince(res)
-            })
-            .catch(function (error) {
-                console.warn(error);
-            });
-        return () => { isMounted = false };
-    }
+    // const getProvince = async () => {
+    //     let isMounted = true;
+    //     await axios.get(`https://dev.farizdotid.com/api/daerahindonesia/provinsi`)
+    //         .then((response) => {
+    //             const res = response.data.provinsi
+    //             if (isMounted)
+    //                 setProvince(res)
+    //         })
+    //         .catch(function (error) {
+    //             console.warn(error);
+    //         });
+    //     return () => { isMounted = false };
+    // }
 
     const handleProvinceChange = async (value) => {
-        // let pos = province.map(function (e) {
-        //     return e.nama;
-        // }).indexOf(value);
         setSelectedProvince(value)
         await axios.get(`https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=${value.id}`)
             .then((response) => {
@@ -93,14 +90,12 @@ const FormRegister = ({ navigation }) => {
     }
 
     const createUser = async (values) => {
-        console.log(values)
         await axios.post('http://66.42.49.240/api/auth/register', values)
-            .then((response) => {
-                // console.log(response.data)
+            .then(() => {
                 navigation.navigate('Login');
             })
             .catch(function (error) {
-                console.warn(error);
+                console.warn(error.message);
             });
 
     }
@@ -119,7 +114,7 @@ const FormRegister = ({ navigation }) => {
                             validationSchema={regisValidationSchema}
                             initialValues={{
                                 first_name: '', last_name: '', email: '', phone_number: '',
-                                password: '', confirm_password: '', BOD: new Date(),
+                                password: '', confirm_password: '', DOB: new Date(),
                                 address: {
                                     address_city: '',
                                     address_region: '',
@@ -131,9 +126,7 @@ const FormRegister = ({ navigation }) => {
                             onSubmit={values => {
                                 values.address.address_city = selectedProvince.nama
                                 values.address.address_region = selectedRegion
-                                values.BOD = date;
-                                // console.log(values)
-
+                                values.DOB = date
                                 createUser(values)
                             }
                             }
@@ -228,6 +221,8 @@ const FormRegister = ({ navigation }) => {
                                             onChangeText={props.handleChange('email')}
                                             onBlur={props.handleBlur('email')}
                                             value={props.values.email}
+                                            autoCapitalize='none'
+                                            keyboardType="email-address"
                                         />
                                     </View>
                                     {(props.errors.email && props.touched.email) &&
@@ -262,22 +257,6 @@ const FormRegister = ({ navigation }) => {
                                     {(props.errors.phone_number && props.touched.phone_number) &&
                                         <Text style={styles.errorText}>{props.errors.phone_number}</Text>
                                     }
-                                    {/* <View style={styles.formUser}>
-                                    <View style={styles.input}>
-                                        {
-                                            DropdownCountries("City", HandleData, province.map((e) => {
-                                                return e.nama
-                                            }))
-                                        }
-                                    </View>
-                                    <View style={styles.input}>
-                                        {
-                                            DropdownCountries("State", HandleSelect, state.map((e) => {
-                                                return e.nama
-                                            }))
-                                        }
-                                    </View>
-                                </View> */}
                                     <View style={styles.formUser}>
                                         <TextInput
                                             style={styles.input}
@@ -286,6 +265,7 @@ const FormRegister = ({ navigation }) => {
                                             onChangeText={props.handleChange('password')}
                                             onBlur={props.handleBlur('password')}
                                             value={props.values.password}
+                                            autoCapitalize='none'
                                         />
                                     </View>
                                     {(props.errors.password && props.touched.password) &&
@@ -300,16 +280,12 @@ const FormRegister = ({ navigation }) => {
                                             onChangeText={props.handleChange('confirm_password')}
                                             onBlur={props.handleBlur('confirm_password')}
                                             value={props.values.confirm_password}
+                                            autoCapitalize='none'
                                         />
                                     </View>
                                     {(props.errors.confirm_password && props.touched.confirm_password) &&
                                         <Text style={styles.errorText}>{props.errors.confirm_password}</Text>
                                     }
-                                    {/* <Field as="select" name="color">
-                                    <option value="red">Red</option>
-                                    <option value="green">Green</option>
-                                    <option value="blue">Blue</option>
-                                </Field> */}
                                     <View style={styles.buttonContainer}>
                                         <View style={styles.button}>
                                             <FlatButton

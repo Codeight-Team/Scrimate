@@ -7,9 +7,9 @@ import axios from 'axios';
 export default function OTPScreen({navigation}) {
     const confirmButtonHandler = (pass) =>{
         console.log(pass.values)
-        axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
-            console.log(response.data);
-          });
+        // axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
+        //     console.log(response.data);
+        //   });
     }
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -20,9 +20,9 @@ export default function OTPScreen({navigation}) {
                     {(props) => (
                         <View>
                             <View style={styles.headingContainer}>
-                                <Text style={styles.title}>We have sent verification code to your phone!!</Text>
+                                <Text style={styles.title}>We have sent verification code to your Email!!</Text>
                                 <View  style={styles.headingContainer2}>
-                                    <Text style={styles.heading2}>Enter the code that was sent through SMS to 08xxxxxxxxxx  </Text>
+                                    <Text style={styles.heading2}>Enter the code that was sent through mail to adm***@gmail.com  </Text>
                                 </View>
                             </View>
                             <View style={styles.formUser}>
