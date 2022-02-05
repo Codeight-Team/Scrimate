@@ -19,7 +19,6 @@ const VenueDetail = ({ navigation, route }) => {
                 await axios.get(`http://66.42.49.240/api/venue/venue-detail/${venue_id}`).then((response) => {
                     if (isActive) {
                         setData(response.data)
-                        console.log(response.data)
                     }
                     setLoading(false)
                 })
@@ -48,14 +47,14 @@ const VenueDetail = ({ navigation, route }) => {
         }).then((response) => {
             console.log(response.data)
             Alert.alert("Venue Status",
-            (response.data.message),
-            [
-                {
-                    text: "OK",
-                    onPress: () => setTimeout(() => {navigation.navigate('Manage Venue Screen', {user_id: route.params.user_id})},500),
-                    style: "cancel",
-                },
-            ]
+                (response.data.message),
+                [
+                    {
+                        text: "OK",
+                        onPress: () => setTimeout(() => { navigation.navigate('Manage Venue Screen', { user_id: route.params.user_id }) }, 500),
+                        style: "cancel",
+                    },
+                ]
             );
         })
             .catch(error => {
@@ -173,25 +172,44 @@ const VenueDetail = ({ navigation, route }) => {
                                 </View>
                             </View>
                             <View style={{ width: '100%', alignItems: 'center' }}>
-                                <TouchableOpacity 
-                                    style={[{ padding: 10, borderRadius: 20, backgroundColor: 'green', elevation: 2 }, data.isOpen&&{backgroundColor: "#8b0000"}]}
-                                    onPress={()=>updateVenueStatus()}
+                                {data.operationals!=0&&
+                                    <TouchableOpacity
+                                        style={[{ padding: 10, borderRadius: 20, backgroundColor: 'green', elevation: 2 }, data.isOpen && { backgroundColor: "#8b0000" }]}
+                                        onPress={() => updateVenueStatus()}
                                     >
-                                    {data.isOpen ?
-                                        <Text style={{ color: "#FFF" }}>
-                                            CLOSE VENUE
-                                        </Text>
-                                        :
-                                        <Text style={{ color: "#FFF" }}>
-                                            OPEN VENUE
-                                        </Text>
-                                    }
+                                        {data.isOpen ?
+                                            <Text style={{ color: "#FFF" }}>
+                                                CLOSE VENUE
+                                            </Text>
+                                            :
+                                            <Text style={{ color: "#FFF" }}>
+                                                OPEN VENUE
+                                            </Text>
+                                        }
 
-                                </TouchableOpacity>
+                                    </TouchableOpacity>
+                                }
                             </View>
                         </View>
                     </View>
                     <View style={styles.addContainer}>
+                        {data.operationals != 0 && <TouchableOpacity style={{
+                            marginHorizontal: 5,
+                            width: 120,
+                            padding: 5,
+                            backgroundColor: '#6C63FF',
+                            elevation: 5,
+                            borderRadius: 10,
+                            flexDirection: 'row',
+                            alignItems: 'center'
+                        }} onPress={() => navigation.navigate('Create Field Screen', { venue_id: venue_id })}>
+                            <Entypo name="circle-with-plus" size={24} color="white" />
+                            <View style={{ padding: 5, paddingRight: 20, justifyContent: 'center', alignItems: 'center', width: 120 }}>
+                                <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                                    Manage Fields
+                                </Text>
+                            </View>
+                        </TouchableOpacity>}
                         {data.operationals != 0 && <TouchableOpacity style={{
                             marginHorizontal: 5,
                             width: 120,

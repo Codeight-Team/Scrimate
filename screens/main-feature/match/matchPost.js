@@ -128,7 +128,7 @@ function MatchPost({ navigation, route }) {
     useEffect(() => {
         const counter = () => {
             setCount((count) => count + 1);
-            console.log(count)
+            // console.log(count)
         }
         counter()
     }, [address_user, myMatch])

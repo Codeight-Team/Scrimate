@@ -67,6 +67,7 @@ function MatchDetail({ navigation, route }) {
                     <Text>Address: {data.venue.address.street}</Text>
                     <Text>Region: {data.venue.address.country}</Text>
                     <Text>Created by: {data.name}</Text>
+                    <Text>Price/Hour: Rp 100000</Text>
                     {
                         renderDay()
                     }

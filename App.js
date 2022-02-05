@@ -58,7 +58,6 @@ function App() {
       let user = {}
         await axios.post('http://66.42.49.240/api/auth/login', data)
       .then(response => {
-        console.log(response.data)
         user = response.data
       }
       ).catch((error) => {

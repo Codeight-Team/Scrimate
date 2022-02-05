@@ -5,7 +5,7 @@ import axios from 'axios';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import moment from 'moment';
 
-function MessageFocus({ navigation }) {
+function ConversationList({ navigation }) {
     const [myChat, setMyChat] = useState()
     useEffect(() => {
         // axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
@@ -91,4 +91,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default MessageFocus;
+export default ConversationList;

@@ -17,7 +17,9 @@ const ManageVenue = ({ navigation, route }) => {
             let isActive = true
             const fetchVenues = async () => {
                 await axios.get(`http://66.42.49.240/api/venue/get-my-venue/${route.params.user_id}`).then((response) => {
-                    setVenue(response.data)
+                    if (isActive) {
+                        setVenue(response.data)
+                    }
                 })
                     .catch(error => {
                         console.log(error)
@@ -26,7 +28,7 @@ const ManageVenue = ({ navigation, route }) => {
             fetchVenues()
             return () => { isActive = false }
         })
-    ),[];
+    ), [];
 
 
 
@@ -73,7 +75,7 @@ const ManageVenue = ({ navigation, route }) => {
                                 </Text>
                             </View>
                         </View>
-                        <View style={{width: '35%', height: '100%', justifyContent: 'center', alignItems: 'center', padding: 15 }}>
+                        <View style={{ width: '35%', height: '100%', justifyContent: 'center', alignItems: 'center', padding: 15 }}>
                             {!item.isOpen ?
                                 <Text style={{ fontWeight: 'bold', color: 'red' }}>
                                     CLOSED

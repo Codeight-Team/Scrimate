@@ -51,12 +51,13 @@ function ReserveVenue({ navigation, route }) {
 
     useEffect(() => {
         fetchVenueDetail()
-    },[])
+    }, [])
 
     const fetchVenueDetail = async () => {
         await axios.get(`http://66.42.49.240/api/venue/venue-detail/${venue_id}`)
             .then(response => {
                 setVenue(response.data)
+                console.log(response.data);
                 setIsLoading(false)
             })
             .catch(err => {
@@ -77,8 +78,8 @@ function ReserveVenue({ navigation, route }) {
                     </View>
                     {venue.operationals[index] ?
                         <Text style={{ color: 'black' }}>
-                            {moment(venue.operationals[index].operational_timeOpen, "HH:mm:ss").format("HH:mm")+ " - "} 
-                             
+                            {moment(venue.operationals[index].operational_timeOpen, "HH:mm:ss").format("HH:mm") + " - "}
+
                             {moment(venue.operationals[index].operational_timeClose, "HH:mm:ss").format("HH:mm")}
                         </Text>
                         :
@@ -95,14 +96,13 @@ function ReserveVenue({ navigation, route }) {
         )
     }
 
-    const renderRating = () => {
-        let avg_rating = 1
+    const renderRating = (values, size) => {
         const rating = [];
-        for (let i = 0; i < avg_rating; i++) {
-            rating.push(<FontAwesome key={i} name="star" size={20} color="orange" />)
+        for (let i = 0; i < values; i++) {
+            rating.push(<FontAwesome key={i} name="star" size={size} color="orange" />)
         }
-        for (let i = 0; i < (5 - avg_rating); i++) {
-            rating.push(<FontAwesome key={i + 10} name="star-o" size={20} color="orange" />)
+        for (let i = 0; i < (5 - values); i++) {
+            rating.push(<FontAwesome key={i + 10} name="star-o" size={size} color="orange" />)
         }
         return rating;
     }
@@ -110,45 +110,60 @@ function ReserveVenue({ navigation, route }) {
     const propsView = () => {
         return (
             <View style={{ width: '100%' }}>
-                {flag == 1 ?
+                {flag == 1 &&
                     <View style={{ flexDirection: 'column', width: '100%', alignItems: 'center' }}>
                         {
                             renderTimeOpen()
                         }
                     </View>
-                    : flag == 2 ?
-                        <View>
-                            <Text style={{ fontWeight: 'bold' }}>Address: </Text>
-                            <Text>{venue.address.address_street}</Text>
-                            <Text>{venue.address.address_region}</Text>
+                }
+                {
+                    flag == 2 &&
+                    <View>
+                        <Text style={{ fontWeight: 'bold' }}>Address: </Text>
+                        <Text>{venue.address.address_street}</Text>
+                        <Text>{venue.address.address_region}</Text>
+                    </View>
+                }
+                {/* venue.venue_rating.length  */}
+
+                {flag == 3 && (venue.venue_rating.length ?
+                    <ScrollView style={{ width: '100%' }}>
+                        <View style={{ flexDirection: 'row', paddingBottom: 10 }}>
+                            <Text style={{ paddingEnd: 20, fontWeight: 'bold' }}>
+                                Rating
+                            </Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                {
+                                    renderRating(4, 20)
+                                }
+                            </View>
+                            <Text style={{ paddingHorizontal: 5 }}>(15)</Text>
                         </View>
-                        :
-                        venue.venue_rating.length?
-                        <View style={{ width: '100%' }}>
-                            <View style={{ flexDirection: 'row', paddingBottom: 20 }}>
-                                <Text style={{ paddingEnd: 20, fontWeight: 'bold' }}>
-                                    Rating
-                                </Text>
-                                <View style={{ flexDirection: 'row' }}>
+                        <View style={{ paddingVertical: 5, }}>
+                            <Text style={{ color: 'gray' }}>Review</Text>
+                        </View>
+                        {
+                        venue.venue_rating.map(item => (
+                            <View style={{ paddingVertical: 10 }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     {
-                                        renderRating()
+                                        renderRating(4, 14)
                                     }
                                 </View>
-                                <Text style={{ paddingHorizontal: 5 }}>(15)</Text>
+                                <Text style={{ paddingRight: 10, fontSize: 12, fontWeight: 'bold' }}>Juki</Text>
+                                <Text>yeakyeakyeakyeakjwandunawduwqnidqwwndqiwuwndiqjndiqnduwqndiqundiqudniqwudnqiuwdniqudniqwuwndqiudnqiudniqwudniw</Text>
                             </View>
-                            <View>
-                                <Text>Comment</Text>
-                            </View>
-                            <ScrollView style={{ width: '100%' }}>
-                                
-                            </ScrollView>
-                        </View>
-                        :
-                        <View style={{ width: '100%', alignItems: 'center' }}>
-                            <Text style={{color: "gray"}}>
-                                No Ratings Yet
-                            </Text>
-                        </View>
+                        ))
+                        }
+                    </ScrollView>
+                    :
+                    <View style={{ width: '100%', alignItems: 'center' }}>
+                        <Text style={{ color: "gray" }}>
+                            No Ratings Yet
+                        </Text>
+                    </View>
+                )
                 }
             </View>
 
@@ -188,12 +203,16 @@ function ReserveVenue({ navigation, route }) {
                     <Text>{route.params.item.address.address_region}</Text>
                     <Text>{route.params.item.address.address_city}</Text> */}
                         </View>
-                        <View style={[{ width: '100%', height: '50%', flexDirection: 'row', padding: 20 }, flag == 1 && { justifyContent: 'center' }]}>
+                        <View style={[{ width: '100%', height: '40%', flexDirection: 'row', padding: 20 }, flag == 1 && { justifyContent: 'center' }]}>
                             {
                                 propsView()
                             }
                         </View>
-                        <View style={[styles.descriptionContainer, { alignItems: 'center', justifyContent: 'center', height: '31%' }]}>
+                        <View style={{ width: '100%', padding: 20, height: '21%', borderTopWidth: 0.5, borderColor: '#cecece' }}>
+                            <Text style={{ fontWeight: 'bold' }}>Description</Text>
+                            <Text>Description</Text>
+                        </View>
+                        <View style={[styles.descriptionContainer, { alignItems: 'center', justifyContent: 'center', height: '21%' }]}>
                             <FlatButton text='choose'
                                 // disabled={!props.isValid} 
                                 onPress={() => navigation.navigate('Choose Field', { field: data.field, venue_name: data.name, venue_image: data.images, address: data.address })} backgroundColor={'#6C63FF'} width={199} />

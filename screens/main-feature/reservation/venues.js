@@ -26,22 +26,16 @@ function ReservationScreen({ navigation, route }) {
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        wait(2000).then(() => setRefreshing(false));
+        wait(2000).then(() => [fetchVenues(),setRefreshing(false)]);
     }, []);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            let isActive = true
-            fetchVenues(isActive)
-            return () => { isActive = false }
-        })
-    ),[preferedAddress];
+    useEffect(() => {
+        fetchVenues()
+    },[preferedAddress]);
 
-    const fetchVenues = async (isActive) => {
+    const fetchVenues = async () => {
         await axios.post(`http://66.42.49.240/api/venue/get-venue/`, { sport_name: sport, address_region: preferedAddress }).then((response) => {
-            if(isActive){
                 setVenues(response.data)
-            }
         })
             .catch(error => {
                 console.log(error)
