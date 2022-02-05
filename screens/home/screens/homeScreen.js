@@ -148,6 +148,12 @@ function HomeScreen({ navigation, route }) {
       sport: "Badminton",
       svg: "shuttle"
     },
+    {
+      name: "Basketball",
+      url: 'Activity Screen',
+      sport: "Basketball",
+      svg: "basket"
+    },
   ]
 
   function RenderBubble() {
