@@ -128,7 +128,7 @@ function ReservationScreen({ navigation, route }) {
                     {venues.length ?
                         MainContent()
                         :
-                        NoDataView()
+                        <NoDataView type={"Venue"}/>
                     }
                 </ScrollView>
             </View>

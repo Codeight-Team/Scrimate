@@ -16,7 +16,6 @@ const MyOrder = ({ navigation, route }) => {
     const fetchOrderList = async () => {
         await axios.get(`http://scrimate.com/api/order/find-my-order/${user_id}`)
             .then(response => {
-                console.log(response.data);
                 setMyOrder(response.data)
             })
             .catch(error => {
@@ -45,7 +44,7 @@ const MyOrder = ({ navigation, route }) => {
                             {
                                 myOrder.reverse().map(item => (
                                     <View key={item.order_id}>
-                                        {item.order_status === 'On Going' &&
+                                        {item.order_status != 'Failure' && item.order_status!="Finish" &&
                                             <Card
                                                 itemId={item.order_id}
                                                 venue_name={item.field.venue.venue_name}
@@ -68,7 +67,7 @@ const MyOrder = ({ navigation, route }) => {
                             {
                                 myOrder.reverse().map(item => (
                                     <View key={item.order_id}>
-                                        {item.order_status != 'On Going' &&
+                                        {item.order_status != 'On Going' && item.order_status != 'Waiting' && 
                                             <Card
                                                 itemId={item.order_id}
                                                 venue_name={item.field.venue.venue_name}

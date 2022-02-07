@@ -10,6 +10,8 @@ import Loading from '../../../../shared/loading';
 function MatchDetail({ navigation, route }) {
     const [matchDetail, setMatchDetail] = useState({})
     const [isLoading, setIsLoading] = useState(true)
+    const [creator_id, setCreatorId] = useState()
+    const [order_id, setOrderId] = useState()
     const match_id = route.params.match_id
     const user_id = route.params.user_id
 
@@ -23,6 +25,8 @@ function MatchDetail({ navigation, route }) {
         await axios.get(`http://scrimate.com/api/match-making/match-detail/${match_id}`)
             .then(response => {
                 setMatchDetail(response.data)
+                setOrderId(response.data.order[response.data.order.length-1].order_id)
+                setCreatorId(response.data.creator_id)
                 setIsLoading(false)
             })
             .catch(error => {
@@ -102,7 +106,8 @@ function MatchDetail({ navigation, route }) {
                                 </View>
                             </View>
                             <View style={styles.buttonContainer}>
-                                <FlatButton width={150} backgroundColor={'#6C63FF'} text={'Join'}
+                                {user_id != creator_id &&
+                                    <FlatButton width={150} backgroundColor={'#6C63FF'} text={'Join'}
                                     onPress={() => Alert.alert('Join Match?',
                                         'You will be asked for payment if you accept this match', [
                                         {
@@ -111,48 +116,13 @@ function MatchDetail({ navigation, route }) {
                                         },
                                         {
                                             text: 'OK',
-                                            onPress: () => sendUserJoin()
+                                            onPress: () => navigation.navigate("Profile",{ screen: 'Payment Method', params: { user_id: creator_id, order_id: order_id, finder_id: user_id, match_id: match_id}})
                                         },
                                     ])} />
+                                }
                             </View>
                         </View>
                     </View>
-                    {/* <View style={[styles.descriptionContainer]}>
-                        <View style={{ height: '10%', width: '100%', alignItems: 'center' }}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{matchDetail.field.venue.venue_name}</Text>
-                        </View>
-                        <View style={{ width: '100%', height: '90%', padding: 10 }}>
-                            <View style={{ flexDirection: 'row', borderBottomWidth: 1, borderColor: '#cecece' }}>
-                                <View style={{ width: '50%' }}>
-                                    <Text style={styles.title}>Day: </Text>
-                                    <Text>{moment(matchDetail.date_of_match).format('dddd')}</Text>
-                                </View>
-                                <View style={{ width: '50%' }}>
-                                    <Text style={styles.title}>Date:  </Text>
-                                    <Text>{moment(matchDetail.date_of_match).format('DD MMMM YYYY')}</Text>
-                                </View>
-                            </View>
-                            <View style={{ padding: 10, flexDirection: 'row' }}>
-                                <View>
-                                    <Text style={styles.title}>Time:  </Text>
-                                    <Text>{moment(matchDetail.time_of_match, "HH:mm:ss").format("HH:mm")} - {moment(matchDetail.time_of_match, 'HH:mm:dd').add(1, "hours").format("HH:mm")}</Text>
-                                    <Text style={styles.title}>Region: </Text>
-                                    <Text> {matchDetail.field.venue.address.address_region}</Text>
-                                    <Text style={styles.title}>Address: </Text>
-                                    <Text> {matchDetail.field.venue.address.address_street}</Text>
-                                </View>
-                            </View>
-                            <View style={{ flexDirection: 'row', height: '20%', alignItems: 'center' }}>
-                                <Text style={{ width: '50%' }}>Price/Hour</Text>
-                                <Text style={{ width: '50%', textAlign: 'right', fontVariant: 'bold' }}> Rp 100000</Text>
-                            </View>
-                            <View style={{ width: '100%', alignItems: 'center' }}>
-                                <Text>Match Creator: {matchDetail.creator.first_name} {matchDetail.creator.last_name}</Text>
-                            </View>
-                        </View>
-                    </View> */}
-
-
                 </View>
             }
         </>

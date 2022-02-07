@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableHighlight, TouchableOpacity, StyleSheet, Image, Platform, Alert } from 'react-native'
-// import CustomDateTimePicker from "../../shared/CustomDateTimePicker";
 import DatePicker from 'react-native-neat-date-picker'
 import moment from "moment";
 import { Entypo } from '@expo/vector-icons';
@@ -84,6 +83,16 @@ const PickDateTime = ({ navigation, route }) => {
         setOrder({ date_of_match: newDate, order_type: type, time_of_match: newTime })
     }
 
+    const sendOrderDetail = async () => {
+        await axios.post(`http://scrimate.com/api/order/create-order/${user_id}/${field.field_id}`, order)
+            .then(response => {
+                navigation.navigate('Profile', { screen: 'Payment Method', params: { user_id: user_id, order_id: response.data.order_id } })
+            })
+            .catch(error =>
+                console.warn(error)
+            )
+    }
+
     const RenderAvailableTime = () => {
         return availableTime.map((item, index) => {
             return (
@@ -110,18 +119,6 @@ const PickDateTime = ({ navigation, route }) => {
         )
     }
 
-    const sendOrderDetail = async() => {
-        await axios.post(`http://scrimate.com/api/order/create-order/${user_id}/${field.field_id}`, order)
-            .then(response => {
-                navigation.navigate('Profile', { screen: 'Payment Method', params: { user_id: user_id, order_id: response.data.order_id } })
-            })
-            .catch(error =>
-                console.warn(error)
-            )
-    }
-
-    
-
     return (
         <View style={styles.container}>
             <View style={{ height: "16%", flexDirection: "row", flexWrap: "wrap" }}>
@@ -139,8 +136,6 @@ const PickDateTime = ({ navigation, route }) => {
                 </View>
             </View>
             <View style={{ padding: 20, height: '34%', justifyContent: "center", alignItems: 'flex-start' }}>
-                {/* <CustomDateTimePicker textStyle={{paddingVertical: 15, paddingHorizontal: 10, borderColor: 'gray', borderWidth: 1}}/> */}
-
                 <View style={{ width: '100%', flexDirection: "row" }}>
                     <View style={{ width: "50%", paddingLeft: 20 }}>
                         <Text>{moment(date).format('dddd')}</Text>

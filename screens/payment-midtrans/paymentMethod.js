@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, ScrollView } from "react-native";
+import { StyleSheet, View, Text, ScrollView, Alert } from "react-native";
 import axios from "axios";
 import Card from "../../shared/card";
 import BCA from "../../assets/bca-logo.png";
@@ -20,6 +20,8 @@ const PaymentMethod = ({ navigation, route }) => {
 
   const user_id = route.params.user_id
   const order_id = route.params.order_id
+  const finder_id = route.params.finder_id
+  const match_id = route.params.match_id
 
   const payment_method = [
     {
@@ -47,13 +49,11 @@ const PaymentMethod = ({ navigation, route }) => {
         setBills(response.data.data.bills)
         setField(response.data.data.field)
         setMatchTime({ date_of_match: response.data.data.date_of_match, time_of_match: response.data.data.time_of_match })
-        if (response.data.data.bills.bill_status == null) {
+        if (response.data.data.bills.bill_status == null || finder_id) {
           setLoading(false)
-        }
-        if (response.data.data.bills.bill_status) {
+        } else if (response.data.data.bills.bill_status) {
           navigation.navigate("Payment", { user_id: user_id, order_id: order_id })
         }
-        console.log(response.data.data);
       })
         .catch(error => {
           console.log(error)
@@ -63,12 +63,35 @@ const PaymentMethod = ({ navigation, route }) => {
   }, [])
 
   const sendPaymentMethod = (value) => {
-    console.log(bills.bill_id, route.params.user_id);
     axios.post(`http://66.42.49.240/api/payment/process-order/${user_id}/${bills.bill_id}`, {
       payment_method: value
     })
       .then(response => {
         navigation.navigate("Payment", { user_id: user_id, order_id: order_id })
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  const checkUserType = (payment_method) => {
+    if (finder_id) {
+      sendFinderToMatch(payment_method)
+    } else {
+      sendPaymentMethod(payment_method)
+    }
+  }
+
+  const sendFinderToMatch = async (payment_method) => {
+    await axios.put(`http://66.42.49.240/api/match-making/join/${finder_id}/${match_id}`, {payment_method: payment_method})
+      .then(res => {
+        Alert.alert('Success',
+          res.data.message, [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate("Payment", { user_id: finder_id, order_id: order_id })
+          },
+        ])
       })
       .catch(err => {
         console.log(err);
@@ -90,7 +113,7 @@ const PaymentMethod = ({ navigation, route }) => {
                 <View style={{ padding: 10, paddingBottom: 0 }}>
                   {payment_method.map(item => (
                     <View key={item.name}>
-                      <Card type="small" name={item.name} png={item.image} description={item.description} onPress={() => sendPaymentMethod(item.name.toLowerCase())} />
+                      <Card type="small" name={item.name} png={item.image} description={item.description} onPress={() => checkUserType(item.name.toLowerCase())} />
                     </View>
                   ))
                   }

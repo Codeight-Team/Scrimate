@@ -10,13 +10,13 @@ import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { set, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, } from 'react-native-reanimated';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
+import NoDataView from '../../../shared/noDataFound';
 
 
 
 function MatchPost({ navigation, route }) {
     const [address_user, setAddress] = useState("Kota Jakarta Barat") //route.params.address
     const [myMatch, setMyMatch] = useState(false)
-    const [data, setData] = useState(postArray)
     const [matchList, setMatchList] = useState([])
     const locationFilterArray = ["Kota Jakarta Barat", "Kota Jakarta Utara", "Kota Jakarta Pusat", "Kota Jakarta Timur", "Kota Jakarta Selatan",]
 
@@ -25,34 +25,6 @@ function MatchPost({ navigation, route }) {
     const title = route.params.title
     const sport = route.params.sport
 
-    const postArray = [
-        {
-            id: 2,
-            venue: { name: "La Futsal", address: { street: "Jl. Andara Raya", country: "Jakarta Selatan" }, rating: "5" },
-            name: 'Cool FC',
-            sports: {
-                name: 'futsal'
-            },
-            schedule: {
-                date: '05-2-2022',
-                timeStart: '07.00 WIB',
-                timeEnd: '08.00 WIB'
-            }
-        },
-        {
-            id: 3,
-            venue: { name: "La Futsal", address: { street: "Jl. Andara Raya", country: "Jakarta Selatan" }, rating: "5" },
-            name: 'Scar FC',
-            sports: {
-                name: 'futsal'
-            },
-            schedule: {
-                date: '28-2-2022',
-                timeStart: '15.00 WIB',
-                timeEnd: '16.00 WIB'
-            }
-        },
-    ]
     const [count, setCount] = useState(0);
 
     useEffect(() => {
@@ -62,7 +34,6 @@ function MatchPost({ navigation, route }) {
     const fethMatchList = async () => {
         await axios.post(`http://scrimate.com/api/match-making/list-match/${user_id}`, { sport_name: sport, address_region: "Kota Jakarta Barat" })
             .then(res => {
-                console.log(res.data)
                 setMatchList(res.data)
             })
             .catch(err => {
@@ -116,7 +87,7 @@ function MatchPost({ navigation, route }) {
         return matchList.map((item) => {
             return (
                 <TouchableOpacity key={item.match_id} onPress={() => {
-                    navigation.navigate("Match Detail", { user_id: user_id, match_id: item.match_id})
+                    navigation.navigate("Match Detail", { user_id: user_id, match_id: item.match_id })
                 }
 
                 }>
@@ -141,7 +112,7 @@ function MatchPost({ navigation, route }) {
                                         {sport}
                                     </Text>
                                 </View>
-                                <Text style={[styles.fontDetail,  { fontWeight: 'bold' }]}>
+                                <Text style={[styles.fontDetail, { fontWeight: 'bold' }]}>
                                     {moment(item.date_of_match).format("dddd")}
                                 </Text>
                                 <Text style={styles.fontDetail}>
@@ -151,7 +122,7 @@ function MatchPost({ navigation, route }) {
                                     {moment(item.time_of_match, "HH:mm:ss").format("HH:mm")} - {moment(item.time_of_match, 'HH:mm:dd').add(1, "hours").format("HH:mm")}
                                 </Text>
                                 <Text style={styles.fontDetail}>
-                                    
+
                                     <Text style={{ fontWeight: 'bold' }}>
                                         {item.field.venue.venue_name}
                                     </Text>
@@ -209,10 +180,10 @@ function MatchPost({ navigation, route }) {
                     <View style={styles.container}>
                         <View style={styles.subContainer}>
                             {
-                                postArray.length != 0 ?
+                                !myMatch?
                                     RenderPost()
                                     :
-                                    <Text>No Data</Text>
+                                    <NoDataView type={"Match"} />
                             }
                         </View>
                     </View>
