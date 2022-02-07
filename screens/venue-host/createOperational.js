@@ -55,8 +55,8 @@ const CreateOperational = ({ route, navigation }) => {
     const timeAvailable = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
         '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
 
-    const sendOperational = async () => {
-        await axios.post("http://66.42.49.240/api/venue/create-operationalhour/"+ venue, time)
+    const sendOperational = async(values) => {
+        await axios.post("http://66.42.49.240/api/venue/create-operationalhour/"+ venue, values)
         .then(()=>{
             Alert.alert(
                 'Operational Hour',
@@ -73,7 +73,16 @@ const CreateOperational = ({ route, navigation }) => {
         })
     }
 
-    const handeOpen = (index) => {
+    const handleSubmit = () =>{
+        const newArr = open.map((item, index)=>{
+            if((time[index].operational_day == (index+1))&&item==true){
+                return time[index]
+            }
+        })
+        sendOperational(newArr)
+    }
+
+    const handleOpen = (index) => {
         const newArr = open.map((item, i) => {
             if (index == i) {
                 return !item
@@ -125,11 +134,11 @@ const CreateOperational = ({ route, navigation }) => {
                                     <View style={{ width: '10%', justifyContent: "center" }}>
                                         {
                                             open[index] ?
-                                                <TouchableOpacity onPress={() => handeOpen(index)}>
+                                                <TouchableOpacity onPress={() => handleOpen(index)}>
                                                     <AntDesign name="checkcircleo" size={21} color="green" />
                                                 </TouchableOpacity>
                                                 :
-                                                <TouchableOpacity onPress={() => handeOpen(index)}>
+                                                <TouchableOpacity onPress={() => handleOpen(index)}>
                                                     <AntDesign name="closecircleo" size={21} color="red" />
                                                 </TouchableOpacity>
                                         }
@@ -201,7 +210,7 @@ const CreateOperational = ({ route, navigation }) => {
                 </View>
             </View>
             <View style={{ width: '100%', alignItems: "center" }}>
-                <FlatButton width={150} text={'submit'} backgroundColor={'#6C63FF'} onPress={() => sendOperational()} />
+                <FlatButton width={150} text={'submit'} backgroundColor={'#6C63FF'} onPress={handleSubmit} />
             </View>
         </View>
     );

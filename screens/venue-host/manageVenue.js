@@ -62,15 +62,15 @@ const ManageVenue = ({ navigation, route }) => {
                         <View style={{ width: '60%', padding: 10 }}>
                             <View>
                                 <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 18, width: '50%' }}>
+                                    <Text style={{ fontWeight: 'bold', fontSize: 16, width: '100%' }}>
                                         {item.venue_name}
                                     </Text>
 
                                 </View>
-                                <Text>
+                                <Text style={{fontSize: 13}}>
                                     {item.address.address_street}
                                 </Text>
-                                <Text>
+                                <Text style={{fontSize: 13}}>
                                     {item.address.address_region}
                                 </Text>
                             </View>

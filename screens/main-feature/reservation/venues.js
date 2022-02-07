@@ -79,7 +79,7 @@ function ReservationScreen({ navigation, route }) {
         return venues.map((item) => {
             return (
                 <TouchableOpacity style={{ width: '100%' }} activeOpacity={.7} key={item.venue_id} onPress={() =>
-                    navigation.navigate("Reserve Venue", { venue_id: item.venue_id })
+                    navigation.navigate("Reserve Venue", { venue_id: item.venue_id, title: title })
                 }>
                     <Card type='small' name={item.venue_name} image={item.image} description={item.address.address_region} />
                 </TouchableOpacity>
@@ -102,7 +102,7 @@ function ReservationScreen({ navigation, route }) {
             <View style={styles.container}>
                 <View style={{ width: '100%', flexDirection: 'row', backgroundColor: '#fff', padding: 10, elevation: 4 }}>
                     <View style={{ width: '50%', }}>
-                        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => console.log('Yeah')}>
+                        <TouchableOpacity style={{ flexDirection: 'row' }}>
                             <Text style={[{ color: 'gray' }, { fontWeight: 'bold' }]}>{sport}, {title}</Text>
                         </TouchableOpacity>
                     </View>

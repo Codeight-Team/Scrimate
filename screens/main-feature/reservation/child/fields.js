@@ -1,61 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, TouchableWithoutFeedback } from 'react-native'
-import { useEffect } from "react/cjs/react.development";
 import FlatButton from "../../../../shared/button";
+import axios from "axios";
+import moment from "moment";
 
 function ChooseField({ navigation, route }) {
-    const [data, setData] = useState({});
-    const field = [
-        {
-            id: 1,
-            name: 'Field 1',
-            type: 'Wood',
-            price: 110000,
-            image: route.params.venue_image
-        },
-        {
-            id: 2,
-            name: 'Field 2',
-            type: 'Vinyl',
-            price: 150000,
-            image: route.params.venue_image
-        },
-        {
-            id: 3,
-            name: 'Field 3',
-            type: 'Wood',
-            price: 110000,
-            image: route.params.venue_image
-        },
-        {
-            id: 4,
-            name: 'Field 4',
-            type: 'Vinyl',
-            price: 150000,
-            image: route.params.venue_image
-        }
-    ]
+    const [fields, setFields] = useState([]);
+    const venue_id = route.params.venue_id
+    const venue_name = route.params.venue_name
+    const title = route.params.title
 
-    const [state, setState] = useState(field[0])
+    const time = moment('12:15:12: PM', 'HH:mm:ss: A').diff(moment().startOf('day'), 'seconds') - moment('12:12:12: PM', 'HH:mm:ss: A').diff(moment().startOf('day'), 'seconds');
+
+    useEffect(() => {
+        console.log(time < 0 ? 0 : time);
+        const fetchFields = async () => {
+            await axios.get(`http://scrimate.com/api/field/get-fields/${venue_id}`)
+                .then(response => {
+                    // if(isMounted){
+                    setFields(response.data)
+                    console.log(response.data)
+                    // }
+                })
+        }
+        fetchFields()
+    }, [])
+
+    const [state, setState] = useState({})
 
     function renderField() {
-        return field.map((item) => {
+        return fields.map((item) => {
             return (
-                <View key={item.id} style={styles.box}>
+                <View key={item.field_id} style={styles.box}>
                     <TouchableWithoutFeedback onPress={() => setState(item)}>
-                        <View style={[styles.inner, state.id == item.id && { borderWidth: 1, backgroundColor: 'grey' }]} onPress={() => [setState(item)]}>
+                        <View style={[styles.inner,
+                        state && state.field_id == item.field_id && { borderWidth: 1, backgroundColor: 'grey' }
+                        ]}
+                        >
 
                             <View style={{ width: '100%', alignItems: "center", marginVertical: 4 }}>
-                                <Text style={[{ fontSize: 16, fontWeight: 'bold' }, state.id == item.id ? { color: 'black' } : { color: '#6C63FF' }]}>{item.name}</Text>
+                                <Text style={[{ fontSize: 16, fontWeight: 'bold' },
+                                state.field_id == item.field_id ? { color: 'black' } :
+                                    { color: '#6C63FF' }]}>{item.field_name}</Text>
                             </View>
                             <View style={{ width: '100%', alignItems: "center" }}>
                                 <Text >Flooring Type </Text>
                                 <View style={{ width: '100%', alignItems: "center" }}>
-                                    <Text style={{ fontWeight: 'bold' }}>{item.type}</Text>
+                                    <Text style={{ fontWeight: 'bold' }}>{item.field_type}</Text>
                                 </View>
                             </View>
                             <View style={{ width: '100%', alignItems: "center", marginVertical: 5 }}>
-                                <Text >Price/Hour <Text style={{ fontWeight: 'bold' }}>{'Rp.' + item.price}</Text></Text>
+                                <Text >Price/Hour <Text style={{ fontWeight: 'bold' }}>{'Rp.' + item.field_price}</Text></Text>
                             </View>
                         </View>
                     </TouchableWithoutFeedback>
@@ -69,7 +64,7 @@ function ChooseField({ navigation, route }) {
         <View style={styles.container}>
             <View style={{ width: '100%', height: '10%', padding: 10 }}>
                 <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#FFFFFF', borderRadius: 20, elevation: 3, alignItems: "center", justifyContent: "center" }}>
-                    <Text style={{ fontWeight: "bold", color: 'black' }}> Venue: {route.params.venue_name}</Text>
+                    <Text style={{ fontWeight: "bold", color: 'black' }}> Venue: {venue_name}</Text>
                 </View>
             </View>
             <View style={{ width: '100%', height: '5%', alignItems: "center", justifyContent: 'center' }}>
@@ -78,20 +73,40 @@ function ChooseField({ navigation, route }) {
                 </Text>
             </View>
             <View style={{ width: '100%', height: '50%', alignItems: "center" }}>
-                <Image style={{ height: '60%', width: '70%', borderRadius: 10, margin: 20 }} source={{ uri: state.image }} />
+                {
+                    Object.entries(state).length == 0 ?
+                        <View style={{
+                            height: '60%',
+                            width: '70%',
+                            borderRadius: 10,
+                            margin: 20,
+                            justifyContent: 'center',
+                            alignItems: "center",
+                            backgroundColor: '#cecece',
+                        }}>
+                            <Text style={{ color: 'gray' }}>
+                                choose field
+                            </Text>
+                        </View>
+                        :
+                        <Image style={{ height: '60%', width: '70%', borderRadius: 10, margin: 20 }} source={{ uri: "http://scrimate.com/" + state.image }} />
+                }
+
                 <View style={{ width: '100%', height: '20%', justifyContent: "center", alignItems: "center" }}>
                     <FlatButton
                         width={200}
                         backgroundColor={'#FFFFFF'}
-                        // disabled={disabled}
+                        disabled={Object.entries(state).length == 0}
                         textStyle={{ color: 'black' }}
                         text={'Choose'}
-                        onPress={() => 
+                        onPress={() =>
                             navigation.navigate('Pick Date Time', {
-                            field: state,
-                            venue_name: route.params.venue_name,
-                            address: route.params.address,
-                        })
+                                field: state,
+                                venue_name: venue_name,
+                                address: route.params.address,
+                                operationals: route.params.operationals,
+                                title: title
+                            })
                         } />
                 </View>
             </View>

@@ -64,8 +64,11 @@ function ProfileScreen({ navigation }) {
 
         <View style={styles.box}>
           <Text style={styles.submenuText}>Activity</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('My Order')}>
-            <Text>My Order</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('My Order', {user_id: data.user_id, type: "order"})}>
+            <Text>Order History</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('My Order', {user_id: data.user_id, type: "match"})}>
+            <Text>My Match</Text>
           </TouchableOpacity>
         </View>
 

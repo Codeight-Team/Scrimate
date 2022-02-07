@@ -90,6 +90,7 @@ function App() {
   }))
 
   useEffect(()=>{
+    auth.signOut()
     setTimeout(async()=>{
       let accessToken = null
       let refreshToken = null

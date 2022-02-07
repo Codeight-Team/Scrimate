@@ -1,35 +1,23 @@
-import React, { useEffect } from "react";
-import { View, TextInput, Text, TouchableWithoutFeedback, Keyboard, StyleSheet, Image, Platform } from 'react-native'
-// import CustomDateTimePicker from "../../shared/CustomDateTimePicker";
-import DateTime from '@react-native-community/datetimepicker'
-import { useState } from "react/cjs/react.development";
+import React, { useState } from "react";
+import { View, TextInput, Text, TouchableWithoutFeedback, Keyboard, StyleSheet, Image, Platform, ScrollView, TouchableOpacity, Button } from 'react-native'
 import moment from "moment";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import { Entypo } from '@expo/vector-icons';
 import FlatButton from "../../../shared/button";
 import * as yup from 'yup';
 import axios from 'axios';
 import { Formik } from "formik";
 import RadioButtonRN from "radio-buttons-react-native"
 import { Picker } from '@react-native-picker/picker'
+import DatePicker from 'react-native-neat-date-picker'
 
 const FormRegister = ({ navigation }) => {
-    const [date, setDate] = useState(new Date())
+    // const [date, setDate] = useState(new Date())
+    const [showDatePicker, setShowDatePicker] = useState(false)
     const [show, setShow] = useState(false)
+    const [date, setDate] = useState(new Date());
     const [province, setProvince] = useState({ id: 31, nama: 'DKI Jakarta' });
     const [region, setRegion] = useState([]);
     const [selectedProvince, setSelectedProvince] = useState({});
     const [selectedRegion, setSelectedRegion] = useState();
-
-    const onChange = (e, selectedDate) => {
-        const currentDate = selectedDate || date
-        setShow(Platform.OS === 'ios')
-        setDate(currentDate)
-    }
-
-    const showDatePicker = () => {
-        setShow(true)
-    }
 
     const gender = [
         {
@@ -64,25 +52,28 @@ const FormRegister = ({ navigation }) => {
             .oneOf([yup.ref('password')], 'Passwords does not match'),
     })
 
-    // const getProvince = async () => {
-    //     let isMounted = true;
-    //     await axios.get(`https://dev.farizdotid.com/api/daerahindonesia/provinsi`)
-    //         .then((response) => {
-    //             const res = response.data.provinsi
-    //             if (isMounted)
-    //                 setProvince(res)
-    //         })
-    //         .catch(function (error) {
-    //             console.warn(error);
-    //         });
-    //     return () => { isMounted = false };
-    // }
+    const openDatePicker = () => {
+        setShowDatePicker(true)
+    }
+
+    const onCancel = () => {
+        // You should close the modal in here
+        setShowDatePicker(false)
+    }
+
+    const onConfirm = (date) => {
+        // You should close the modal in here
+        setShowDatePicker(false)
+
+        // The parameter 'date' is a Date object so that you can use any Date prototype method.
+        setDate(date)
+    }
 
     const handleProvinceChange = async (value) => {
         setSelectedProvince(value)
         await axios.get(`https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=${value.id}`)
             .then((response) => {
-                    setRegion(response.data.kota_kabupaten)
+                setRegion(response.data.kota_kabupaten)
             })
             .catch(err => {
                 console.warn(err.message)
@@ -168,17 +159,40 @@ const FormRegister = ({ navigation }) => {
                                             style={{ flexDirection: 'row' }}
                                             selectedBtn={(e) => props.values.gender = e.label} />
                                     </View>
+                                    <View style={styles.formUser}>
+                                        <TouchableOpacity style={{
+                                            backgroundColor: '#FFF',
+                                            borderWidth: 1,
+                                            borderColor: '#E8EAF1',
+                                            padding: 14,
+                                            paddingLeft: 25,
+                                            borderRadius: 30,
+                                            margin: 5,
+                                            width: 240
+                                        }}
+                                            onPress={openDatePicker}>
+                                            {/* { date == Date.now()? */}
+                                                <Text>
+                                                    {moment(date).format("DD MMMM YYYY")}
+                                                </Text>
+                                                {/* :
+                                                <Text style={{fontSize: 11, color: '#a6a6a6'}}>
+                                                    Date of Birth
+                                                </Text>
+                                            } */}
+                                        </TouchableOpacity>
+                                    </View>
                                     <View style={{ flexDirection: "row" }}>
                                         <Picker
                                             style={{ margin: 5, borderRadius: 30, width: 120 }}
                                             itemStyle={{ fontSize: 5 }}
                                             selectedValue={selectedProvince}
                                             onValueChange={handleProvinceChange
-                                                
+
                                             }>
                                             <Picker.Item label="City" value="0" />
                                             <Picker.Item label={province.nama} value={province} />
-                                            
+
                                         </Picker>
                                         <Picker
                                             style={{ margin: 5, borderRadius: 30, width: 120 }}
@@ -195,9 +209,10 @@ const FormRegister = ({ navigation }) => {
                                             }
                                         </Picker>
                                     </View>
-                                    <View style={styles.formUser}>
+
+                                    <View style={[styles.formUser, {width: 125}]}>
                                         <TextInput
-                                            style={styles.input}
+                                            style={[styles.input]}
                                             placeholder='Postal Code'
                                             onChangeText={props.handleChange('address.address_postalcode')}
                                             onBlur={props.handleBlur('address.address_postalcode')}
@@ -228,22 +243,7 @@ const FormRegister = ({ navigation }) => {
                                     {(props.errors.email && props.touched.email) &&
                                         <Text style={styles.errorText}>{props.errors.email}</Text>
                                     }
-                                    <View style={styles.formUser}>
-                                        <TouchableOpacity style={{
-                                            backgroundColor: '#FFF',
-                                            borderWidth: 1,
-                                            borderColor: '#E8EAF1',
-                                            padding: 14,
-                                            paddingLeft: 25,
-                                            borderRadius: 30,
-                                            margin: 5,
-                                            width: 240
-                                        }}
-                                            onPress={() => showDatePicker()}>
-                                            <Text>{moment(date).format('DD MMMM yyyy')}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
+
                                     <View style={styles.formUser}>
                                         <TextInput
                                             style={styles.input}
@@ -303,17 +303,13 @@ const FormRegister = ({ navigation }) => {
                     </ScrollView>
 
                 </View>
-                {
-                    show && (
-                        <DateTime timeZoneOffsetInMinutes={0}
-                            value={new Date(date)}
-                            mode="date"
-                            maximumDate={new Date(moment().format("YYYY-MM-DD"))}
-                            onChange={onChange}
-                        />
-                    )
-
-                }
+                <DatePicker
+                    isVisible={showDatePicker}
+                    mode={'single'}
+                    onCancel={onCancel}
+                    onConfirm={onConfirm}
+                    maxDate={new Date()}
+                />
             </View >
         </TouchableWithoutFeedback>
 

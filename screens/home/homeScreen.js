@@ -38,7 +38,7 @@ function HomeScreen({ navigation, route }) {
 
 
   const fetchUserData = async (user) => {
-    await axios.get(`http://66.42.49.240/api/users/${user}`).then(response => {
+    await axios.get(`http://scrimate.com/api/users/${user}`).then(response => {
         setData(response.data.userData)
     })
     .catch(function (error) {
@@ -178,8 +178,6 @@ function HomeScreen({ navigation, route }) {
         :
         <>
           <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'flex-start', top: 147 }}>
-            {/* <ComponentBubble></ComponentBubble>
-         */}
             {
               UserBubble()
             }

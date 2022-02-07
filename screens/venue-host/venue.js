@@ -105,7 +105,7 @@ const VenueDetail = ({ navigation, route }) => {
                                 </View>
                                 <View style={{ width: '70%', flexDirection: 'row' }}>
                                     {data.venue_facility.map((item, index) => (
-                                        <Text key={index}>
+                                        <Text key={index} style={{paddingRight: 5}}>
                                             {item}
                                         </Text>
                                     ))
@@ -202,28 +202,11 @@ const VenueDetail = ({ navigation, route }) => {
                             borderRadius: 10,
                             flexDirection: 'row',
                             alignItems: 'center'
-                        }} onPress={() => navigation.navigate('Create Field Screen', { venue_id: venue_id })}>
+                        }} onPress={() => navigation.navigate('Manage Field Screen', { venue_id: venue_id })}>
                             <Entypo name="circle-with-plus" size={24} color="white" />
                             <View style={{ padding: 5, paddingRight: 20, justifyContent: 'center', alignItems: 'center', width: 120 }}>
                                 <Text style={{ color: 'white', fontWeight: 'bold' }}>
                                     Manage Fields
-                                </Text>
-                            </View>
-                        </TouchableOpacity>}
-                        {data.operationals != 0 && <TouchableOpacity style={{
-                            marginHorizontal: 5,
-                            width: 120,
-                            padding: 5,
-                            backgroundColor: '#6C63FF',
-                            elevation: 5,
-                            borderRadius: 10,
-                            flexDirection: 'row',
-                            alignItems: 'center'
-                        }} onPress={() => navigation.navigate('Create Field Screen', { venue_id: venue_id })}>
-                            <Entypo name="circle-with-plus" size={24} color="white" />
-                            <View style={{ padding: 5, paddingRight: 20, justifyContent: 'center', alignItems: 'center', width: 120 }}>
-                                <Text style={{ color: 'white', fontWeight: 'bold' }}>
-                                    Add New Field
                                 </Text>
                             </View>
                         </TouchableOpacity>}
