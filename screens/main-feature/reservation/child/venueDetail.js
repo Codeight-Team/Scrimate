@@ -98,7 +98,6 @@ function ReserveVenue({ navigation, route }) {
         await axios.get(`http://66.42.49.240/api/venue/venue-detail/${venue_id}`)
             .then(response => {
                 setVenue(response.data)
-                console.log(response.data);
                 setIsLoading(false)
             })
             .catch(err => {

@@ -13,14 +13,10 @@ function ChooseField({ navigation, route }) {
     const time = moment('12:15:12: PM', 'HH:mm:ss: A').diff(moment().startOf('day'), 'seconds') - moment('12:12:12: PM', 'HH:mm:ss: A').diff(moment().startOf('day'), 'seconds');
 
     useEffect(() => {
-        console.log(time < 0 ? 0 : time);
         const fetchFields = async () => {
             await axios.get(`http://scrimate.com/api/field/get-fields/${venue_id}`)
                 .then(response => {
-                    // if(isMounted){
                     setFields(response.data)
-                    console.log(response.data)
-                    // }
                 })
         }
         fetchFields()

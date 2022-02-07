@@ -13,10 +13,11 @@ const PickDateTime = ({ navigation, route }) => {
     const [date, setDate] = useState(new Date())
     const [time, setTime] = useState("Choose Time!")
     const [disabled, setDisabled] = useState(true);
-    const [user_id, setUserId] = useState(true);
+    const [user_id, setUserId] = useState();
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [availableTime, setAvailableTime] = useState([])
     const [openTime, setOpen] = useState()
+    const [order, setOrder] = useState({})
 
     const dateNow = new Date()
     const type = route.params.title
@@ -63,21 +64,24 @@ const PickDateTime = ({ navigation, route }) => {
             }
         })
         setAvailableTime(time)
-
     }
 
     useEffect(() => {
-        operationals
+        const getUserId = async () => {
+            try {
+                let user_id = await AsyncStorage.getItem('user_id')
+                setUserId(user_id)
+            } catch (error) {
+                Alert.alert('Sign in needed')
+            }
+        }
+        getUserId()
     }, [])
 
-    const sendOrderDetail = async (values) => {
-        await axios.post(`http://scrimate.com/api/order/create-order/${user_id}/${field.field_id}`, values)
-            .then(response => {
-                // navigation.navigate("")
-            })
-            .catch(error => 
-                console.warn(error)
-            )
+    const parseOrder = (value) => {
+        let newDate = moment(date).format("DD-MM-YYYY")
+        let newTime = moment(value, "HH").format("HH:mm")
+        setOrder({ date_of_match: newDate, order_type: type, time_of_match: newTime })
     }
 
     const RenderAvailableTime = () => {
@@ -85,7 +89,7 @@ const PickDateTime = ({ navigation, route }) => {
             return (
                 <View key={index} style={{ padding: 3, paddingHorizontal: 5, height: 50, width: "33%" }}>
                     <TouchableOpacity disabled={(moment(item.timeOpen, "HH").format("HH:mm") + " - " + moment(item.timeClose, "HH").format("HH:mm")) == time}
-                        onPress={() => [setTimeBtn(moment(item.timeOpen, "HH").format("HH:mm") + " - " + moment(item.timeClose, "HH").format("HH:mm")), setOpen(moment(item.timeOpen, "HH").format("HH:mm"))]} style={[
+                        onPress={() => [setTimeBtn(moment(item.timeOpen, "HH").format("HH:mm") + " - " + moment(item.timeClose, "HH").format("HH:mm")), parseOrder(item.timeOpen)]} style={[
                             {
                                 height: "100%",
                                 width: "100%",
@@ -106,33 +110,33 @@ const PickDateTime = ({ navigation, route }) => {
         )
     }
 
-    useEffect(() => {
-        const getUserId = async () => {
-            try {
-                let user_id = await AsyncStorage.getItem('user_id')
-                setUserId(user_id)
-            } catch (error) {
-                Alert.alert('Sign in needed')
-            }
-        }
-        getUserId()
-    }, [])
+    const sendOrderDetail = async() => {
+        await axios.post(`http://scrimate.com/api/order/create-order/${user_id}/${field.field_id}`, order)
+            .then(response => {
+                navigation.navigate('Profile', { screen: 'Payment Method', params: { user_id: user_id, order_id: response.data.order_id } })
+            })
+            .catch(error =>
+                console.warn(error)
+            )
+    }
+
+    
 
     return (
         <View style={styles.container}>
-            <View style={{ height: "16%", flexDirection: "row", flexWrap: "wrap"}}>
-                    <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#6C63FF', borderRadius: 18, elevation: 3, alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ fontWeight: "bold", color: '#fff' }}>{type} Reservation</Text>
-                    </View>
-                    <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#6C63FF', borderRadius: 18, elevation: 3, alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ fontWeight: "bold", color: '#fff' }}>{route.params.venue_name}</Text>
-                    </View>
-                    <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#6C63FF', borderRadius: 18, elevation: 3, alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ fontWeight: "bold", color: '#fff', }}>{field.field_name}</Text>
-                    </View>
-                    <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#6C63FF', borderRadius: 18, elevation: 3, alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ fontWeight: "bold", color: '#fff', }}>Rp {field.field_price}</Text>
-                    </View>
+            <View style={{ height: "16%", flexDirection: "row", flexWrap: "wrap" }}>
+                <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#6C63FF', borderRadius: 18, elevation: 3, alignItems: "center", justifyContent: "center" }}>
+                    <Text style={{ fontWeight: "bold", color: '#fff' }}>{type} Reservation</Text>
+                </View>
+                <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#6C63FF', borderRadius: 18, elevation: 3, alignItems: "center", justifyContent: "center" }}>
+                    <Text style={{ fontWeight: "bold", color: '#fff' }}>{route.params.venue_name}</Text>
+                </View>
+                <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#6C63FF', borderRadius: 18, elevation: 3, alignItems: "center", justifyContent: "center" }}>
+                    <Text style={{ fontWeight: "bold", color: '#fff', }}>{field.field_name}</Text>
+                </View>
+                <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#6C63FF', borderRadius: 18, elevation: 3, alignItems: "center", justifyContent: "center" }}>
+                    <Text style={{ fontWeight: "bold", color: '#fff', }}>Rp {field.field_price}</Text>
+                </View>
             </View>
             <View style={{ padding: 20, height: '34%', justifyContent: "center", alignItems: 'flex-start' }}>
                 {/* <CustomDateTimePicker textStyle={{paddingVertical: 15, paddingHorizontal: 10, borderColor: 'gray', borderWidth: 1}}/> */}
@@ -197,17 +201,17 @@ const PickDateTime = ({ navigation, route }) => {
                         disabled={disabled}
                         text={'Pay'}
                         onPress={() =>
-                            [ ,
-                            Alert.alert('Ready to Pay?',
-                                'You will be directed to payment, double check your order', [
-                                {
-                                    text: 'Cancel',
-                                },
-                                {
-                                    text: 'OK',
-                                    onPress: () => sendOrderDetail({date_of_match: moment(date).format("DD-MM-YYYY"), order_type: type, time_of_match: openTime})
-                                },
-                            ])
+                            [,
+                                Alert.alert('Ready to Pay?',
+                                    'You will be directed to payment, double check your order', [
+                                    {
+                                        text: 'Cancel',
+                                    },
+                                    {
+                                        text: 'OK',
+                                        onPress: () => sendOrderDetail()
+                                    },
+                                ])
                             ]
                         } />
                 </View>

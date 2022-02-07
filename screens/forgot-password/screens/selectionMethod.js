@@ -5,9 +5,6 @@ import RadioButton from '../../../shared/radio';
 import Cloud from '../../../assets/cloud.svg'
 
 export default function selectionMethod({ navigation }) {
-    // useEffect(() => 
-    //     console.log("Test")
-    // )
     const [radioValue, setRadioValue] = useState({})
     const radioHandler = (value) => {
         setRadioValue(value)

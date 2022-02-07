@@ -17,7 +17,9 @@ const PaymentMethod = ({ navigation, route }) => {
   const [bills, setBills] = useState({})
   const [field, setField] = useState({})
   const [matchTime, setMatchTime] = useState({})
-  const [selectedMethod, setSelectedMethod] = useState()
+
+  const user_id = route.params.user_id
+  const order_id = route.params.order_id
 
   const payment_method = [
     {
@@ -39,15 +41,19 @@ const PaymentMethod = ({ navigation, route }) => {
 
   useEffect(() => {
     const fetchOrderDetail = async () => {
-      await axios.get(`http://66.42.49.240/api/order/find-a-order/${route.params.user_id}/${route.params.order_id}`).then((response) => {
-        // setUser(response.data.userData)
+      await axios.get(`http://66.42.49.240/api/order/find-a-order/${user_id}/${order_id}`).then((response) => {
         setMatch(response.data.data.order_type);
         setCreator(response.data.data.creator);
         setBills(response.data.data.bills)
         setField(response.data.data.field)
         setMatchTime({ date_of_match: response.data.data.date_of_match, time_of_match: response.data.data.time_of_match })
-        setLoading(false)
-        console.log(response.data.data.bills);
+        if (response.data.data.bills.bill_status == null) {
+          setLoading(false)
+        }
+        if (response.data.data.bills.bill_status) {
+          navigation.navigate("Payment", { user_id: user_id, order_id: order_id })
+        }
+        console.log(response.data.data);
       })
         .catch(error => {
           console.log(error)
@@ -56,18 +62,17 @@ const PaymentMethod = ({ navigation, route }) => {
     fetchOrderDetail()
   }, [])
 
-  const sendPaymentMethod = async (value) => {
-    // console.log(bills.bill_id, route.params.user_id);
-    // await axios.post(`http://66.42.49.240/api/payment/process-order/${route.params.user_id}/${bills.bill_id}`, {
-    //   payment_method: value
-    // })
-    // .then(response=>{
-    //   console.log(response.data);
-    // })
-    // .catch(err=>{
-    //   console.log(err);
-    // })
-    navigation.navigate("Payment")
+  const sendPaymentMethod = (value) => {
+    console.log(bills.bill_id, route.params.user_id);
+    axios.post(`http://66.42.49.240/api/payment/process-order/${user_id}/${bills.bill_id}`, {
+      payment_method: value
+    })
+      .then(response => {
+        navigation.navigate("Payment", { user_id: user_id, order_id: order_id })
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }
 
   return (
@@ -76,7 +81,7 @@ const PaymentMethod = ({ navigation, route }) => {
         :
         <View style={styles.container}>
           <View style={styles.inner}>
-            <CustomHeader title={"Choose Payment Method"} onPressBackButton={() => navigation.goBack()} backButtonModel={"left"} />
+            <CustomHeader title={"Choose Payment Method"} onPressBackButton={() => navigation.navigate("Profile Screen")} backButtonModel={"left"} />
             <View style={{ width: '100%', height: '50%', backgroundColor: "#FFF" }}>
               <View style={{ padding: 10, elevation: 5, backgroundColor: "#FFF" }}>
                 <Text style={{ fontWeight: "bold", }}>Payment Method</Text>
@@ -119,17 +124,6 @@ const PaymentMethod = ({ navigation, route }) => {
                           <Text style={{ color: 'black', fontWeight: 'normal' }}>By</Text> {creator.first_name} {creator.last_name}
                         </Text>
                       </View>
-                      {/* <View style={{ padding: 10, flexDirection: 'row' }}>
-                    <Text style={{ width: "30%" }}>
-                      Description
-                    </Text>
-                    <Text style={{ fontWeight: "bold", width: "5%" }}>
-                      :
-                    </Text>
-                    <Text style={{ width: "65%" }}>
-                      Teadawa qwt q qwd qqw qwd q w qwd qdq  qw wd wdq qw qd
-                    </Text>
-                  </View> */}
                     </View>
                     <View>
                     </View>

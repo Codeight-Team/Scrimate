@@ -7,8 +7,9 @@ import Football from '../../../assets/soccer-ball.svg';
 import Dummy from '../../../assets/lapangan-dummy.png';
 import axios from 'axios';
 import { PanGestureHandler } from 'react-native-gesture-handler';
-import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, } from 'react-native-reanimated';
+import Animated, { set, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, } from 'react-native-reanimated';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
+import moment from 'moment';
 
 
 
@@ -16,21 +17,15 @@ function MatchPost({ navigation, route }) {
     const [address_user, setAddress] = useState("Kota Jakarta Barat") //route.params.address
     const [myMatch, setMyMatch] = useState(false)
     const [data, setData] = useState(postArray)
+    const [matchList, setMatchList] = useState([])
     const locationFilterArray = ["Kota Jakarta Barat", "Kota Jakarta Utara", "Kota Jakarta Pusat", "Kota Jakarta Timur", "Kota Jakarta Selatan",]
-    
+
+    const user_id = route.params.user.user_id
+    const address = route.params.user.address.address_region
+    const title = route.params.title
+    const sport = route.params.sport
+
     const postArray = [
-        // {
-        //     id: 1,
-        //     venue: { name: "Badminton 77", address: { street: "Jl. Andara Raya", country: "Jakarta Selatan" }, rating: "5" },
-        //     name: 'Firhan Reynaldo',
-        //     sports: {
-        //         name: 'badminton'
-        //     },
-        //     schedule: {
-        //         date: '25-1-2022',
-        //         time: '07.00 WIB'
-        //     }
-        // },
         {
             id: 2,
             venue: { name: "La Futsal", address: { street: "Jl. Andara Raya", country: "Jakarta Selatan" }, rating: "5" },
@@ -61,13 +56,19 @@ function MatchPost({ navigation, route }) {
     const [count, setCount] = useState(0);
 
     useEffect(() => {
-        const counter = () => {
-            setCount((count) => count + 1);
-            // console.log(count)
-        }
-        counter()
+        fethMatchList()
     }, [address_user, myMatch])
 
+    const fethMatchList = async () => {
+        await axios.post(`http://scrimate.com/api/match-making/list-match/${user_id}`, { sport_name: sport, address_region: "Kota Jakarta Barat" })
+            .then(res => {
+                console.log(res.data)
+                setMatchList(res.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
 
     const dimensions = useWindowDimensions();
     const top = useSharedValue(
@@ -103,26 +104,26 @@ function MatchPost({ navigation, route }) {
     });
 
     function Svg(sports) {
-        if (sports === 'badminton')
+        if (sports === 'Badminton')
             return <Badminton width={20} height={20} />
-        else if (sports === 'futsal')
+        else if (sports === 'Futsal')
             return <Futsal width={20} height={20} />
-        else if (sports === 'football')
+        else if (sports === 'Football')
             return <Football width={20} height={20} />
     }
 
     function RenderPost() {
-        return postArray.map((item) => {
+        return matchList.map((item) => {
             return (
-                <TouchableOpacity key={item.id} onPress={() => {
-                    navigation.navigate("Match Detail", { data: item })
+                <TouchableOpacity key={item.match_id} onPress={() => {
+                    navigation.navigate("Match Detail", { user_id: user_id, match_id: item.match_id})
                 }
 
                 }>
                     <View style={styles.box}>
                         <View style={styles.inner}>
                             <Image style={{ width: "100%", height: "40%", borderRadius: 10 }}
-                                source={Dummy}></Image>
+                                source={{ uri: "http://scrimate.com/" + item.field.image }}></Image>
                             <View style={{
                                 width: '100%',
                                 height: '60%',
@@ -135,31 +136,34 @@ function MatchPost({ navigation, route }) {
                                 padding: 10,
                                 paddingTop: 0
                             }}>
-                                <View style={{ flexDirection: 'row', padding: 4, paddingLeft: 0 }}>{Svg(item.sports.name)}
+                                <View style={{ flexDirection: 'row', padding: 4, paddingLeft: 0 }}>{Svg(sport)}
                                     <Text style={{ marginLeft: 10, textTransform: 'capitalize', fontWeight: 'bold' }}>
-                                        {item.sports.name}
+                                        {sport}
                                     </Text>
                                 </View>
-                                <Text style={styles.fontDetail}>
-                                    {item.schedule.date}
+                                <Text style={[styles.fontDetail,  { fontWeight: 'bold' }]}>
+                                    {moment(item.date_of_match).format("dddd")}
                                 </Text>
                                 <Text style={styles.fontDetail}>
-                                    {item.schedule.timeStart} - {item.schedule.timeEnd}
+                                    {moment(item.date_of_match).format("ddd DD MMMM YYYY")}
                                 </Text>
                                 <Text style={styles.fontDetail}>
-                                    Venue:
+                                    {moment(item.time_of_match, "HH:mm:ss").format("HH:mm")} - {moment(item.time_of_match, 'HH:mm:dd').add(1, "hours").format("HH:mm")}
+                                </Text>
+                                <Text style={styles.fontDetail}>
+                                    
                                     <Text style={{ fontWeight: 'bold' }}>
-                                        {item.venue ? ' ' + item.venue.name : " TBD"}
+                                        {item.field.venue.venue_name}
                                     </Text>
                                 </Text>
                                 <Text style={styles.fontDetail}>
-                                    {item.venue ? item.venue.address.street : ""}
+                                    {item.field.venue.address.address_street}
                                 </Text>
                                 <Text style={styles.fontDetail}>
-                                    {item.venue ? item.venue.address.country : ""}
+                                    {item.field.venue.address.address_region}
                                 </Text>
                                 <Text style={[styles.fontDetail, { fontWeight: 'bold' }]}>
-                                    by <Text style={{ color: '#6C63FF', fontWeight: 'bold' }}>{item.name}</Text>
+                                    {/* by <Text style={{ color: '#6C63FF', fontWeight: 'bold' }}>{item.name}</Text> */}
                                 </Text>
                             </View>
                         </View>

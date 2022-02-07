@@ -43,32 +43,53 @@ const MyOrder = ({ navigation, route }) => {
                     {active == "progress" &&
                         <>
                             {
-                                myOrder.map(item => (
-                                    <Card key={item.order_id}
-                                        itemId={item.order_id}
-                                        venue_name={item.field.venue.venue_name}
-                                        field_name={item.field.field_name}
-                                        image={item.field.image}
-                                        status={item.order_status}
-                                        date={item.date_of_match}
-                                        time={item.time_of_match}
-                                        price={item.bills[0].bill_amount}
-                                        onPress={() => item.order_status == "Settlement" ||
-                                            item.order_status == "Failed" ?
-                                            navigation.navigate("Order Summary")
-                                            :
-                                            navigation.navigate("Payment Method", { order_id: item.order_id, user_id:user_id, type: item.order_type })} />
+                                myOrder.reverse().map(item => (
+                                    <View key={item.order_id}>
+                                        {item.order_status === 'On Going' &&
+                                            <Card
+                                                itemId={item.order_id}
+                                                venue_name={item.field.venue.venue_name}
+                                                field_name={item.field.field_name}
+                                                image={item.field.image}
+                                                status={item.order_status}
+                                                date={item.date_of_match}
+                                                time={item.time_of_match}
+                                                price={item.bills[0].bill_amount}
+                                                onPress={() =>
+                                                    navigation.navigate("Payment Method", { order_id: item.order_id, user_id: user_id, type: item.order_type })} />}
+                                    </View>
                                 ))
                             }
                         </>
 
                     }
                     {active == "history" &&
-                        <Card itemId={"WDAIJAIDJWIJ9093882"} item={"Lapangan 41"} status={'Success'} onPress={() => console.log("Go to Payment")} />
+                        <>
+                            {
+                                myOrder.reverse().map(item => (
+                                    <View key={item.order_id}>
+                                        {item.order_status != 'On Going' &&
+                                            <Card
+                                                itemId={item.order_id}
+                                                venue_name={item.field.venue.venue_name}
+                                                field_name={item.field.field_name}
+                                                image={item.field.image}
+                                                status={item.order_status}
+                                                date={item.date_of_match}
+                                                time={item.time_of_match}
+                                                price={item.bills[0].bill_amount}
+                                                onPress={() =>
+                                                    // item.order_status == "Settlement" ||
+                                                    // item.order_status == "Failed" ?
+                                                    // navigation.navigate("Order Summary")
+                                                    // :
+                                                    navigation.navigate("Payment Method", { order_id: item.order_id, user_id: user_id, type: item.order_type })} />}
+                                    </View>
+                                ))
+                            }
+                        </>
                     }
-                    {active == "history" &&
-                        <Card itemId={"WDAIJAIDJWIJ9093882"} item={"Lapangan 41"} status={'Failed'} onPress={() => console.log("Go to Payment")} />
-                    }
+
                 </ScrollView>
             </View>
         </View>
