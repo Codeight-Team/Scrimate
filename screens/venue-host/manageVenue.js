@@ -9,6 +9,9 @@ const ManageVenue = ({ navigation, route }) => {
     const [venue, setVenue] = useState([])
     const [isUpdate, setIsUpdate] = useState("Not Updated")
 
+    const updateData = () =>{
+        console.log(isUpdate);
+    }
 
     const user_id = route.params.user_id
 
@@ -16,6 +19,7 @@ const ManageVenue = ({ navigation, route }) => {
         React.useCallback(() => {
             let isActive = true
             const fetchVenues = async () => {
+                updateData();
                 await axios.get(`http://66.42.49.240/api/venue/get-my-venue/${route.params.user_id}`).then((response) => {
                     if (isActive) {
                         setVenue(response.data)
