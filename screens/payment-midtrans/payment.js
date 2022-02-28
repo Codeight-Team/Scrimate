@@ -6,9 +6,9 @@ import BCA from '../../assets/bca-logo.png'
 import * as Clipboard from 'expo-clipboard';
 import { FontAwesome5 } from '@expo/vector-icons';
 import CountDown from 'react-native-countdown-component';
-import axios from "axios";
 import moment from "moment";
 import Loading from "../../shared/loading";
+import api from "../../services/api";
 
 const Payment = ({ navigation, route }) => {
     const [data, setData] = useState({})
@@ -21,18 +21,20 @@ const Payment = ({ navigation, route }) => {
     const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
+        let isMounted = true;
         setTimeout(() => {
             const getBillData = async () => {
-                await axios.get(`http://66.42.49.240/api/order/find-a-order/${route.params.user_id}/${route.params.order_id}`)
+                await api.get(`/api/order/find-a-order/${route.params.user_id}/${route.params.order_id}`)
                     .then((response) => {
-                        setData(response.data.data.bills)
-                        setCreator(response.data.data.creator)
-                        setFinder(response.data.data.finder)
-                        setDateTime({ time_of_match: response.data.data.time_of_match, date_of_match: response.data.data.date_of_match })
-                        setField(response.data.data.field)
-                        // setExpire(response.data.expire)
-                        setTimer(response.data.expire)
-                        setIsLoading(false)
+                        if (isMounted) {
+                            setData(response.data.data.bills)
+                            setCreator(response.data.data.creator)
+                            setFinder(response.data.data.finder)
+                            setDateTime({ time_of_match: response.data.data.time_of_match, date_of_match: response.data.data.date_of_match })
+                            setField(response.data.data.field)
+                            setTimer(response.data.expire)
+                            setIsLoading(false)
+                        }
                     })
                     .catch(err => {
                         console.log(err)
@@ -40,24 +42,27 @@ const Payment = ({ navigation, route }) => {
             }
             getBillData();
         }, 1000)
+        return () => {
+            isMounted = false;
+        };
     }, [refresh])
 
-    const setTimer = async (value) => {
+    const setTimer = (value) => {
         let now = new Date().getTime();
         if (value) {
             const newTime = new Date(value).getTime();
             let s = newTime - now;
-            let minutes = Math.floor((s%(1000*60*60))/(1000*60)*60)
-            if(minutes>0)
-                setExpire(minutes)
+            let seconds = Math.floor((s % (1000 * 60 * 60)) / (1000 * 60) * 60)
+            if (seconds > 0)
+                setExpire(seconds)
         }
-        
+
     }
 
     return (
         <View style={styles.container}>
             <View style={styles.inner}>
-                <CustomHeader title={"Payment Summary"} onPressBackButton={() => navigation.navigate("Profile Screen")} backButtonModel={"close"} />
+                <CustomHeader title={"Payment Summary"} onPressBackButton={() => navigation.navigate("My Order", { user_id: route.params.user_id })} backButtonModel={"close"} />
                 {isLoading ?
                     <Loading />
                     :

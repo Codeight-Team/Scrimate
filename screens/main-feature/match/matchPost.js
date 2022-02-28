@@ -4,13 +4,12 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Badminton from '../../../assets/icons/shuttlecock.svg';
 import Futsal from '../../../assets/icons/futsal.svg';
 import Football from '../../../assets/soccer-ball.svg';
-import Dummy from '../../../assets/lapangan-dummy.png';
-import axios from 'axios';
 import { PanGestureHandler } from 'react-native-gesture-handler';
-import Animated, { set, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, } from 'react-native-reanimated';
-import { AntDesign, Ionicons } from '@expo/vector-icons';
+import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, } from 'react-native-reanimated';
+import { AntDesign } from '@expo/vector-icons';
 import moment from 'moment';
 import NoDataView from '../../../shared/noDataFound';
+import api from '../../../services/api';
 
 
 
@@ -25,14 +24,12 @@ function MatchPost({ navigation, route }) {
     const title = route.params.title
     const sport = route.params.sport
 
-    const [count, setCount] = useState(0);
-
     useEffect(() => {
-        fethMatchList()
+        fetchMatchList()
     }, [address_user, myMatch])
 
-    const fethMatchList = async () => {
-        await axios.post(`http://scrimate.com/api/match-making/list-match/${user_id}`, { sport_name: sport, address_region: "Kota Jakarta Barat" })
+    const fetchMatchList = async () => {
+        await api.post(`/api/match-making/list-match/${user_id}`, { sport_name: sport, address_region: "Kota Jakarta Barat" })
             .then(res => {
                 setMatchList(res.data)
             })
@@ -149,17 +146,7 @@ function MatchPost({ navigation, route }) {
             <View style={styles.container}>
                 <View style={{ width: '100%', flexDirection: 'row', backgroundColor: '#fff', padding: 10, elevation: 4 }}>
                     <View style={{ width: '50%', }}>
-                        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => setMyMatch(!myMatch)}>
-                            <Text style={[myMatch ? { color: '#6C63FF' } : { color: 'gray' }, { fontWeight: 'bold' }]}>My Match</Text>
-                            <View style={{ marginHorizontal: 4 }}>
-                                {
-                                    myMatch ?
-                                        <Ionicons name="checkmark-circle" size={20} color="green" />
-                                        :
-                                        <Ionicons name="close-circle-sharp" size={20} color="gray" />
-                                }
-                            </View>
-                        </TouchableOpacity>
+                            <Text style={[myMatch ? { color: '#6C63FF' } : { color: 'gray' }, { fontWeight: 'bold' }]}>Join Match</Text>
                     </View>
                     <View style={{ width: '50%', alignItems: 'flex-end' }}>
                         <TouchableOpacity onPress={() => top.value = dimensions.height / 2
@@ -180,14 +167,21 @@ function MatchPost({ navigation, route }) {
                     <View style={styles.container}>
                         <View style={styles.subContainer}>
                             {
-                                !myMatch?
-                                    RenderPost()
-                                    :
+                                myMatch.length ?
                                     <NoDataView type={"Match"} />
+                                    :
+                                    RenderPost()
                             }
                         </View>
                     </View>
                 </ScrollView>
+                <TouchableOpacity 
+                    onPress={() => console.log()}
+                    style={{ width: '100%', height: "10%", backgroundColor: '#6C63FF', alignItems: 'center', justifyContent: 'center', elevation: 4 }}>
+                    <View>
+                        <Text style={{fontSize: 17, color: '#fff'}}>Go to My Match</Text>
+                    </View>
+                </TouchableOpacity>
             </View>
             <PanGestureHandler onGestureEvent={gestureHandler}>
                 <Animated.View

@@ -1,19 +1,20 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView } from 'react-native';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import CustomHeader from '../../../shared/customHeader';
 import moment from 'moment';
 import { Ionicons } from '@expo/vector-icons';
+import api from '../../../services/api';
 
 function MessageFocus({ navigation, route }) {
     const [conversation, setConversation] = useState([])
     const [currentChat, setCurrentChat] = useState(null)
     const [messages, setMessages] = useState([])
+    const [newMessage, setNewMessage] = useState("")
 
     useEffect(() => {
         // const getConversation = async () => {
-        //     await axios.get('/conversation/'+ user.user_id)
+        //     await api.get('/conversation/'+ user.user_id)
         //     .then(()=>{
         //         console.log(response.data)
         //         setConversation(response.data)
@@ -23,7 +24,11 @@ function MessageFocus({ navigation, route }) {
         // }
         // getConversation()
     }, [])
-    const Message = ({ own , chat}) => {
+
+    const sendNewMessage = async ()  =>{
+
+    }
+    const Message = ({ own, chat }) => {
         return (
             <View style={{ display: 'flex' }}>
                 <View style={[{ paddingHorizontal: 15, paddingVertical: 5, flexDirection: 'row' }, own && styles.messageOwn]}>
@@ -49,20 +54,22 @@ function MessageFocus({ navigation, route }) {
             <View style={{ flex: 1, }}>
                 <ScrollView >
                     <View>
-                        <Message chat={"hai"}/>
+                        <Message chat={"hai"} />
                         <Message chat={"hei"} own={true} />
                     </View>
                 </ScrollView>
-                <View style={{padding: 10}}>
-                    <View style={{flexDirection: 'row', width: '100%', justifyContent: 'center'}}>
+                <View style={{ padding: 10 }}>
+                    <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'center' }}>
                         <TextInput
-                        style={{paddingHorizontal: 20, width: '80%', borderRadius: 20, backgroundColor: "#FFF", borderWidth: 1, borderColor: '#cecece'}}
+                            style={{ paddingHorizontal: 20, width: '80%', borderRadius: 20, backgroundColor: "#FFF", borderWidth: 1, borderColor: '#cecece' }}
                             multiline={true}
                             placeholder='Write something...'
-                            onChangeText={(text) => this.setState({ text })}
-                            />
-                        <TouchableOpacity style={{width: 40, height: 40, borderRadius: 10, backgroundColor: '#6C63FF', justifyContent: 'center', alignItems: 'center', marginHorizontal: 10}}>
-                                <Ionicons name="paper-plane" size={23} color="white" />
+                            onChangeText={(e) => setNewMessage(e)}
+                        />
+                        <TouchableOpacity
+                            onPress={sendNewMessage}
+                            style={{ width: 40, height: 40, borderRadius: 10, backgroundColor: '#6C63FF', justifyContent: 'center', alignItems: 'center', marginHorizontal: 10 }}>
+                            <Ionicons name="paper-plane" size={23} color="white" />
                         </TouchableOpacity>
                     </View>
                 </View>

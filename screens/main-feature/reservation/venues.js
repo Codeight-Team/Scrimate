@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, RefreshControl, TouchableOpacity, useWindowDimensions, ScrollView } from 'react-native';
 import { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
 import Card from '../../../shared/card'
 import { AntDesign } from '@expo/vector-icons';
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import NoDataView from '../../../shared/noDataFound';
-import { useFocusEffect } from '@react-navigation/native';
+import api from '../../../services/api';
 
 
 function ReservationScreen({ navigation, route }) {
@@ -34,7 +33,7 @@ function ReservationScreen({ navigation, route }) {
     },[preferedAddress]);
 
     const fetchVenues = async () => {
-        await axios.post(`http://66.42.49.240/api/venue/get-venue/`, { sport_name: sport, address_region: preferedAddress }).then((response) => {
+        await api.post(`/api/venue/get-venue/`, { sport_name: sport, address_region: preferedAddress }).then((response) => {
                 setVenues(response.data)
         })
             .catch(error => {
@@ -113,7 +112,7 @@ function ReservationScreen({ navigation, route }) {
                                 <AntDesign name="caretdown" size={10} color="black" />
                             </View>
                             <Text style={{ color: '#6C63FF', fontWeight: 'bold' }}>
-                                {preferedAddress ? preferedAddress : "Kota Jakarta Barat"}
+                                {preferedAddress}
                             </Text>
 
                         </TouchableOpacity>

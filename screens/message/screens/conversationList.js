@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView, Image, Pressable } from 'react-native';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+import api from '../../../services/api';
 import moment from 'moment';
 
 function ConversationList({ navigation }) {
     const [myChat, setMyChat] = useState()
     useEffect(() => {
-        // axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
+        // api.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
         //     console.log(response.data);
         //   });
     })
@@ -19,12 +18,9 @@ function ConversationList({ navigation }) {
                     <View style={{ width: '25%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
                         <Image style={{ width: 60, height: 60, backgroundColor: 'black', borderRadius: 50 }} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
                     </View>
-                    <View style={{ width: '55%', height: '100%', paddingVertical: 10 }}>
+                    <View style={{ width: '55%', height: '100%', paddingVertical: 10 , justifyContent: 'center'}}>
                         <Text style={{ fontSize: 17, fontWeight: 'bold' }}>
                             Rafi
-                        </Text>
-                        <Text style={{ fontSize: 13, color: 'gray' }}>
-                            hai
                         </Text>
                     </View>
                     <View style={{ width: '15%', height: '100%', paddingVertical: 10, alignItems: 'flex-end' }}>

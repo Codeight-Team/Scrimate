@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import Dummy from '../../../../assets/lapangan-dummy.png'
 import FlatButton from '../../../../shared/button';
 import moment from 'moment';
 import Loading from '../../../../shared/loading';
+import api from '../../../../services/api';
+import { IMAGE_URL } from '@env'
 
 function MatchDetail({ navigation, route }) {
     const [matchDetail, setMatchDetail] = useState({})
@@ -22,22 +22,12 @@ function MatchDetail({ navigation, route }) {
     }, [])
 
     const fetchDetailMatch = async () => {
-        await axios.get(`http://scrimate.com/api/match-making/match-detail/${match_id}`)
+        await api.get(`/api/match-making/match-detail/${match_id}`)
             .then(response => {
                 setMatchDetail(response.data)
                 setOrderId(response.data.order[response.data.order.length-1].order_id)
                 setCreatorId(response.data.creator_id)
                 setIsLoading(false)
-            })
-            .catch(error => {
-                console.log(error)
-            })
-    }
-
-    const sendUserJoin = async () => {
-        await axios.put(`http://scrimate.com/api/match-making/join/${user_id}/${match_id}`)
-            .then(response => {
-                // setMatchDetail(response.data)
             })
             .catch(error => {
                 console.log(error)
@@ -51,7 +41,7 @@ function MatchDetail({ navigation, route }) {
                 :
                 <View style={styles.container}>
                     <View style={styles.ImageContainer}>
-                        <Image style={{ height: '100%', width: '100%', borderRadius: 20 }} source={{ uri: "http://scrimate.com/" + matchDetail.field.image }}></Image>
+                        <Image style={{ height: '100%', width: '100%', borderRadius: 20 }} source={{ uri: IMAGE_URL + matchDetail.field.image }}></Image>
                     </View>
                     <View style={styles.descriptionContainer}>
                         <View style={styles.itemContainer}>

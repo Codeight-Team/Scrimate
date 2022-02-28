@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, TouchableWithoutFeedback, Keyboard, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import NotFound from '../../../../assets/image-not-found.svg';
 import FlatButton from '../../../../shared/button';
 import { FontAwesome } from '@expo/vector-icons';
 import Loading from '../../../../shared/loading';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
+import api from '../../../../services/api';
 
 function ReserveVenue({ navigation, route }) {
     const [flag, setFlag] = useState(1);
@@ -95,7 +95,7 @@ function ReserveVenue({ navigation, route }) {
     }, [])
 
     const fetchVenueDetail = async () => {
-        await axios.get(`http://66.42.49.240/api/venue/venue-detail/${venue_id}`)
+        await api.get(`/api/venue/venue-detail/${venue_id}`)
             .then(response => {
                 setVenue(response.data)
                 setIsLoading(false)

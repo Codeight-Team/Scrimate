@@ -1,40 +1,45 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import { StyleSheet, View, Text, Image, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { useState, useContext } from 'react';
-import { AuthContext } from '../../../component/context';
-import { useIsFocused, useFocusEffect } from '@react-navigation/native';
-import axios from 'axios'
+import { AuthContext } from '../../component/context';
+import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import TrophySVG from '../../../assets/icons/trophy.svg';
-import Loading from '../../../shared/loading'
+import TrophySVG from '../../assets/icons/trophy.svg';
+import Loading from '../../shared/loading'
+import api from '../../services/api';
+import {IMAGE_URL} from '@env'
 
 function ProfileScreen({ navigation }) {
   const [data, setData] = useState([]);
   const context = useContext(AuthContext)
+  const [role, setRole] = useState([]);
 
   useFocusEffect(
     React.useCallback(() => {
       let isActive = true
       const fetchUser = async () => {
         let user
+        let role
         try {
           user = await AsyncStorage.getItem('user_id')
+          role = await AsyncStorage.getItem('role')
+          setRole(JSON.parse(role))
         } catch (error) {
           Alert.alert('Sign in needed')
         }
-        fetchUserData(user)
+        fetchUserData(user, isActive)
       }
-
       fetchUser()
       return () => { isActive = false }
     }, [])
   );
 
-  const fetchUserData = async (user) => {
-    await axios.get(`http://66.42.49.240/api/users/${user}`).then(response => {
-      setData(response.data.userData)
+  const fetchUserData = async (user, isActive) => {
+    await api.get(`/api/users/${user}`).then(response => {
+      if(isActive)
+        setData(response.data.userData)
     })
       .catch(function (error) {
         console.log(error)
@@ -49,7 +54,7 @@ function ProfileScreen({ navigation }) {
     <>
       <View style={styles.container}>
         <View style={[styles.box, styles.containerProfile]}>
-          <Image source={{ uri: 'http://66.42.49.240/' + data.image }} style={styles.profilePicture} />
+          <Image source={{ uri: IMAGE_URL + data.image }} style={styles.profilePicture} />
           <View style={styles.innerProfile}>
             <Text style={[styles.white, styles.fontMedium, { textTransform: 'capitalize' }]}>{data.first_name} {data.last_name}</Text>
             <View style={{ marginLeft: 0, margin: 7, width: 150, height: 35, backgroundColor: '#fff', borderRadius: 50, alignItems: 'center', justifyContent: 'center', padding: 4, flexDirection: 'row' }}>
@@ -64,10 +69,10 @@ function ProfileScreen({ navigation }) {
 
         <View style={styles.box}>
           <Text style={styles.submenuText}>Activity</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('My Order', {user_id: data.user_id, type: "order"})}>
+          <TouchableOpacity onPress={() => navigation.navigate('My Order', {user_id: data.user_id, type: "Order"})}>
             <Text>Order History</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('My Order', {user_id: data.user_id, type: "match"})}>
+          <TouchableOpacity onPress={() => navigation.navigate('My Order', {user_id: data.user_id, type: "Match"})}>
             <Text>My Match</Text>
           </TouchableOpacity>
         </View>
@@ -77,11 +82,11 @@ function ProfileScreen({ navigation }) {
           <TouchableOpacity onPress={() => navigation.navigate("Edit Profile Screen", data)}>
             <Text>Update Profile</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Edit Location Screen')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Edit Location Screen', {data: data})}>
             <Text>Location / Address Settings</Text>
           </TouchableOpacity>
         </View>
-        {!data.user_role?
+        {role.find(e=> e == "ROLE_USER")?
           <View style={styles.box}>
             <Text style={styles.submenuText}>Host</Text>
             <TouchableOpacity onPress={() => navigation.navigate("Manage Venue Screen", { user_id: data.user_id })}>

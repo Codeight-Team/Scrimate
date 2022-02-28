@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Image, StyleSheet, Keyboard, TouchableWithoutFeedback, TouchableOpacity, ScrollView, Modal, Alert } from 'react-native'
 import { Formik } from "formik";
-import axios from "axios";
 import FlatButton from "../../shared/button";
 import { Entypo, MaterialIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import SelectDropdown from 'react-native-select-dropdown'
 import Loading from "../../shared/loading";
+import api from "../../services/api";
 
 const CreateVenue = ({ navigation, route }) => {
     const countries = ["Kota Jakarta Barat", "Kota Jakarta Timur", "Kota Jakarta Pusat", "Kota Jakarta Utara", 'Kota Jakarta Selatan']
@@ -47,17 +47,20 @@ const CreateVenue = ({ navigation, route }) => {
     };
 
     useEffect(() => {
+        let isMounted = true
         console.log(route.params.user_id)
-        fetchSports()
+        fetchSports(isMounted)
+        return ()=> {isMounted = false}
     }, [])
 
     const fetchSports = async () => {
-        await axios.get(`http://66.42.49.240/api/sports/`).then(response => {
+        await api.get(`/api/sports/`).then(response => {
             let data = []
             response.data.map((item) => (
                 data.push(item.sport_name)
             ))
-            setSports(data)
+            if(isMounted)
+                setSports(data)
         })
             .catch(function (error) {
                 console.log(error)
@@ -96,7 +99,7 @@ const CreateVenue = ({ navigation, route }) => {
         }
         setIsLoading(true)
         console.log(formData)
-        await axios.post(`http://scrimate.com/api/venue/insert-new-venue/${route.params.user_id}`, formData, config).then((response) => {
+        await api.post(`/api/venue/insert-new-venue/${route.params.user_id}`, formData, config).then((response) => {
             Alert.alert("Venue Created",
                 response.message,
                 [

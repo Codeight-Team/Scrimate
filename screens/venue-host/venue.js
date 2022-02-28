@@ -3,9 +3,9 @@ import { StyleSheet, View, Text, TouchableOpacity, Image, Alert } from "react-na
 import { Entypo } from '@expo/vector-icons';
 import FlatButton from "../../shared/button";
 import { useFocusEffect } from '@react-navigation/native';
-import axios from "axios";
 import Loading from "../../shared/loading";
 import moment from "moment";
+import api from "../../services/api"
 
 const VenueDetail = ({ navigation, route }) => {
     const venue_id = route.params.venue
@@ -16,7 +16,7 @@ const VenueDetail = ({ navigation, route }) => {
         React.useCallback(() => {
             let isActive = true
             const fetchVenues = async () => {
-                await axios.get(`http://66.42.49.240/api/venue/venue-detail/${venue_id}`).then((response) => {
+                await api.get(`/api/venue/venue-detail/${venue_id}`).then((response) => {
                     if (isActive) {
                         setData(response.data)
                     }
@@ -42,7 +42,7 @@ const VenueDetail = ({ navigation, route }) => {
     ]
 
     const updateVenueStatus = async () => {
-        await axios.put(`http://66.42.49.240/api/venue/update-status/${venue_id}`, {
+        await api.put(`/api/venue/update-status/${venue_id}`, {
             isOpen: !data.isOpen
         }).then((response) => {
             console.log(response.data)

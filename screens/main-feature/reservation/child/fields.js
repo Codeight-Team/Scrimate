@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, TouchableWithoutFeedback } from 'react-native'
 import FlatButton from "../../../../shared/button";
-import axios from "axios";
 import moment from "moment";
+import api from "../../../../services/api";
 
 function ChooseField({ navigation, route }) {
     const [fields, setFields] = useState([]);
@@ -10,11 +10,9 @@ function ChooseField({ navigation, route }) {
     const venue_name = route.params.venue_name
     const title = route.params.title
 
-    const time = moment('12:15:12: PM', 'HH:mm:ss: A').diff(moment().startOf('day'), 'seconds') - moment('12:12:12: PM', 'HH:mm:ss: A').diff(moment().startOf('day'), 'seconds');
-
     useEffect(() => {
         const fetchFields = async () => {
-            await axios.get(`http://scrimate.com/api/field/get-fields/${venue_id}`)
+            await api.get(`/api/field/get-fields/${venue_id}`)
                 .then(response => {
                     setFields(response.data)
                 })

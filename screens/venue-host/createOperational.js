@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
 import FlatButton from "../../shared/button";
-import axios from "axios";
 import moment from "moment";
 import { AntDesign } from '@expo/vector-icons';
 import { useEffect } from "react/cjs/react.development";
-import SelectDropdown from 'react-native-select-dropdown'
+import SelectDropdown from 'react-native-select-dropdown';
+import api from "../../services/api";
 
 const CreateOperational = ({ route, navigation }) => {
     const venue = route.params.venue
@@ -56,7 +56,7 @@ const CreateOperational = ({ route, navigation }) => {
         '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
 
     const sendOperational = async(values) => {
-        await axios.post("http://66.42.49.240/api/venue/create-operationalhour/"+ venue, values)
+        await api.post("/api/venue/create-operationalhour/"+ venue, values)
         .then(()=>{
             Alert.alert(
                 'Operational Hour',

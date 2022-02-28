@@ -6,7 +6,7 @@ import { Entypo } from '@expo/vector-icons';
 import FlatButton from "../../shared/button";
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ScrollView } from "react-native-gesture-handler";
-import axios from "axios";
+import api from "../../services/api";
 
 const PickDateTime = ({ navigation, route }) => {
     const [date, setDate] = useState(new Date())
@@ -78,19 +78,21 @@ const PickDateTime = ({ navigation, route }) => {
     }, [])
 
     const parseOrder = (value) => {
-        let newDate = moment(date).format("DD-MM-YYYY")
         let newTime = moment(value, "HH").format("HH:mm")
-        setOrder({ date_of_match: newDate, order_type: type, time_of_match: newTime })
+        setOrder({ date_of_match: date, order_type: type, time_of_match: newTime })
     }
 
     const sendOrderDetail = async () => {
-        await axios.post(`http://scrimate.com/api/order/create-order/${user_id}/${field.field_id}`, order)
+        await api.post(`/api/order/create-order/${user_id}/${field.field_id}`, order)
             .then(response => {
-                navigation.navigate('Profile', { screen: 'Payment Method', params: { user_id: user_id, order_id: response.data.order_id } })
+                setTimeout(() => {
+                    navigation.navigate('Profile', { screen: 'Payment Method', params: { user_id: user_id, order_id: response.data.order_id } })
+                },1000)
             })
             .catch(error =>
-                console.warn(error)
+                console.warn(error.message)
             )
+        console.log(user_id, field.field_id, order);
     }
 
     const RenderAvailableTime = () => {

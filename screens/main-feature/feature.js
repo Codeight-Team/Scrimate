@@ -2,7 +2,6 @@ import * as React from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView } from 'react-native';
 import { useState, useEffect } from 'react';
 import Card from '../../shared/card';
-import axios from 'axios';
 
 function ActivityScreen({ navigation, route }) {
     const [address_user, setAddress] = useState()

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Image } from "react-native";
 import { Entypo } from '@expo/vector-icons';
-import axios from "axios";
+import api from "../../services/api";
 
 const ManageFields = ({ navigation, route }) => {
 
@@ -10,7 +10,7 @@ const ManageFields = ({ navigation, route }) => {
 
     useEffect(() => {
         const fetchFieldList = async () => {
-            await axios.get(`http://scrimate.com/api/field/get-fields/${venue_id}`)
+            await api.get(`/api/field/get-fields/${venue_id}`)
                 .then(response => {
                     setFields(response.data)
                 })

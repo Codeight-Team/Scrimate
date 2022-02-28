@@ -1,36 +1,46 @@
-import React, { useState } from 'react'
-import { StyleSheet, View, Text, TouchableOpacity, Image, Alert } from 'react-native'
+import React, { useState, useEffect, useCallback } from 'react'
+import { StyleSheet, View, Text, TouchableOpacity, Image, RefreshControl } from 'react-native'
 import { Entypo } from '@expo/vector-icons';
 import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
-import axios from 'axios';
+import api from '../../services/api';
 
 const ManageVenue = ({ navigation, route }) => {
     const [venue, setVenue] = useState([])
-    const [isUpdate, setIsUpdate] = useState("Not Updated")
-
+    const [refreshing, setRefreshing] = useState(false);
 
     const user_id = route.params.user_id
 
-    useFocusEffect(
-        React.useCallback(() => {
-            let isActive = true
-            const fetchVenues = async () => {
-                await axios.get(`http://66.42.49.240/api/venue/get-my-venue/${route.params.user_id}`).then((response) => {
-                    if (isActive) {
-                        setVenue(response.data)
-                    }
-                })
-                    .catch(error => {
-                        console.log(error)
-                    });
+    const wait = (timeout) => {
+        return new Promise(resolve => setTimeout(resolve, timeout));
+    }
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        wait(2000).then(() => [fetchVenues(true),setRefreshing(false)]);
+    }, []);
+
+    // useFocusEffect(
+    useEffect(() => {
+        // React.useCallback(() => {
+        let isActive = true
+        
+        fetchVenues(isActive)
+        return () => { isActive = false }
+        // })
+    },[])
+    // ), [user_id];
+
+    const fetchVenues = async (isActive) => {
+        await api.get(`/api/venue/get-my-venue/${user_id}`).then((response) => {
+            if (isActive) {
+                setVenue(response.data)
             }
-            fetchVenues()
-            return () => { isActive = false }
         })
-    ), [];
-
-
+            .catch(error => {
+                console.log(error)
+            });
+    }
 
     const renderVenue = () => {
         return venue.map(item => (
@@ -67,10 +77,10 @@ const ManageVenue = ({ navigation, route }) => {
                                     </Text>
 
                                 </View>
-                                <Text style={{fontSize: 13}}>
+                                <Text style={{ fontSize: 13 }}>
                                     {item.address.address_street}
                                 </Text>
-                                <Text style={{fontSize: 13}}>
+                                <Text style={{ fontSize: 13 }}>
                                     {item.address.address_region}
                                 </Text>
                             </View>
@@ -100,7 +110,12 @@ const ManageVenue = ({ navigation, route }) => {
                 <View style={{ height: '90%', width: '100%', paddingVertical: 20 }}>
                     {venue.length != 0 ?
                         <View style={{ height: '100%', width: '100%' }}>
-                            <ScrollView>
+                            <ScrollView refreshControl={
+                                <RefreshControl
+                                    refreshing={refreshing}
+                                    onRefresh={onRefresh}
+                                />
+                            }>
                                 <View style={{ flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'center' }}>
                                     {
                                         renderVenue()

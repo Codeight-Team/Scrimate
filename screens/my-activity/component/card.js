@@ -30,8 +30,8 @@ const Card = ({ itemId, venue_name, onPress, status, time, date, field_name, ima
                                     </Text>
                                 </View>
                                 <View style={{width: "50%", alignItems: 'flex-end'}}>
-                                    <View style={[styles.statusbar, status == "Success" ? styles.settle : status == "On Going" ? styles.onGoing : status == "Failed" ? styles.failure:status=="Refund"&& styles.refund]}>
-                                        <Text style={[{fontWeight: 'bold'},status == "Success" ? styles.green : status == "On Going" ? styles.orange : status == "Failed" ? styles.red:status=="Refund"&& styles.blue]}>
+                                    <View style={[styles.statusbar, status == "Finish" ? styles.settle : status == "On Going" ? styles.onGoing : status == "Failed" ? styles.failure:status=="Refund"&& styles.refund]}>
+                                        <Text style={[{fontWeight: 'bold'},status == "Finish" ? styles.green : status == "On Going" ? styles.orange : status == "Failed" ? styles.red:status=="Refund"&& styles.blue]}>
                                             {status}
                                         </Text>
                                     </View>

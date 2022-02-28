@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import Card from "../component/card";
-import axios from "axios";
+import NoDataView from "../../../shared/noDataFound";
+import api from "../../../services/api";
 
 const MyOrder = ({ navigation, route }) => {
     const [active, setActive] = useState("progress")
@@ -10,13 +11,17 @@ const MyOrder = ({ navigation, route }) => {
 
 
     useEffect(() => {
-        fetchOrderList()
+        let isMounted = true
+        navigation.setOptions({title: "My " + route.params.type })
+        fetchOrderList(isMounted)
+        return () => {isMounted = false}
     }, [])
 
-    const fetchOrderList = async () => {
-        await axios.get(`http://scrimate.com/api/order/find-my-order/${user_id}`)
+    const fetchOrderList = async (isMounted) => {
+        await api.get(`/api/order/find-my-order/${user_id}`)
             .then(response => {
-                setMyOrder(response.data)
+                if(isMounted)
+                    setMyOrder(response.data)
             })
             .catch(error => {
                 console.log(error)
@@ -34,17 +39,17 @@ const MyOrder = ({ navigation, route }) => {
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.box, active == "history" && { backgroundColor: '#cecece' }]} onPress={() => setActive("history")}>
                         <Text style={[{ color: 'black' }, active != "history" && { fontWeight: "bold" }]}>
-                            Order History
+                            {route.params.type} History
                         </Text>
                     </TouchableOpacity>
                 </View>
                 <ScrollView>
                     {active == "progress" &&
                         <>
-                            {
-                                myOrder.reverse().map(item => (
+                            { myOrder.find(item => item.order_status == "On Going" || item.order_status == "Waiting" ) ?
+                                myOrder.map(item => (
                                     <View key={item.order_id}>
-                                        {item.order_status != 'Failure' && item.order_status!="Finish" &&
+                                        {item.order_status != 'Failed' && item.order_status!="Finish" &&
                                             <Card
                                                 itemId={item.order_id}
                                                 venue_name={item.field.venue.venue_name}
@@ -58,14 +63,16 @@ const MyOrder = ({ navigation, route }) => {
                                                     navigation.navigate("Payment Method", { order_id: item.order_id, user_id: user_id, type: item.order_type })} />}
                                     </View>
                                 ))
+                                :
+                                <NoDataView type="Progress"/>
                             }
                         </>
 
                     }
                     {active == "history" &&
                         <>
-                            {
-                                myOrder.reverse().map(item => (
+                            { myOrder.find(item => item.order_status == "Finish" || item.order_status == "Failed") ?
+                                myOrder.map(item => (
                                     <View key={item.order_id}>
                                         {item.order_status != 'On Going' && item.order_status != 'Waiting' && 
                                             <Card
@@ -85,6 +92,8 @@ const MyOrder = ({ navigation, route }) => {
                                                     navigation.navigate("Payment Method", { order_id: item.order_id, user_id: user_id, type: item.order_type })} />}
                                     </View>
                                 ))
+                                :
+                                <NoDataView type="History"/>
                             }
                         </>
                     }

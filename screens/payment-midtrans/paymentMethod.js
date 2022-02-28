@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, ScrollView, Alert } from "react-native";
-import axios from "axios";
 import Card from "../../shared/card";
 import BCA from "../../assets/bca-logo.png";
 import BRI from "../../assets/bri-logo.png";
@@ -8,6 +7,7 @@ import BNI from "../../assets/bni-logo.png";
 import CustomHeader from "../../shared/customHeader";
 import Loading from "../../shared/loading";
 import moment from "moment";
+import api from "../../services/api";
 
 
 const PaymentMethod = ({ navigation, route }) => {
@@ -43,7 +43,7 @@ const PaymentMethod = ({ navigation, route }) => {
 
   useEffect(() => {
     const fetchOrderDetail = async () => {
-      await axios.get(`http://66.42.49.240/api/order/find-a-order/${user_id}/${order_id}`).then((response) => {
+      await api.get(`/api/order/find-a-order/${user_id}/${order_id}`).then((response) => {
         setMatch(response.data.data.order_type);
         setCreator(response.data.data.creator);
         setBills(response.data.data.bills)
@@ -63,7 +63,7 @@ const PaymentMethod = ({ navigation, route }) => {
   }, [])
 
   const sendPaymentMethod = (value) => {
-    axios.post(`http://66.42.49.240/api/payment/process-order/${user_id}/${bills.bill_id}`, {
+    api.post(`/api/payment/process-order/${user_id}/${bills.bill_id}`, {
       payment_method: value
     })
       .then(response => {
@@ -83,7 +83,7 @@ const PaymentMethod = ({ navigation, route }) => {
   }
 
   const sendFinderToMatch = async (payment_method) => {
-    await axios.put(`http://66.42.49.240/api/match-making/join/${finder_id}/${match_id}`, {payment_method: payment_method})
+    await api.put(`/api/match-making/join/${finder_id}/${match_id}`, {payment_method: payment_method})
       .then(res => {
         Alert.alert('Success',
           res.data.message, [
@@ -104,7 +104,7 @@ const PaymentMethod = ({ navigation, route }) => {
         :
         <View style={styles.container}>
           <View style={styles.inner}>
-            <CustomHeader title={"Choose Payment Method"} onPressBackButton={() => navigation.navigate("Profile Screen")} backButtonModel={"left"} />
+            <CustomHeader title={"Choose Payment Method"} onPressBackButton={() => navigation.navigate("My Order", { user_id: user_id })} backButtonModel={"left"} />
             <View style={{ width: '100%', height: '50%', backgroundColor: "#FFF" }}>
               <View style={{ padding: 10, elevation: 5, backgroundColor: "#FFF" }}>
                 <Text style={{ fontWeight: "bold", }}>Payment Method</Text>
