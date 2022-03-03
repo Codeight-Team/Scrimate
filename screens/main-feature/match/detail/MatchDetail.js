@@ -6,11 +6,13 @@ import moment from 'moment';
 import Loading from '../../../../shared/loading';
 import api from '../../../../services/api';
 import { IMAGE_URL } from '@env'
+import { Ionicons } from '@expo/vector-icons';
 
 function MatchDetail({ navigation, route }) {
     const [matchDetail, setMatchDetail] = useState({})
     const [isLoading, setIsLoading] = useState(true)
     const [creator_id, setCreatorId] = useState()
+    const [finder_id, setFinderId] = useState()
     const [order_id, setOrderId] = useState()
     const match_id = route.params.match_id
     const user_id = route.params.user_id
@@ -25,8 +27,9 @@ function MatchDetail({ navigation, route }) {
         await api.get(`/api/match-making/match-detail/${match_id}`)
             .then(response => {
                 setMatchDetail(response.data)
-                setOrderId(response.data.order[response.data.order.length-1].order_id)
+                setOrderId(response.data.order[response.data.order.length - 1].order_id)
                 setCreatorId(response.data.creator_id)
+                setFinderId(response.data.finder_id)
                 setIsLoading(false)
             })
             .catch(error => {
@@ -47,8 +50,8 @@ function MatchDetail({ navigation, route }) {
                         <View style={styles.itemContainer}>
                             <View style={styles.detailContainer}>
                                 <View style={{ height: '10%', width: '100%', alignItems: 'center' }}>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{matchDetail.field.venue.venue_name} 
-                                    <Text style={{fontSize: 16, color: 'gray'}}> {matchDetail.field.field_name}</Text>
+                                    <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{matchDetail.field.venue.venue_name}
+                                        <Text style={{ fontSize: 16, color: 'gray' }}> {matchDetail.field.field_name}</Text>
                                     </Text>
                                 </View>
                                 <View style={{ padding: 20, flexDirection: 'row' }}>
@@ -84,31 +87,39 @@ function MatchDetail({ navigation, route }) {
                                         {matchDetail.creator.first_name} {matchDetail.creator.last_name}
                                     </Text>
                                 </View>
-                                <View style={{height: '20%', justifyContent: 'center'}}>
+                                <View style={{ height: '20%', justifyContent: 'center' }}>
                                     <View style={{ flexDirection: 'row', paddingHorizontal: 20, alignItems: 'center' }}>
                                         <Text style={{ width: '50%', fontWeight: 'bold', color: 'gray', fontSize: 12 }}>Field Price</Text>
                                         <Text style={{ width: '50%', textAlign: 'right', fontSize: 12 }}> Rp {matchDetail.field.field_price}</Text>
                                     </View>
                                     <View style={{ flexDirection: 'row', paddingHorizontal: 20, padding: 5, alignItems: 'center' }}>
                                         <Text style={{ width: '50%', fontWeight: 'bold', color: 'black', fontSize: 16 }}>Match Price</Text>
-                                        <Text style={{ width: '50%', textAlign: 'right', fontWeight: 'bold', fontSize: 16 }}> Rp {matchDetail.field.field_price/2}</Text>
+                                        <Text style={{ width: '50%', textAlign: 'right', fontWeight: 'bold', fontSize: 16 }}> Rp {matchDetail.field.field_price / 2}</Text>
                                     </View>
                                 </View>
                             </View>
                             <View style={styles.buttonContainer}>
-                                {user_id != creator_id &&
+                                {(user_id != creator_id && user_id != finder_id )&&
                                     <FlatButton width={150} backgroundColor={'#6C63FF'} text={'Join'}
-                                    onPress={() => Alert.alert('Join Match?',
-                                        'You will be asked for payment if you accept this match', [
-                                        {
-                                            text: 'Cancel',
-                                            onPress: () => console.log('Cancel Pressed'),
-                                        },
-                                        {
-                                            text: 'OK',
-                                            onPress: () => navigation.navigate("Profile",{ screen: 'Payment Method', params: { user_id: creator_id, order_id: order_id, finder_id: user_id, match_id: match_id}})
-                                        },
-                                    ])} />
+                                        onPress={() => Alert.alert('Join Match?',
+                                            'You will be asked for payment if you accept this match', [
+                                            {
+                                                text: 'Cancel',
+                                                onPress: () => console.log('Cancel Pressed'),
+                                            },
+                                            {
+                                                text: 'OK',
+                                                onPress: () => navigation.navigate("Profile", { screen: 'Payment Method', params: { user_id: creator_id, order_id: order_id, finder_id: user_id, match_id: match_id } })
+                                            },
+                                        ])} />
+                                }
+                                {finder_id && (finder_id==user_id||creator_id==user_id)?
+                                    <TouchableOpacity>
+                                        <Ionicons name="md-chatbubble-ellipses" size={30} color="#6C63FF" />
+                                    </TouchableOpacity>
+                                    :
+                                    <>
+                                    </>
                                 }
                             </View>
                         </View>

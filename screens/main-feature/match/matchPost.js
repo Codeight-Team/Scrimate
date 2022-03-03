@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Image, useWindowDimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import Badminton from '../../../assets/icons/shuttlecock.svg';
-import Futsal from '../../../assets/icons/futsal.svg';
-import Football from '../../../assets/soccer-ball.svg';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, } from 'react-native-reanimated';
 import { AntDesign } from '@expo/vector-icons';
-import moment from 'moment';
 import NoDataView from '../../../shared/noDataFound';
 import api from '../../../services/api';
+import Post from './components/post';
 
 
 
@@ -71,73 +68,15 @@ function MatchPost({ navigation, route }) {
         }
     });
 
-    function Svg(sports) {
-        if (sports === 'Badminton')
-            return <Badminton width={20} height={20} />
-        else if (sports === 'Futsal')
-            return <Futsal width={20} height={20} />
-        else if (sports === 'Football')
-            return <Football width={20} height={20} />
-    }
+
 
     function RenderPost() {
         return matchList.map((item) => {
-            return (
-                <TouchableOpacity key={item.match_id} onPress={() => {
-                    navigation.navigate("Match Detail", { user_id: user_id, match_id: item.match_id })
-                }
-
-                }>
-                    <View style={styles.box}>
-                        <View style={styles.inner}>
-                            <Image style={{ width: "100%", height: "40%", borderRadius: 10 }}
-                                source={{ uri: "http://scrimate.com/" + item.field.image }}></Image>
-                            <View style={{
-                                width: '100%',
-                                height: '60%',
-                                alignItems: 'flex-start',
-                                justifyContent: 'center',
-                                marginBottom: 5,
-                                borderRadius: 10,
-                                borderTopRightRadius: 0,
-                                borderTopLeftRadius: 0,
-                                padding: 10,
-                                paddingTop: 0
-                            }}>
-                                <View style={{ flexDirection: 'row', padding: 4, paddingLeft: 0 }}>{Svg(sport)}
-                                    <Text style={{ marginLeft: 10, textTransform: 'capitalize', fontWeight: 'bold' }}>
-                                        {sport}
-                                    </Text>
-                                </View>
-                                <Text style={[styles.fontDetail, { fontWeight: 'bold' }]}>
-                                    {moment(item.date_of_match).format("dddd")}
-                                </Text>
-                                <Text style={styles.fontDetail}>
-                                    {moment(item.date_of_match).format("ddd DD MMMM YYYY")}
-                                </Text>
-                                <Text style={styles.fontDetail}>
-                                    {moment(item.time_of_match, "HH:mm:ss").format("HH:mm")} - {moment(item.time_of_match, 'HH:mm:dd').add(1, "hours").format("HH:mm")}
-                                </Text>
-                                <Text style={styles.fontDetail}>
-
-                                    <Text style={{ fontWeight: 'bold' }}>
-                                        {item.field.venue.venue_name}
-                                    </Text>
-                                </Text>
-                                <Text style={styles.fontDetail}>
-                                    {item.field.venue.address.address_street}
-                                </Text>
-                                <Text style={styles.fontDetail}>
-                                    {item.field.venue.address.address_region}
-                                </Text>
-                                <Text style={[styles.fontDetail, { fontWeight: 'bold' }]}>
-                                    {/* by <Text style={{ color: '#6C63FF', fontWeight: 'bold' }}>{item.name}</Text> */}
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            );
+            return <Post
+                key={item.match_id}
+                user_id={user_id}
+                item={item}
+                onPress={() => navigation.navigate("Match Detail", { user_id: user_id, match_id: item.match_id })} />
         });
     }
 
@@ -146,7 +85,7 @@ function MatchPost({ navigation, route }) {
             <View style={styles.container}>
                 <View style={{ width: '100%', flexDirection: 'row', backgroundColor: '#fff', padding: 10, elevation: 4 }}>
                     <View style={{ width: '50%', }}>
-                            <Text style={[myMatch ? { color: '#6C63FF' } : { color: 'gray' }, { fontWeight: 'bold' }]}>Join Match</Text>
+                        <Text style={[myMatch ? { color: '#6C63FF' } : { color: 'gray' }, { fontWeight: 'bold' }]}>Join Match</Text>
                     </View>
                     <View style={{ width: '50%', alignItems: 'flex-end' }}>
                         <TouchableOpacity onPress={() => top.value = dimensions.height / 2
@@ -167,7 +106,7 @@ function MatchPost({ navigation, route }) {
                     <View style={styles.container}>
                         <View style={styles.subContainer}>
                             {
-                                myMatch.length ?
+                                matchList.length < 1?
                                     <NoDataView type={"Match"} />
                                     :
                                     RenderPost()
@@ -175,11 +114,11 @@ function MatchPost({ navigation, route }) {
                         </View>
                     </View>
                 </ScrollView>
-                <TouchableOpacity 
-                    onPress={() => console.log()}
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('My Match', { user_id: user_id })}
                     style={{ width: '100%', height: "10%", backgroundColor: '#6C63FF', alignItems: 'center', justifyContent: 'center', elevation: 4 }}>
                     <View>
-                        <Text style={{fontSize: 17, color: '#fff'}}>Go to My Match</Text>
+                        <Text style={{ fontSize: 17, color: '#fff' }}>Go to My Match</Text>
                     </View>
                 </TouchableOpacity>
             </View>

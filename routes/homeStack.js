@@ -6,6 +6,7 @@ import ActivityScreen from '../screens/main-feature/feature';
 import ReserveVenue from '../screens/main-feature/reservation/child/venueDetail';
 import Match from '../screens/main-feature/match/matchPost';
 import MatchDetail from '../screens/main-feature/match/detail/MatchDetail';
+import MyMatchList from '../screens/main-feature/match/match-owned/myMatch';
 import ChooseField from '../screens/main-feature/reservation/child/fields';
 import PickDateTime from '../screens/venue/pickDateTime';
 // import CreateOrder from '../screens/venue/createOrder';
@@ -38,11 +39,11 @@ function HomeStack() {
         }} />
         <Stack.Screen name="Match" component={Match} options={{ title: "Match" }} />
         <Stack.Screen name="Match Detail" component={MatchDetail} />
+        <Stack.Screen name="My Match" component={MyMatchList} options={{ title: "Owned Match" }} />
         <Stack.Screen name="Reserve Venue" component={ReserveVenue} options={{ title: 'Venue' }} />
       </Stack.Group>
       <Stack.Screen name="Choose Field" component={ChooseField} options={{ title: 'Field' }} />
       <Stack.Screen name="Pick Date Time" component={PickDateTime} />
-      {/* <Stack.Screen name="Order Screen" component={CreateOrder} /> */}
       <Stack.Screen name="Payment Method Screen" component={PaymentMethod}  options={{ headerShown: false }}/>
       <Stack.Screen name="Payment Screen" component={Payment}  options={{ headerShown: false }}/>
     </Stack.Navigator>
