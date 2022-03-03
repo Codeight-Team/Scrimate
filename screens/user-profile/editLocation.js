@@ -1,12 +1,24 @@
-import React from "react";
-import { StyleSheet, View, Text, TextInput } from "react-native";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View, Text } from "react-native";
 import SelectDropdown from 'react-native-select-dropdown'
-import { useState } from "react/cjs/react.development";
+import api from "../../services/api";
 
-const EditAddress = () => {
+const EditAddress = ({route}) => {
     const [selectedRegion, setSelectedRegion] = useState('Kota Jakarta Barat')
     const region = ['Kota Jakarta Barat','Kota Jakarta Utara','Kota Jakarta Timur','Kota Jakarta Selatan','Kota Jakarta Pusat']
+    const [data, setData] = useState({})
+
+    useEffect(()=>{
+        const fetchAddress = async () => {
+            await api.get('/api/address/'+route.params.data.address_id)
+            .then(res=>{
+                setData(res.data)
+            })
+            .catch(err=> console.log(err))
+        }
+        fetchAddress()
+    },[])
+
     return (
         <View style={styles.container}>
             <View style={styles.inner}>
@@ -15,7 +27,7 @@ const EditAddress = () => {
                         Your Address
                     </Text>
                     <Text>
-                        Jl Anggrek, Jakarta Barat
+                        {data.address_street} Street, {data.address_region}
                     </Text>
                 </View>
                 <View style={styles.box}>
@@ -55,7 +67,7 @@ const styles = StyleSheet.create({
     inner: {
         width: '100%',
         height: '100%',
-        padding: 20,
+        padding: 10,
         backgroundColor: '#F4F8FF'
     },
     box: {

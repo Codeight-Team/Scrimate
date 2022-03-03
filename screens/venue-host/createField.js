@@ -4,7 +4,7 @@ import { useState } from "react/cjs/react.development";
 import * as ImagePicker from 'expo-image-picker';
 import { Formik } from "formik";
 import FlatButton from "../../shared/button";
-import axios from "axios";
+import api from "../../services/api";
 
 const CreateField = ({ navigation, route }) => {
     const [image, setImage] = useState(null)
@@ -45,7 +45,7 @@ const CreateField = ({ navigation, route }) => {
                 Accept: "application/json"
             }
         }
-        await axios.post(`http://66.42.49.240/api/field/create-field/${venue_id}`, data, config)
+        await api.post(`/api/field/create-field/${venue_id}`, data, config)
             .then((response) => {
                 Alert.alert("Field Created",
                 response.message,

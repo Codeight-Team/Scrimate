@@ -1,6 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import ProfileScreen from '../screens/main/screen/profileScreen';
+import ProfileScreen from '../screens/user-profile/profileScreen';
 import EditProfile from '../screens/user-profile/editProfile';
 import CreateVenue from '../screens/venue-host/createVenue';
 import CreateField from '../screens/venue-host/createField';
@@ -11,6 +11,9 @@ import PaymentMethod from '../screens/payment-midtrans/paymentMethod';
 import Payment from '../screens/payment-midtrans/payment';
 import MyOrder from '../screens/my-activity/my-order/myOrder';
 import EditAddress from '../screens/user-profile/editLocation';
+import ManageFields from '../screens/venue-host/manageFields';
+import MyMatch from '../screens/my-activity/my-match/my-match';
+import ManageSchedule from '../screens/venue-host/manageSchedule';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,15 +33,29 @@ function ProfileStack() {
         />
         <Stack.Screen name="Create Venue Screen" component={CreateVenue}
         />
+        <Stack.Screen name="Manage Field Screen" component={ManageFields}
+        />
         <Stack.Screen name="Create Field Screen" component={CreateField}
         />
         <Stack.Screen name="Create Operational Screen" component={CreateOperational}
         />
+        <Stack.Screen name="Manage Schedule Screen" component={ManageSchedule}
+        />
         <Stack.Screen name="My Order" component={MyOrder}
         />
-        <Stack.Screen name="Payment Method" component={PaymentMethod}
+        <Stack.Screen name="My Match" component={MyMatch}
         />
-        <Stack.Screen name="Payment" component={Payment}
+        <Stack.Screen name="Payment Method" component={PaymentMethod} options={
+          {
+            headerShown: false
+          }
+        }
+        />
+        <Stack.Screen name="Payment" component={Payment} options={
+          {
+            headerShown: false
+          }
+        }
         />
       </Stack.Group>
     </Stack.Navigator>

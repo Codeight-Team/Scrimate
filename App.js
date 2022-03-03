@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Main from './routes/mainTabStack'
 import Root from './routes/rootStack'
 import Loading from './shared/loading';
-import axios from 'axios'
+import api from './services/api';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -15,7 +15,8 @@ function App() {
   const initialLoginState = {
     accessToken: null,
     refreshToken: null,
-    user_id: ''
+    user_id: '',
+    role: [],
   }
 
   const LoginReducer = (state, action) => {
@@ -32,21 +33,24 @@ function App() {
           ...state,
           accessToken: action.token,
           refreshToken: action.refreshToken,
-          user_id: action.user_id
+          user_id: action.user_id,
+          role: action.role,
         }
       case 'SIGN_OUT':
         return {
           ...state,
           accessToken: null,
           refreshToken: null,
-          user_id: null
+          user_id: null,
+          role: null
         }
         case 'FETCH_DATA':
         return {
           ...state,
           accessToken: action.token,
           refreshToken: action.refreshToken,
-          user_id: action.user_id
+          user_id: action.user_id,
+          role: action.role,
         }
     }
   }
@@ -56,7 +60,7 @@ function App() {
   const auth = useMemo(() => ({
     login: async (data) => {
       let user = {}
-        await axios.post('http://66.42.49.240/api/auth/login', data)
+        await api.post('/api/auth/login', data)
       .then(response => {
         user = response.data
       }
@@ -69,19 +73,21 @@ function App() {
           await AsyncStorage.setItem('AccessToken', user.accessToken)
           await AsyncStorage.setItem('RefreshToken', user.refreshToken)
           await AsyncStorage.setItem('user_id', user.user_id)
+          await AsyncStorage.setItem('role', JSON.stringify(user.role))
         } catch (error) {
           Alert.alert("Wrong Email or Password")
         }
       }
       else
         console.warn('null')
-      dispatch({ type: 'LOGIN', token: user.accessToken, refreshToken: user.refreshToken, user_id: user.user_id })
+      dispatch({ type: 'LOGIN', token: user.accessToken, refreshToken: user.refreshToken, user_id: user.user_id,  role: user.role})
     },
     signOut: async () => {
       try {
         await AsyncStorage.removeItem('AccessToken')
         await AsyncStorage.removeItem('RefreshToken')
         await AsyncStorage.removeItem('user_id')
+        await AsyncStorage.removeItem('role')
       } catch (error) {
         Alert.alert('Try Again')
       }
@@ -94,15 +100,18 @@ function App() {
       let accessToken = null
       let refreshToken = null
       let user_id = null
+      let role = null
       try {
         accessToken = await AsyncStorage.getItem('AccessToken')
         refreshToken = await AsyncStorage.getItem('RefreshToken')
         user_id = await AsyncStorage.getItem('user_id')
+        role = await AsyncStorage.getItem('role')
+
         setIsLoading(false)
       } catch (error) {
         Alert.alert('Sign in needed')
       }
-      dispatch({type:'FETCH_DATA', token: accessToken, refreshToken: refreshToken, user_id: user_id })
+      dispatch({type:'FETCH_DATA', token: accessToken, refreshToken: refreshToken, user_id: user_id, role: JSON.parse(role)})
     }, 1000)
   },[]);
 

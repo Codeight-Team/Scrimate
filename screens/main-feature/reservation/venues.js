@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, RefreshControl, TouchableOpacity, useWindowDimensions, ScrollView } from 'react-native';
 import { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
 import Card from '../../../shared/card'
 import { AntDesign } from '@expo/vector-icons';
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import NoDataView from '../../../shared/noDataFound';
-import { useFocusEffect } from '@react-navigation/native';
+import api from '../../../services/api';
 
 
 function ReservationScreen({ navigation, route }) {
@@ -34,7 +33,7 @@ function ReservationScreen({ navigation, route }) {
     },[preferedAddress]);
 
     const fetchVenues = async () => {
-        await axios.post(`http://66.42.49.240/api/venue/get-venue/`, { sport_name: sport, address_region: preferedAddress }).then((response) => {
+        await api.post(`/api/venue/get-venue/`, { sport_name: sport, address_region: preferedAddress }).then((response) => {
                 setVenues(response.data)
         })
             .catch(error => {
@@ -79,7 +78,7 @@ function ReservationScreen({ navigation, route }) {
         return venues.map((item) => {
             return (
                 <TouchableOpacity style={{ width: '100%' }} activeOpacity={.7} key={item.venue_id} onPress={() =>
-                    navigation.navigate("Reserve Venue", { venue_id: item.venue_id })
+                    navigation.navigate("Reserve Venue", { venue_id: item.venue_id, title: title })
                 }>
                     <Card type='small' name={item.venue_name} image={item.image} description={item.address.address_region} />
                 </TouchableOpacity>
@@ -102,7 +101,7 @@ function ReservationScreen({ navigation, route }) {
             <View style={styles.container}>
                 <View style={{ width: '100%', flexDirection: 'row', backgroundColor: '#fff', padding: 10, elevation: 4 }}>
                     <View style={{ width: '50%', }}>
-                        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => console.log('Yeah')}>
+                        <TouchableOpacity style={{ flexDirection: 'row' }}>
                             <Text style={[{ color: 'gray' }, { fontWeight: 'bold' }]}>{sport}, {title}</Text>
                         </TouchableOpacity>
                     </View>
@@ -113,7 +112,7 @@ function ReservationScreen({ navigation, route }) {
                                 <AntDesign name="caretdown" size={10} color="black" />
                             </View>
                             <Text style={{ color: '#6C63FF', fontWeight: 'bold' }}>
-                                {preferedAddress ? preferedAddress : "Kota Jakarta Barat"}
+                                {preferedAddress}
                             </Text>
 
                         </TouchableOpacity>
@@ -128,7 +127,7 @@ function ReservationScreen({ navigation, route }) {
                     {venues.length ?
                         MainContent()
                         :
-                        NoDataView()
+                        <NoDataView type={"Venue"}/>
                     }
                 </ScrollView>
             </View>

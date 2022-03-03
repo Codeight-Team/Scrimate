@@ -5,11 +5,10 @@ import Moment from 'moment';
 import Pen from '../../assets/icons/pencil.svg'
 import * as ImagePicker from 'expo-image-picker';
 import FlatButton from '../../shared/button';
-import { AntDesign } from '@expo/vector-icons';
-import DefaultPicture from '../../shared/defaultProfilePicture';
-import { Ionicons } from '@expo/vector-icons';
-import { Formik } from 'formik'
-import axios from 'axios';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { Formik } from 'formik';
+import api from '../../services/api';
+import {IMAGE_URL} from '@env'
 
 function EditProfile({ navigation, route }) {
     const [data, setData] = useState(route.params)
@@ -46,7 +45,7 @@ function EditProfile({ navigation, route }) {
             }
         }
 
-        await axios.put(`http://66.42.49.240/api/users/${data.user_id}`, formData, config).then(() => {
+        await api.put(`/api/users/${data.user_id}`, formData, config).then(() => {
             setSuccess(true)
             setTimeout(() => { navigation.navigate('Profile Screen') }, 1000)
         })
@@ -56,7 +55,7 @@ function EditProfile({ navigation, route }) {
     }
 
     const updateForm = async (values) => {
-        await axios.put(`http://66.42.49.240/api/users/${data.user_id}`, values).then(response => {
+        await api.put(`/api/users/${data.user_id}`, values).then(response => {
             setSuccess(true)
             setTimeout(() => { navigation.navigate('Profile Screen') }, 1000)
         })
@@ -74,7 +73,7 @@ function EditProfile({ navigation, route }) {
     const ImageForm = () => (
         <View style={[styles.centeredView, { width: "100%", height: '80%' }]}>
             {image ? <Image source={{ uri: image }} style={styles.profilePicture} /> :
-                <Image source={{ uri: 'http://66.42.49.240/'+ data.image }} style={styles.profilePicture} />
+                <Image source={{ uri: IMAGE_URL+ data.image }} style={styles.profilePicture} />
                 // <Image source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} style={styles.profilePicture} />
             }
             <TouchableOpacity style={{ padding: 10 }} onPress={pickImage}>
@@ -224,7 +223,7 @@ function EditProfile({ navigation, route }) {
                         height: '30%', width: '100%', backgroundColor: 'FFF', justifyContent: 'flex-end', borderRadius: 40, padding: 20,
                         alignItems: 'center'
                     }}>
-                        {data.image ? <Image source={{ uri: 'http://66.42.49.240/'+ data.image }} style={styles.profilePicture} /> : <DefaultPicture />}
+                        {data.image && <Image source={{ uri: IMAGE_URL+ data.image }} style={styles.profilePicture} />}
                         <TouchableOpacity onPress={() => activateModal('picture')} style={{ width: 25, height: 25, backgroundColor: 'rgba(0,0,0, 0.2)', borderRadius: 50, alignItems: 'center', justifyContent: 'center', margin: 10, paddingBottom: 2 }}>
                             <Pen width={13} height={13} fill={"black"} />
                         </TouchableOpacity>
@@ -305,8 +304,8 @@ const styles = StyleSheet.create({
         padding: 20
     },
     profilePicture: {
-        borderWidth: 1,
-        borderColor: 'grey',
+        borderWidth: 0.5,
+        borderColor: '#cecece',
         borderRadius: 50,
         width: 100,
         height: 100,

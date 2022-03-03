@@ -3,9 +3,9 @@ import { StyleSheet, View, Text, TouchableOpacity, Image, Alert } from "react-na
 import { Entypo } from '@expo/vector-icons';
 import FlatButton from "../../shared/button";
 import { useFocusEffect } from '@react-navigation/native';
-import axios from "axios";
 import Loading from "../../shared/loading";
 import moment from "moment";
+import api from "../../services/api"
 
 const VenueDetail = ({ navigation, route }) => {
     const venue_id = route.params.venue
@@ -16,7 +16,7 @@ const VenueDetail = ({ navigation, route }) => {
         React.useCallback(() => {
             let isActive = true
             const fetchVenues = async () => {
-                await axios.get(`http://66.42.49.240/api/venue/venue-detail/${venue_id}`).then((response) => {
+                await api.get(`/api/venue/venue-detail/${venue_id}`).then((response) => {
                     if (isActive) {
                         setData(response.data)
                     }
@@ -42,7 +42,7 @@ const VenueDetail = ({ navigation, route }) => {
     ]
 
     const updateVenueStatus = async () => {
-        await axios.put(`http://66.42.49.240/api/venue/update-status/${venue_id}`, {
+        await api.put(`/api/venue/update-status/${venue_id}`, {
             isOpen: !data.isOpen
         }).then((response) => {
             console.log(response.data)
@@ -105,7 +105,7 @@ const VenueDetail = ({ navigation, route }) => {
                                 </View>
                                 <View style={{ width: '70%', flexDirection: 'row' }}>
                                     {data.venue_facility.map((item, index) => (
-                                        <Text key={index}>
+                                        <Text key={index} style={{paddingRight: 5}}>
                                             {item}
                                         </Text>
                                     ))
@@ -202,28 +202,11 @@ const VenueDetail = ({ navigation, route }) => {
                             borderRadius: 10,
                             flexDirection: 'row',
                             alignItems: 'center'
-                        }} onPress={() => navigation.navigate('Create Field Screen', { venue_id: venue_id })}>
+                        }} onPress={() => navigation.navigate('Manage Field Screen', { venue_id: venue_id })}>
                             <Entypo name="circle-with-plus" size={24} color="white" />
                             <View style={{ padding: 5, paddingRight: 20, justifyContent: 'center', alignItems: 'center', width: 120 }}>
                                 <Text style={{ color: 'white', fontWeight: 'bold' }}>
                                     Manage Fields
-                                </Text>
-                            </View>
-                        </TouchableOpacity>}
-                        {data.operationals != 0 && <TouchableOpacity style={{
-                            marginHorizontal: 5,
-                            width: 120,
-                            padding: 5,
-                            backgroundColor: '#6C63FF',
-                            elevation: 5,
-                            borderRadius: 10,
-                            flexDirection: 'row',
-                            alignItems: 'center'
-                        }} onPress={() => navigation.navigate('Create Field Screen', { venue_id: venue_id })}>
-                            <Entypo name="circle-with-plus" size={24} color="white" />
-                            <View style={{ padding: 5, paddingRight: 20, justifyContent: 'center', alignItems: 'center', width: 120 }}>
-                                <Text style={{ color: 'white', fontWeight: 'bold' }}>
-                                    Add New Field
                                 </Text>
                             </View>
                         </TouchableOpacity>}

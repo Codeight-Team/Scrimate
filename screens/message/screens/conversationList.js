@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView, Image, Pressable } from 'react-native';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+import api from '../../../services/api';
 import moment from 'moment';
 
 function ConversationList({ navigation }) {
     const [myChat, setMyChat] = useState()
     useEffect(() => {
-        // axios.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
+        // api.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
         //     console.log(response.data);
         //   });
     })
@@ -19,12 +18,9 @@ function ConversationList({ navigation }) {
                     <View style={{ width: '25%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
                         <Image style={{ width: 60, height: 60, backgroundColor: 'black', borderRadius: 50 }} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
                     </View>
-                    <View style={{ width: '55%', height: '100%', paddingVertical: 10 }}>
+                    <View style={{ width: '55%', height: '100%', paddingVertical: 10 , justifyContent: 'center'}}>
                         <Text style={{ fontSize: 17, fontWeight: 'bold' }}>
                             Rafi
-                        </Text>
-                        <Text style={{ fontSize: 13, color: 'gray' }}>
-                            hai
                         </Text>
                     </View>
                     <View style={{ width: '15%', height: '100%', paddingVertical: 10, alignItems: 'flex-end' }}>
@@ -33,47 +29,6 @@ function ConversationList({ navigation }) {
                         </Text>
                     </View>
                 </TouchableOpacity>
-                {/* <Pressable style={({ pressed }) => [
-                    {
-                        backgroundColor: pressed ? 'red' : '#F4F8FF',
-                    }, { width: '100%', height: 70, borderBottomWidth: 1, borderColor: '#cccccc', justifyContent: 'center' }
-                ]} onPress={() => console.log('yeah')}>
-                    <View style={{ width: '100%', flexDirection: 'row' }}>
-                        <View style={{ width: '25%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                            <Image style={{ width: 60, height: 60, backgroundColor: 'black', borderRadius: 50 }} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
-                        </View>
-                        <View style={{ width: '75%', height: '100%', paddingVertical: 10 }}>
-                            <Text style={{ fontSize: 17, fontWeight: 'bold' }}>
-                                Rafi
-                            </Text>
-                            <Text style={{ fontSize: 13, color: 'gray' }}>
-                                wew
-                            </Text>
-                        </View>
-                    </View>
-                </Pressable> */}
-                {/* {!myChat ?
-                    <TouchableOpacity style={{ width: '100%', height: 70, borderBottomWidth: 1, borderColor: '#cccccc', flexDirection: 'row' }}>
-                        <View style={{ width: '25%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                            <Image style={{ width: 60, height: 60, backgroundColor: 'black', borderRadius: 50 }} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
-                        </View>
-                        <View style={{ width: '75%', height: '100%', paddingVertical: 10 }}>
-                            <Text style={{ fontSize: 17, fontWeight: 'bold' }}>
-                                Rafi
-                            </Text>
-                            <Text style={{ fontSize: 13, color: 'gray' }}>
-                                wew
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-
-                    :
-                    <View style={{ width: '100%', alignItems: 'center' }}>
-                        <Text style={{ color: 'gray' }}>
-                            You Have No Message...
-                        </Text>
-                    </View>
-                } */}
             </View>
         </View>
     )

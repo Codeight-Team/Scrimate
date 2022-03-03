@@ -2,7 +2,6 @@ import * as React from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView } from 'react-native';
 import { useState, useEffect } from 'react';
 import Card from '../../shared/card';
-import axios from 'axios';
 
 function ActivityScreen({ navigation, route }) {
     const [address_user, setAddress] = useState()
@@ -30,9 +29,7 @@ function ActivityScreen({ navigation, route }) {
     function RenderActivity() {
         return data.map((item) => {
             return (
-                    
-                    // console.log(route.params.user)
-                    <Card key={item.name} name={item.name} image={item.svg} onPress={()=> navigation.navigate(item.url, { sport: route.params.sport, user: route.params.user, title: item.title, address: address_user })} />
+                <Card key={item.name} name={item.name} image={item.svg} onPress={() => navigation.navigate(item.url, { sport: route.params.sport, user: route.params.user, title: item.title, address: address_user })} />
             )
         });
     }
@@ -42,11 +39,11 @@ function ActivityScreen({ navigation, route }) {
             <View style={styles.titleContainer}>
                 <Text style={{ color: 'gray', fontWeight: 'bold' }}>{route.params.sport}</Text>
             </View>
-                <View style={{width: '100%'}}>
-                    {
-                        RenderActivity()
-                    }
-                </View>
+            <View style={{ width: '100%' }}>
+                {
+                    RenderActivity()
+                }
+            </View>
         </View>
     )
 }

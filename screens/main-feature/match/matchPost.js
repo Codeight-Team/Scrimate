@@ -1,73 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Image, useWindowDimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import Badminton from '../../../assets/icons/shuttlecock.svg';
-import Futsal from '../../../assets/icons/futsal.svg';
-import Football from '../../../assets/soccer-ball.svg';
-import Dummy from '../../../assets/lapangan-dummy.png';
-import axios from 'axios';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, } from 'react-native-reanimated';
-import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import NoDataView from '../../../shared/noDataFound';
+import api from '../../../services/api';
+import Post from './components/post';
 
 
 
 function MatchPost({ navigation, route }) {
     const [address_user, setAddress] = useState("Kota Jakarta Barat") //route.params.address
     const [myMatch, setMyMatch] = useState(false)
-    const [data, setData] = useState(postArray)
+    const [matchList, setMatchList] = useState([])
     const locationFilterArray = ["Kota Jakarta Barat", "Kota Jakarta Utara", "Kota Jakarta Pusat", "Kota Jakarta Timur", "Kota Jakarta Selatan",]
-    
-    const postArray = [
-        // {
-        //     id: 1,
-        //     venue: { name: "Badminton 77", address: { street: "Jl. Andara Raya", country: "Jakarta Selatan" }, rating: "5" },
-        //     name: 'Firhan Reynaldo',
-        //     sports: {
-        //         name: 'badminton'
-        //     },
-        //     schedule: {
-        //         date: '25-1-2022',
-        //         time: '07.00 WIB'
-        //     }
-        // },
-        {
-            id: 2,
-            venue: { name: "La Futsal", address: { street: "Jl. Andara Raya", country: "Jakarta Selatan" }, rating: "5" },
-            name: 'Cool FC',
-            sports: {
-                name: 'futsal'
-            },
-            schedule: {
-                date: '05-2-2022',
-                timeStart: '07.00 WIB',
-                timeEnd: '08.00 WIB'
-            }
-        },
-        {
-            id: 3,
-            venue: { name: "La Futsal", address: { street: "Jl. Andara Raya", country: "Jakarta Selatan" }, rating: "5" },
-            name: 'Scar FC',
-            sports: {
-                name: 'futsal'
-            },
-            schedule: {
-                date: '28-2-2022',
-                timeStart: '15.00 WIB',
-                timeEnd: '16.00 WIB'
-            }
-        },
-    ]
-    const [count, setCount] = useState(0);
+
+    const user_id = route.params.user.user_id
+    const address = route.params.user.address.address_region
+    const title = route.params.title
+    const sport = route.params.sport
 
     useEffect(() => {
-        const counter = () => {
-            setCount((count) => count + 1);
-            // console.log(count)
-        }
-        counter()
+        fetchMatchList()
     }, [address_user, myMatch])
 
+    const fetchMatchList = async () => {
+        await api.post(`/api/match-making/list-match/${user_id}`, { sport_name: sport, address_region: "Kota Jakarta Barat" })
+            .then(res => {
+                setMatchList(res.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
 
     const dimensions = useWindowDimensions();
     const top = useSharedValue(
@@ -102,70 +68,15 @@ function MatchPost({ navigation, route }) {
         }
     });
 
-    function Svg(sports) {
-        if (sports === 'badminton')
-            return <Badminton width={20} height={20} />
-        else if (sports === 'futsal')
-            return <Futsal width={20} height={20} />
-        else if (sports === 'football')
-            return <Football width={20} height={20} />
-    }
+
 
     function RenderPost() {
-        return postArray.map((item) => {
-            return (
-                <TouchableOpacity key={item.id} onPress={() => {
-                    navigation.navigate("Match Detail", { data: item })
-                }
-
-                }>
-                    <View style={styles.box}>
-                        <View style={styles.inner}>
-                            <Image style={{ width: "100%", height: "40%", borderRadius: 10 }}
-                                source={Dummy}></Image>
-                            <View style={{
-                                width: '100%',
-                                height: '60%',
-                                alignItems: 'flex-start',
-                                justifyContent: 'center',
-                                marginBottom: 5,
-                                borderRadius: 10,
-                                borderTopRightRadius: 0,
-                                borderTopLeftRadius: 0,
-                                padding: 10,
-                                paddingTop: 0
-                            }}>
-                                <View style={{ flexDirection: 'row', padding: 4, paddingLeft: 0 }}>{Svg(item.sports.name)}
-                                    <Text style={{ marginLeft: 10, textTransform: 'capitalize', fontWeight: 'bold' }}>
-                                        {item.sports.name}
-                                    </Text>
-                                </View>
-                                <Text style={styles.fontDetail}>
-                                    {item.schedule.date}
-                                </Text>
-                                <Text style={styles.fontDetail}>
-                                    {item.schedule.timeStart} - {item.schedule.timeEnd}
-                                </Text>
-                                <Text style={styles.fontDetail}>
-                                    Venue:
-                                    <Text style={{ fontWeight: 'bold' }}>
-                                        {item.venue ? ' ' + item.venue.name : " TBD"}
-                                    </Text>
-                                </Text>
-                                <Text style={styles.fontDetail}>
-                                    {item.venue ? item.venue.address.street : ""}
-                                </Text>
-                                <Text style={styles.fontDetail}>
-                                    {item.venue ? item.venue.address.country : ""}
-                                </Text>
-                                <Text style={[styles.fontDetail, { fontWeight: 'bold' }]}>
-                                    by <Text style={{ color: '#6C63FF', fontWeight: 'bold' }}>{item.name}</Text>
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            );
+        return matchList.map((item) => {
+            return <Post
+                key={item.match_id}
+                user_id={user_id}
+                item={item}
+                onPress={() => navigation.navigate("Match Detail", { user_id: user_id, match_id: item.match_id })} />
         });
     }
 
@@ -174,17 +85,7 @@ function MatchPost({ navigation, route }) {
             <View style={styles.container}>
                 <View style={{ width: '100%', flexDirection: 'row', backgroundColor: '#fff', padding: 10, elevation: 4 }}>
                     <View style={{ width: '50%', }}>
-                        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => setMyMatch(!myMatch)}>
-                            <Text style={[myMatch ? { color: '#6C63FF' } : { color: 'gray' }, { fontWeight: 'bold' }]}>My Match</Text>
-                            <View style={{ marginHorizontal: 4 }}>
-                                {
-                                    myMatch ?
-                                        <Ionicons name="checkmark-circle" size={20} color="green" />
-                                        :
-                                        <Ionicons name="close-circle-sharp" size={20} color="gray" />
-                                }
-                            </View>
-                        </TouchableOpacity>
+                        <Text style={[myMatch ? { color: '#6C63FF' } : { color: 'gray' }, { fontWeight: 'bold' }]}>Join Match</Text>
                     </View>
                     <View style={{ width: '50%', alignItems: 'flex-end' }}>
                         <TouchableOpacity onPress={() => top.value = dimensions.height / 2
@@ -205,14 +106,21 @@ function MatchPost({ navigation, route }) {
                     <View style={styles.container}>
                         <View style={styles.subContainer}>
                             {
-                                postArray.length != 0 ?
-                                    RenderPost()
+                                matchList.length < 1?
+                                    <NoDataView type={"Match"} />
                                     :
-                                    <Text>No Data</Text>
+                                    RenderPost()
                             }
                         </View>
                     </View>
                 </ScrollView>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('My Match', { user_id: user_id })}
+                    style={{ width: '100%', height: "10%", backgroundColor: '#6C63FF', alignItems: 'center', justifyContent: 'center', elevation: 4 }}>
+                    <View>
+                        <Text style={{ fontSize: 17, color: '#fff' }}>Go to My Match</Text>
+                    </View>
+                </TouchableOpacity>
             </View>
             <PanGestureHandler onGestureEvent={gestureHandler}>
                 <Animated.View

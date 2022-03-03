@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, TouchableWithoutFeedback, Keyboard, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import NotFound from '../../../../assets/image-not-found.svg';
 import FlatButton from '../../../../shared/button';
 import { FontAwesome } from '@expo/vector-icons';
 import Loading from '../../../../shared/loading';
 import moment from 'moment';
-
+import Swiper from 'react-native-swiper';
+import api from '../../../../services/api';
 
 function ReserveVenue({ navigation, route }) {
     const [flag, setFlag] = useState(1);
@@ -15,6 +15,7 @@ function ReserveVenue({ navigation, route }) {
     const [isLoading, setIsLoading] = useState(true)
 
     const venue_id = route.params.venue_id;
+    const title = route.params.title;
 
     const tabData = [{ name: 'Time Open', id: 1 }, { name: 'Location', id: 2 }, { name: 'Rating', id: 3 }];
 
@@ -45,7 +46,47 @@ function ReserveVenue({ navigation, route }) {
         },
         {
             id: 7,
-            name: 'Minggu'
+            name: 'Sunday'
+        }
+    ]
+    const review = [
+        {
+            id: 1,
+            name: 'Juki',
+            rating: 5,
+            comment: "Have the best field in the city!!"
+        },
+        {
+            id: 2,
+            name: 'David',
+            rating: 5,
+            comment: "good for practice"
+        },
+        {
+            id: 3,
+            name: 'Malik',
+            rating: 5,
+            comment: "nice flooring"
+        },
+        {
+            id: 4,
+            name: 'Steven',
+            rating: 5,
+        },
+        {
+            id: 5,
+            name: 'Gary',
+            rating: 5
+        },
+        {
+            id: 6,
+            name: 'Bob',
+            rating: 5
+        },
+        {
+            id: 7,
+            name: 'John',
+            rating: 5
         }
     ]
 
@@ -54,10 +95,9 @@ function ReserveVenue({ navigation, route }) {
     }, [])
 
     const fetchVenueDetail = async () => {
-        await axios.get(`http://66.42.49.240/api/venue/venue-detail/${venue_id}`)
+        await api.get(`/api/venue/venue-detail/${venue_id}`)
             .then(response => {
                 setVenue(response.data)
-                console.log(response.data);
                 setIsLoading(false)
             })
             .catch(err => {
@@ -127,7 +167,7 @@ function ReserveVenue({ navigation, route }) {
                 }
                 {/* venue.venue_rating.length  */}
 
-                {flag == 3 && (venue.venue_rating.length ?
+                {flag == 3 && (!venue.venue_rating.length ?
                     <ScrollView style={{ width: '100%' }}>
                         <View style={{ flexDirection: 'row', paddingBottom: 10 }}>
                             <Text style={{ paddingEnd: 20, fontWeight: 'bold' }}>
@@ -138,23 +178,24 @@ function ReserveVenue({ navigation, route }) {
                                     renderRating(4, 20)
                                 }
                             </View>
-                            <Text style={{ paddingHorizontal: 5 }}>(15)</Text>
+                            <Text style={{ paddingHorizontal: 5 }}>({review.length})</Text>
                         </View>
                         <View style={{ paddingVertical: 5, }}>
                             <Text style={{ color: 'gray' }}>Review</Text>
                         </View>
                         {
-                        venue.venue_rating.map(item => (
-                            <View style={{ paddingVertical: 10 }}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    {
-                                        renderRating(4, 14)
-                                    }
+                            // venue.venue_rating.
+                            review.map(item => (
+                                <View key={item.id} style={{ paddingVertical: 10 }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        {
+                                            renderRating(item.rating, 14)
+                                        }
+                                    </View>
+                                    <Text style={{ paddingRight: 10, fontSize: 12, fontWeight: 'bold' }}>{item.name}</Text>
+                                    <Text>{item.comment}</Text>
                                 </View>
-                                <Text style={{ paddingRight: 10, fontSize: 12, fontWeight: 'bold' }}>Juki</Text>
-                                <Text>yeakyeakyeakyeakjwandunawduwqnidqwwndqiwuwndiqjndiqnduwqndiqundiqudniqwudnqiuwdniqudniqwuwndqiudnqiudniqwudniw</Text>
-                            </View>
-                        ))
+                            ))
                         }
                     </ScrollView>
                     :
@@ -208,14 +249,44 @@ function ReserveVenue({ navigation, route }) {
                                 propsView()
                             }
                         </View>
-                        <View style={{ width: '100%', padding: 20, height: '21%', borderTopWidth: 0.5, borderColor: '#cecece' }}>
-                            <Text style={{ fontWeight: 'bold' }}>Description</Text>
-                            <Text>Description</Text>
+                        <View style={{ height: '21%', borderTopWidth: 0.5, borderColor: '#cecece' }}>
+                            <Swiper
+                                showsButtons={true}
+                                loop={false}
+                                showsPagination={false}
+                                nextButton={<Text style={styles.button}>›</Text>}
+                                prevButton={<Text style={styles.button}>‹</Text>}
+                            >
+                                <View style={styles.slide}>
+                                    <Text style={styles.fontSmall}>Description</Text>
+                                    <Text>{venue.venue_description}</Text>
+                                </View>
+                                <View style={styles.slide}>
+                                    <Text style={styles.fontSmall}>Facility</Text>
+                                    <View style={{ flexWrap: 'wrap', flexDirection: 'row' }}>
+                                        {
+                                            venue.venue_facility.map((item, index) => (
+                                                <Text style={{ marginRight: 10 }} key={index}>{item}</Text>
+                                            ))
+                                        }
+                                    </View>
+                                </View>
+
+                            </Swiper>
                         </View>
+                        {/* <View style={{ width: '100%', padding: 20, height: '21%', borderTopWidth: 0.5, borderColor: '#cecece' }}>
+                            <Text style={{ fontWeight: 'bold' }}>Description</Text>
+                            <Text>{venue.venue_description}</Text>
+                        </View> */}
                         <View style={[styles.descriptionContainer, { alignItems: 'center', justifyContent: 'center', height: '21%' }]}>
                             <FlatButton text='choose'
                                 // disabled={!props.isValid} 
-                                onPress={() => navigation.navigate('Choose Field', { field: data.field, venue_name: data.name, venue_image: data.images, address: data.address })} backgroundColor={'#6C63FF'} width={199} />
+                                onPress={() => navigation.navigate('Choose Field', {
+                                    venue_id: venue.venue_id,
+                                    venue_name: venue.venue_name,
+                                    operationals: venue.operationals,
+                                    title: title
+                                })} backgroundColor={'#6C63FF'} width={199} />
                         </View>
                     </View>
                 </>
@@ -247,13 +318,21 @@ const styles = StyleSheet.create({
         elevation: 4,
     },
     fontSmall: {
-        fontSize: 14,
-        padding: 5,
-        color: '#6C63FF',
+        color: 'black',
+        fontSize: 12,
         fontWeight: 'bold'
     },
     red: {
         color: 'red'
+    },
+    slide: {
+        flex: 1,
+        width: '100%',
+        padding: 10,
+        paddingHorizontal: 30
+    },
+    button: {
+        fontSize: 20
     }
 });
 

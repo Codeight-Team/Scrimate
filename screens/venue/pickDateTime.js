@@ -1,76 +1,68 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableHighlight, TouchableOpacity, StyleSheet, Image, Platform, Alert } from 'react-native'
-// import CustomDateTimePicker from "../../shared/CustomDateTimePicker";
-import DateTime from '@react-native-community/datetimepicker'
+import DatePicker from 'react-native-neat-date-picker'
 import moment from "moment";
 import { Entypo } from '@expo/vector-icons';
 import FlatButton from "../../shared/button";
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { ScrollView } from "react-native-gesture-handler";
+import api from "../../services/api";
 
 const PickDateTime = ({ navigation, route }) => {
     const [date, setDate] = useState(new Date())
-    const [show, setShow] = useState(false)
     const [time, setTime] = useState("Choose Time!")
     const [disabled, setDisabled] = useState(true);
-    const [user_id, setUserId] = useState(true);
+    const [user_id, setUserId] = useState();
+    const [showDatePicker, setShowDatePicker] = useState(false)
+    const [availableTime, setAvailableTime] = useState([])
+    const [openTime, setOpen] = useState()
+    const [order, setOrder] = useState({})
 
-    const onChange = (e, selectedDate) => {
-        const currentDate = selectedDate || date
-        setShow(Platform.OS === 'ios')
-        setDate(currentDate)
-        setTime("Choose Time!")
-        setDisabled(true)
-    }
+    const dateNow = new Date()
+    const type = route.params.title
+
+    const day = [
+        { name: "Monday", id: 1 },
+        { name: "Tuesday", id: 2 },
+        { name: "Wednesday", id: 3 },
+        { name: "Thursday", id: 4 },
+        { name: "Friday", id: 5 },
+        { name: "Saturday", id: 6 },
+        { name: "Sunday", id: 7 }]
+
+    const operationals = route.params.operationals
+    const field = route.params.field
 
     const setTimeBtn = (item) => {
         setTime(item);
         setDisabled(false);
     }
 
-    const showDatePicker = () => {
-        setShow(true)
+    const openDatePicker = () => {
+        setShowDatePicker(true)
     }
 
-    const timeArr = [
-        {
-            time: '09:00 - 10:00',
-        },
-        {
-            time: '10:00 - 11:00'
-        },
-        {
-            time: '11:00 - 12:00'
-        },
-        {
-            time: '12:00 - 13:00'
-        },
-    ]
+    const onCancel = () => {
+        setShowDatePicker(false)
+    }
 
-
-
-    const RenderAvailableTime = () => {
-        return timeArr.map((item) => {
-            return (
-                <View key={item.time} style={{ height: 50, width: "33%" }}>
-                    <TouchableOpacity onPress={() => setTimeBtn(item.time)} style={[
-                        {
-                            height: "90%",
-                            width: "90%",
-                            backgroundColor: "#FFFFFF",
-                            elevation: 5,
-                            borderRadius: 10,
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        },
-                        item.time=="09:00 - 10:00"&&{backgroundColor: 'gray'}
-                    ]}>
-                        <Text style={{ fontWeight: 'bold' }}>{item.time}</Text>
-                    </TouchableOpacity>
-                </View>
-            )
-        }
-
-        )
+    const onConfirm = async (date) => {
+        setShowDatePicker(false)
+        setTime("Choose Time!")
+        setDate(date)
+        let time = []
+        day.map(item => {
+            if (moment(date).format("dddd") == item.name) {
+                operationals.map(operational => {
+                    if (item.id == operational.operational_day) {
+                        for (let i = moment(operational.operational_timeOpen, "HH:mm:ss").hours(); i < moment(operational.operational_timeClose, "HH:mm:ss").hours(); i++) {
+                            time.push({ timeOpen: i, timeClose: i + 1 })
+                        }
+                    }
+                })
+            }
+        })
+        setAvailableTime(time)
     }
 
     useEffect(() => {
@@ -85,26 +77,71 @@ const PickDateTime = ({ navigation, route }) => {
         getUserId()
     }, [])
 
+    const parseOrder = (value) => {
+        let newTime = moment(value, "HH").format("HH:mm")
+        setOrder({ date_of_match: date, order_type: type, time_of_match: newTime })
+    }
+
+    const sendOrderDetail = async () => {
+        await api.post(`/api/order/create-order/${user_id}/${field.field_id}`, order)
+            .then(response => {
+                setTimeout(() => {
+                    navigation.navigate('Profile', { screen: 'Payment Method', params: { user_id: user_id, order_id: response.data.order_id } })
+                },1000)
+            })
+            .catch(error =>
+                console.warn(error.message)
+            )
+        console.log(user_id, field.field_id, order);
+    }
+
+    const RenderAvailableTime = () => {
+        return availableTime.map((item, index) => {
+            return (
+                <View key={index} style={{ padding: 3, paddingHorizontal: 5, height: 50, width: "33%" }}>
+                    <TouchableOpacity disabled={(moment(item.timeOpen, "HH").format("HH:mm") + " - " + moment(item.timeClose, "HH").format("HH:mm")) == time}
+                        onPress={() => [setTimeBtn(moment(item.timeOpen, "HH").format("HH:mm") + " - " + moment(item.timeClose, "HH").format("HH:mm")), parseOrder(item.timeOpen)]} style={[
+                            {
+                                height: "100%",
+                                width: "100%",
+                                backgroundColor: "#FFFFFF",
+                                elevation: 5,
+                                borderRadius: 10,
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            },
+                            (moment(item.timeOpen, "HH").format("HH:mm") + " - " + moment(item.timeClose, "HH").format("HH:mm")) == time && { backgroundColor: 'gray', borderWidth: 1 }
+                        ]}>
+                        <Text style={{ fontWeight: 'bold' }}>{moment(item.timeOpen, "HH").format("HH:mm") + " - " + moment(item.timeClose, "HH").format("HH:mm")}</Text>
+                    </TouchableOpacity>
+                </View>
+            )
+        }
+
+        )
+    }
+
     return (
         <View style={styles.container}>
-            <View style={{ width: '100%', height: "8%", flexDirection: "row", alignItems: "center", marginLeft: 20 }}>
-                <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#FFFFFF', borderRadius: 20, elevation: 3, alignItems: "center", justifyContent: "center" }}>
-                    <Text style={{ fontWeight: "bold", color: 'black' }}>{route.params.venue_name}</Text>
+            <View style={{ height: "16%", flexDirection: "row", flexWrap: "wrap" }}>
+                <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#6C63FF', borderRadius: 18, elevation: 3, alignItems: "center", justifyContent: "center" }}>
+                    <Text style={{ fontWeight: "bold", color: '#fff' }}>{type} Reservation</Text>
                 </View>
-                <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#FFFFFF', borderRadius: 20, elevation: 3, alignItems: "center", justifyContent: "center" }}>
-                    <Text style={{ fontWeight: "bold", color: 'black', }}>{route.params.field.name}</Text>
+                <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#6C63FF', borderRadius: 18, elevation: 3, alignItems: "center", justifyContent: "center" }}>
+                    <Text style={{ fontWeight: "bold", color: '#fff' }}>{route.params.venue_name}</Text>
                 </View>
-                <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#FFFFFF', borderRadius: 20, elevation: 3, alignItems: "center", justifyContent: "center" }}>
-                    <Text style={{ fontWeight: "bold", color: 'black', }}>Rp {route.params.field.price}</Text>
+                <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#6C63FF', borderRadius: 18, elevation: 3, alignItems: "center", justifyContent: "center" }}>
+                    <Text style={{ fontWeight: "bold", color: '#fff', }}>{field.field_name}</Text>
+                </View>
+                <View style={{ margin: 5, height: 40, paddingLeft: 10, paddingRight: 10, backgroundColor: '#6C63FF', borderRadius: 18, elevation: 3, alignItems: "center", justifyContent: "center" }}>
+                    <Text style={{ fontWeight: "bold", color: '#fff', }}>Rp {field.field_price}</Text>
                 </View>
             </View>
-            <View style={{ padding: 20, height: '40%', justifyContent: "center", alignItems: 'flex-start' }}>
-                {/* <CustomDateTimePicker textStyle={{paddingVertical: 15, paddingHorizontal: 10, borderColor: 'gray', borderWidth: 1}}/> */}
-
+            <View style={{ padding: 20, height: '34%', justifyContent: "center", alignItems: 'flex-start' }}>
                 <View style={{ width: '100%', flexDirection: "row" }}>
                     <View style={{ width: "50%", paddingLeft: 20 }}>
                         <Text>{moment(date).format('dddd')}</Text>
-                        <TouchableHighlight style={{ borderRadius: 30 }} activeOpacity={0.2} underlayColor="#6C63FF" onPress={() => showDatePicker()}>
+                        <TouchableHighlight style={{ borderRadius: 30 }} activeOpacity={0.2} underlayColor="#6C63FF" onPress={openDatePicker}>
                             <Text style={
                                 {
                                     fontWeight: 'bold',
@@ -119,7 +156,7 @@ const PickDateTime = ({ navigation, route }) => {
                     </View>
                     <View style={{ width: '50%', height: 60, alignItems: 'center', justifyContent: 'center' }}>
                         <TouchableOpacity
-                            onPress={() => showDatePicker()}
+                            onPress={openDatePicker}
                             style={
                                 {
                                     alignItems: "center",
@@ -137,53 +174,42 @@ const PickDateTime = ({ navigation, route }) => {
                     </View>
                 </View>
             </View>
-            {
-                show && (
-                    <DateTime timeZoneOffsetInMinutes={0}
-                        value={new Date(date)}
-                        mode="date"
-                        minimumDate={new Date(moment().format("YYYY-MM-DD"))}
-                        onChange={onChange}
-                    />
-                )
-
-            }
-            <View style={{ padding: 30, height: '52%', backgroundColor: '#6C63FF' }}>
-                <View style={{ height: '70%', width: '100%', flexWrap: 'wrap', flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
-                    {
-                        RenderAvailableTime()
-                    }
+            <DatePicker
+                isVisible={showDatePicker}
+                mode={'single'}
+                onCancel={onCancel}
+                onConfirm={onConfirm}
+                minDate={dateNow}
+            />
+            <View style={{ paddingVertical: 30, height: '50%', backgroundColor: '#6C63FF' }}>
+                <View style={{ height: '81%', width: '100%' }}>
+                    <ScrollView contentContainerStyle={{ alignItems: "center" }}>
+                        <View style={{ flexDirection: "row", flexWrap: 'wrap', justifyContent: "center" }}>
+                            {
+                                RenderAvailableTime()
+                            }
+                        </View>
+                    </ScrollView>
                 </View>
-                <View style={{ width: '95%', height: '20%', justifyContent: "center", alignItems: "center" }}>
+                <View style={{ width: '100%', height: '30%', justifyContent: "center", alignItems: "center", backgroundColor: "#FFF", elevation: 3 }}>
                     <FlatButton
                         width={200}
-                        backgroundColor={'#FFFFFF'}
+                        backgroundColor={'#6C63FF'}
                         disabled={disabled}
-                        textStyle={{ color: 'black' }}
                         text={'Pay'}
                         onPress={() =>
-
-                            Alert.alert('Ready to Pay?',
-                                'You will be directed to payment, double check your order', [
-                                {
-                                    text: 'Cancel',
-                                },
-                                {
-                                    text: 'OK',
-                                    onPress: () => navigation.navigate("Payment Method Screen", {
-                                        data: {
-                                            venue_name: route.params.venue_name,
-                                            field_name: route.params.field.name,
-                                            field_price: route.params.field.price,
-                                            address: route.params.address,
-                                            day: moment(date).format('dddd'),
-                                            date: moment(date).format('D MMMM yyyy'),
-                                            time: time,
-                                            user_id: user_id
-                                        }
-                                    })
-                                },
-                            ])
+                            [,
+                                Alert.alert('Ready to Pay?',
+                                    'You will be directed to payment, double check your order', [
+                                    {
+                                        text: 'Cancel',
+                                    },
+                                    {
+                                        text: 'OK',
+                                        onPress: () => sendOrderDetail()
+                                    },
+                                ])
+                            ]
                         } />
                 </View>
             </View>

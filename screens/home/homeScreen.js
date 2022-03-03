@@ -1,50 +1,52 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import { StyleSheet, View, Text, useWindowDimensions, TouchableOpacity, Image, StatusBar, TouchableOpacityComponent } from 'react-native';
+import { StyleSheet, View, Text, useWindowDimensions, TouchableOpacity, Image, StatusBar } from 'react-native';
 import { useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, } from 'react-native-reanimated';
-import TrophySVG from '../../../assets/icons/trophy.svg';
+import TrophySVG from '../../assets/icons/trophy.svg';
 import Swiper from 'react-native-swiper';
-import MenuComponent from '../../../shared/menu';
+import MenuComponent from '../../shared/menu';
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import Loading from '../../../shared/loading';
-import axios from 'axios'
+import Loading from '../../shared/loading';
+import dummy from '../../assets/lapangan-dummy.png'
+import { IMAGE_URL } from '@env'
+import api from '../../services/api';
 
 function HomeScreen({ navigation, route }) {
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true)
 
   useFocusEffect(
-    React.useCallback(()=> {
-        top.value = (dimensions.height / 1.2)
-        let isActive = true
-        const fetchUser = async () =>{
-          let user
-          try {
-            user = await AsyncStorage.getItem('user_id')
-          } catch (error) {
-            Alert.alert('Sign in needed')
-          }
-          if(isActive)
-            fetchUserData(user)
+    React.useCallback(() => {
+      top.value = (dimensions.height / 1.2)
+      let isActive = true
+      const fetchUser = async () => {
+        let user
+        try {
+          user = await AsyncStorage.getItem('user_id')
+        } catch (error) {
+          Alert.alert('Sign in needed')
         }
-        fetchUser()
-        return () =>{isActive = false} 
-    },[])
+        if (isActive)
+          fetchUserData(user)
+      }
+      fetchUser()
+      return () => { isActive = false }
+    }, [])
   );
 
 
   const fetchUserData = async (user) => {
-    await axios.get(`http://66.42.49.240/api/users/${user}`).then(response => {
-        setData(response.data.userData)
+    await api.get(`/api/users/${user}`).then(response => {
+      setData(response.data.userData)
     })
-    .catch(function (error) {
+      .catch(function (error) {
         console.log(error)
-    })
-    .finally(()=>setLoading(false))
+      })
+      .finally(() => setLoading(false))
   }
 
   const dimensions = useWindowDimensions();
@@ -86,7 +88,7 @@ function HomeScreen({ navigation, route }) {
         {!isLoading && data &&
           <Image
             style={styles.profilePicture}
-            source={{ uri: 'http://66.42.49.240/' + data.image }}
+            source={{ uri: IMAGE_URL + data.image }}
           />
         }
 
@@ -107,19 +109,28 @@ function HomeScreen({ navigation, route }) {
             </View>
           </View>
         }
-
       </View>
     )
   }
   const ComponentBubble = ({ color, title, data, type }) => {
-    return <View style={[styles.bubbleContainer, color, {flexDirection: 'column'}]}>
+    return <View style={[styles.bubbleContainer, color, { flexDirection: 'column' }]}>
       <Text style={styles.userText}>{title}</Text>
-      {!data?
+      {!data ?
         <View>
-          {type=="match"?
-            <Text style={{color: '#BCBCBC'}}>You haven't joined a game yet</Text>
+          {type == "match" ?
+            <>
+              <Text style={{ color: '#BCBCBC' }}>You haven't joined a game yet</Text>
+              {/* <View>
+                  <Text  style={{ fontSize: 10}}>
+                      October 2021
+                  </Text>
+                  <Image source={dummy} style={{width: 50, height: 50}}/>
+              </View> */}
+            </>
             :
-            <Text style={{color: '#a3a3a3'}}>You have no upcoming games</Text>
+            <>
+              <Text style={{ color: '#a3a3a3' }}>You have no upcoming games</Text>
+            </>
           }
         </View>
         :
@@ -178,8 +189,6 @@ function HomeScreen({ navigation, route }) {
         :
         <>
           <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'flex-start', top: 147 }}>
-            {/* <ComponentBubble></ComponentBubble>
-         */}
             {
               UserBubble()
             }
@@ -196,7 +205,7 @@ function HomeScreen({ navigation, route }) {
               <View style={styles.slide}>
                 <ComponentBubble color={red} title={"Match History"} type={"match"} />
               </View>
-              
+
             </Swiper>
           </View>
           <PanGestureHandler onGestureEvent={gestureHandler}>
@@ -239,8 +248,6 @@ function HomeScreen({ navigation, route }) {
 
   );
 }
-
-export default HomeScreen;
 
 const styles = StyleSheet.create({
   wrapper: {},
@@ -295,3 +302,5 @@ const styles = StyleSheet.create({
     marginRight: 10
   }
 })
+
+export default HomeScreen;
