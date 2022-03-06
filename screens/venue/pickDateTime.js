@@ -9,16 +9,20 @@ import { ScrollView } from "react-native-gesture-handler";
 import api from "../../services/api";
 
 const PickDateTime = ({ navigation, route }) => {
-    const [date, setDate] = useState(new Date())
+    const [date, setDate] = useState(new Date(Date.now() + (3600 * 1000 * 24)))
+    const [dateShow, setDateShow] = useState(new Date(Date.now() + (3600 * 1000 * 24)))
     const [time, setTime] = useState("Choose Time!")
     const [disabled, setDisabled] = useState(true);
     const [user_id, setUserId] = useState();
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [availableTime, setAvailableTime] = useState([])
-    const [openTime, setOpen] = useState()
+    const [openTime, setOpen] = useState([])
     const [order, setOrder] = useState({})
 
+
     const dateNow = new Date()
+    const datePlusOne = dateNow
+    datePlusOne.setMonth(datePlusOne.getMonth() + 1)
     const type = route.params.title
 
     const day = [
@@ -46,23 +50,24 @@ const PickDateTime = ({ navigation, route }) => {
         setShowDatePicker(false)
     }
 
+    const fetchTimeOpen = async (date) => {
+        await api.post('/api/field/field-schedule/' + field.field_id, { date_choose: date })
+            .then(res => {
+                // setOpen(res.data.times)
+                checkTimeOpen(res.data.times)
+            })
+            .catch(err => console.log(err))
+    }
+
     const onConfirm = async (date) => {
-        setShowDatePicker(false)
         setTime("Choose Time!")
-        setDate(date)
-        let time = []
-        day.map(item => {
-            if (moment(date).format("dddd") == item.name) {
-                operationals.map(operational => {
-                    if (item.id == operational.operational_day) {
-                        for (let i = moment(operational.operational_timeOpen, "HH:mm:ss").hours(); i < moment(operational.operational_timeClose, "HH:mm:ss").hours(); i++) {
-                            time.push({ timeOpen: i, timeClose: i + 1 })
-                        }
-                    }
-                })
-            }
-        })
-        setAvailableTime(time)
+        setDateShow(date)
+        let newDate = new Date(date)
+        newDate.setDate(newDate.getDate() + 1)
+        setDate(newDate)
+        setShowDatePicker(false)
+        await fetchTimeOpen(newDate)
+        
     }
 
     useEffect(() => {
@@ -87,20 +92,43 @@ const PickDateTime = ({ navigation, route }) => {
             .then(response => {
                 setTimeout(() => {
                     navigation.navigate('Profile', { screen: 'Payment Method', params: { user_id: user_id, order_id: response.data.order_id } })
-                },1000)
+                }, 1000)
             })
             .catch(error =>
                 console.warn(error.message)
             )
-        console.log(user_id, field.field_id, order);
+    }
+
+    const checkTimeOpen = (times) => {
+        let time = []
+        day.map(item => {
+            if (moment(date).format("dddd") == item.name) {
+                operationals.map(operational => {
+                    if (item.id == operational.operational_day) {
+                        for (let i = moment(operational.operational_timeOpen, "HH:mm:ss").hours(); i < moment(operational.operational_timeClose, "HH:mm:ss").hours(); i++) {
+                            if(times.length != 0){
+                                if(times.indexOf(moment(i, "HH").format("HH:mm:ss")) == -1){
+                                    time.push({ timeOpen: i, timeClose: i + 1 })
+                                }
+                            }else{
+                                time.push({ timeOpen: i, timeClose: i + 1 })
+                            }        
+                            
+                        }
+                    }
+                })
+            }
+        })
+        setAvailableTime(time)
     }
 
     const RenderAvailableTime = () => {
         return availableTime.map((item, index) => {
             return (
                 <View key={index} style={{ padding: 3, paddingHorizontal: 5, height: 50, width: "33%" }}>
-                    <TouchableOpacity disabled={(moment(item.timeOpen, "HH").format("HH:mm") + " - " + moment(item.timeClose, "HH").format("HH:mm")) == time}
-                        onPress={() => [setTimeBtn(moment(item.timeOpen, "HH").format("HH:mm") + " - " + moment(item.timeClose, "HH").format("HH:mm")), parseOrder(item.timeOpen)]} style={[
+                    <TouchableOpacity disabled={(moment(item.timeOpen, "HH").format("HH:mm") + " - " + moment(item.timeClose, "HH").format("HH:mm") == time)}
+                        onPress={() => [setTimeBtn(moment(item.timeOpen, "HH").format("HH:mm") + " - " + moment(item.timeClose, "HH").format("HH:mm")), parseOrder(item.timeOpen)]}
+                        style={[
                             {
                                 height: "100%",
                                 width: "100%",
@@ -116,9 +144,7 @@ const PickDateTime = ({ navigation, route }) => {
                     </TouchableOpacity>
                 </View>
             )
-        }
-
-        )
+        })
     }
 
     return (
@@ -140,14 +166,14 @@ const PickDateTime = ({ navigation, route }) => {
             <View style={{ padding: 20, height: '34%', justifyContent: "center", alignItems: 'flex-start' }}>
                 <View style={{ width: '100%', flexDirection: "row" }}>
                     <View style={{ width: "50%", paddingLeft: 20 }}>
-                        <Text>{moment(date).format('dddd')}</Text>
+                        <Text>{moment(dateShow).format('dddd')}</Text>
                         <TouchableHighlight style={{ borderRadius: 30 }} activeOpacity={0.2} underlayColor="#6C63FF" onPress={openDatePicker}>
                             <Text style={
                                 {
                                     fontWeight: 'bold',
                                     fontSize: 18
                                 }
-                            }>{moment(date).format('DD MMMM yyyy')}
+                            }>{moment(dateShow).format('DD MMMM yyyy')}
                             </Text>
                         </TouchableHighlight>
                         <Text>
@@ -179,7 +205,8 @@ const PickDateTime = ({ navigation, route }) => {
                 mode={'single'}
                 onCancel={onCancel}
                 onConfirm={onConfirm}
-                minDate={dateNow}
+                maxDate={dateNow}
+                minDate={new Date()}
             />
             <View style={{ paddingVertical: 30, height: '50%', backgroundColor: '#6C63FF' }}>
                 <View style={{ height: '81%', width: '100%' }}>

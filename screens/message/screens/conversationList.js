@@ -1,16 +1,19 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView, Image, Pressable } from 'react-native';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import api from '../../../services/api';
 import moment from 'moment';
+import io from 'socket.io-client';
 
 function ConversationList({ navigation }) {
     const [myChat, setMyChat] = useState()
+    const ENDPOINT = 'ws://66.42.49.240:8900';
+
     useEffect(() => {
-        // api.get(`https://jsonplaceholder.typicode.com/todos/1`).then((response) => {
-        //     console.log(response.data);
-        //   });
-    })
+        const socket = io(ENDPOINT, {transport:['websocket'], jsonp: false})
+        socket.connect();
+        socket.on('connect', ()=> console.log('socket connected..'))
+    },[])
     return (
         <View style={styles.container}>
             <View style={styles.inner}>

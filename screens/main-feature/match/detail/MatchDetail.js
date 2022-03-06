@@ -50,9 +50,10 @@ function MatchDetail({ navigation, route }) {
                         <View style={styles.itemContainer}>
                             <View style={styles.detailContainer}>
                                 <View style={{ height: '10%', width: '100%', alignItems: 'center' }}>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{matchDetail.field.venue.venue_name}
-                                        <Text style={{ fontSize: 16, color: 'gray' }}> {matchDetail.field.field_name}</Text>
+                                    <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{matchDetail.field.field_name}
                                     </Text>
+                                    <Text style={{ fontSize: 13, color: 'gray' }}>{matchDetail.field.venue.venue_name} </Text>
+
                                 </View>
                                 <View style={{ padding: 20, flexDirection: 'row' }}>
                                     <View style={{ paddingHorizontal: 10, width: '50%' }}>
@@ -81,12 +82,24 @@ function MatchDetail({ navigation, route }) {
                                         <Text> {matchDetail.field.venue.address.address_region}</Text>
                                     </View>
                                 </View>
-                                <View style={{ paddingHorizontal: 30, height: '20%', justifyContent: 'center' }}>
-                                    <Text style={{ color: '#6C63FF', fontWeight: 'bold', fontSize: 12 }}>Match Creator</Text>
-                                    <Text>
-                                        {matchDetail.creator.first_name} {matchDetail.creator.last_name}
-                                    </Text>
+                                <View style={{ paddingHorizontal: 30, height: '20%', flexDirection: 'row' }}>
+                                    <View style={{ justifyContent: 'center', width: '60%' }}>
+                                        <Text style={{ color: '#6C63FF', fontWeight: 'bold', fontSize: 12 }}>Match Creator</Text>
+                                        <Text>
+                                            {matchDetail.creator.first_name} {matchDetail.creator.last_name}
+                                        </Text>
+                                    </View>
+                                    {
+                                        finder_id &&
+                                        <View style={{ justifyContent: 'center', width: '40%' }}>
+                                            <Text style={{ color: '#6C63FF', fontWeight: 'bold', fontSize: 12 }}>Finder</Text>
+                                            <Text>
+                                                {matchDetail.finder.first_name} {matchDetail.finder.last_name}
+                                            </Text>
+                                        </View>
+                                    }
                                 </View>
+
                                 <View style={{ height: '20%', justifyContent: 'center' }}>
                                     <View style={{ flexDirection: 'row', paddingHorizontal: 20, alignItems: 'center' }}>
                                         <Text style={{ width: '50%', fontWeight: 'bold', color: 'gray', fontSize: 12 }}>Field Price</Text>
@@ -99,7 +112,7 @@ function MatchDetail({ navigation, route }) {
                                 </View>
                             </View>
                             <View style={styles.buttonContainer}>
-                                {(user_id != creator_id && user_id != finder_id )&&
+                                {(user_id != creator_id && user_id != finder_id) &&
                                     <FlatButton width={150} backgroundColor={'#6C63FF'} text={'Join'}
                                         onPress={() => Alert.alert('Join Match?',
                                             'You will be asked for payment if you accept this match', [
@@ -113,7 +126,7 @@ function MatchDetail({ navigation, route }) {
                                             },
                                         ])} />
                                 }
-                                {finder_id && (finder_id==user_id||creator_id==user_id)?
+                                {finder_id && (finder_id == user_id || creator_id == user_id) ?
                                     <TouchableOpacity>
                                         <Ionicons name="md-chatbubble-ellipses" size={30} color="#6C63FF" />
                                     </TouchableOpacity>

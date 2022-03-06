@@ -4,10 +4,12 @@ import moment from 'moment';
 import Svg from './svg';
 
 const Post = ({ item, user_id, onPress }) => {
+    const date = new Date();
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={styles.box}>
-                <View style={styles.inner}>
+                <View style={[styles.inner,moment(moment(date).format('YYYY-MM-DD')).isAfter(moment(item.date_of_match).format('YYYY-MM-DD'))
+                &&{borderWidth: 1, borderColor: 'red',backgroundColor: '#cecece'}]}>
                     <Image style={{ width: "100%", height: "40%", borderRadius: 10 }}
                         source={{ uri: "http://scrimate.com/" + item.field.image }}></Image>
                     <View style={{
