@@ -2,14 +2,31 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import moment from 'moment';
 import Svg from './svg';
+import { Ionicons } from '@expo/vector-icons';
 
 const Post = ({ item, user_id, onPress }) => {
+    const date = new Date();
+
+    const invalid = moment(moment(date).format('YYYY-MM-DD')).isAfter(moment(item.date_of_match).format('YYYY-MM-DD'))
+
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={styles.box}>
-                <View style={styles.inner}>
-                    <Image style={{ width: "100%", height: "40%", borderRadius: 10 }}
-                        source={{ uri: "http://scrimate.com/" + item.field.image }}></Image>
+                <View style={[styles.inner, invalid
+                    && { borderWidth: 1, borderColor: 'red', backgroundColor: '#cecece' }]}>
+                    <View style={{ width: "100%", height: "40%" }}>
+                        <Image style={{ width: "100%", height: "100%", borderRadius: 10, backgroundColor: 'black'}}
+                            source={{ uri: "http://scrimate.com/" + item.field.image }}></Image>
+                        {
+                            invalid &&
+                            <View style={{ borderRadius: 10, position: 'absolute', height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row', backgroundColor: 'black', opacity: 0.6}}>
+                                <Ionicons name="md-warning" size={20} color="#8b0000" />
+                                <Text style={{fontWeight: 'bold', color: '#8b0000'}}>
+                                    DUE DATE
+                                </Text>
+                            </View>
+                        }
+                    </View>
                     <View style={{
                         width: '100%',
                         height: '60%',
@@ -52,7 +69,7 @@ const Post = ({ item, user_id, onPress }) => {
                             item.creator ?
                                 <Text style={[styles.fontDetail, { fontWeight: 'bold' }]}>
                                     Creator: <Text style={{ color: '#6C63FF', fontWeight: 'bold' }}>{
-                                    item.creator_id == user_id?"You":item.creator.first_name
+                                        item.creator_id == user_id ? "You" : item.creator.first_name
                                     }</Text>
                                 </Text>
                                 :

@@ -53,12 +53,13 @@ const CreateVenue = ({ navigation, route }) => {
         return ()=> {isMounted = false}
     }, [])
 
-    const fetchSports = async () => {
+    const fetchSports = async (isMounted) => {
         await api.get(`/api/sports/`).then(response => {
             let data = []
             response.data.map((item) => (
                 data.push(item.sport_name)
             ))
+            console.log(response.data[0].sport_name);
             if(isMounted)
                 setSports(data)
         })
@@ -67,7 +68,7 @@ const CreateVenue = ({ navigation, route }) => {
             })
     }
 
-    const sendVenueData = async (values) => {
+    const createNewVenue = async (values) => {
         const formData = new FormData();
 
         formData.append('venue_name', values.venue_name)
@@ -155,7 +156,7 @@ const CreateVenue = ({ navigation, route }) => {
                                         onSubmit={values => {
                                             values.venue_facility = facility
                                             values.image = image
-                                            sendVenueData(values)
+                                            createNewVenue(values)
                                         }}
                                     >
                                         {({ handleChange, handleBlur, handleSubmit, values }) => (

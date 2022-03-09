@@ -202,7 +202,7 @@ const VenueDetail = ({ navigation, route }) => {
                             borderRadius: 10,
                             flexDirection: 'row',
                             alignItems: 'center'
-                        }} onPress={() => navigation.navigate('Manage Field Screen', { venue_id: venue_id })}>
+                        }} onPress={() => navigation.navigate('Manage Field Screen', { venue_id: venue_id, operationals: data.operationals })}>
                             <Entypo name="circle-with-plus" size={24} color="white" />
                             <View style={{ padding: 5, paddingRight: 20, justifyContent: 'center', alignItems: 'center', width: 120 }}>
                                 <Text style={{ color: 'white', fontWeight: 'bold' }}>

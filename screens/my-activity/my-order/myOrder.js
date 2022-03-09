@@ -55,12 +55,14 @@ const MyOrder = ({ navigation, route }) => {
                                                 venue_name={item.field.venue.venue_name}
                                                 field_name={item.field.field_name}
                                                 image={item.field.image}
+                                                apake={item.field.image}
                                                 status={item.order_status}
                                                 date={item.date_of_match}
                                                 time={item.time_of_match}
                                                 price={item.bills[0].bill_amount}
                                                 onPress={() =>
-                                                    navigation.navigate("Payment Method", { order_id: item.order_id, user_id: user_id, type: item.order_type })} />}
+                                                    navigation.navigate("Payment Method", { order_id: item.order_id, user_id: user_id, type: item.order_type })} 
+                                                    />}
                                     </View>
                                 ))
                                 :
@@ -84,6 +86,7 @@ const MyOrder = ({ navigation, route }) => {
                                                 date={item.date_of_match}
                                                 time={item.time_of_match}
                                                 price={item.bills[0].bill_amount}
+                                                onPressRate={() => navigation.navigate("Give Rating", { user_id: user_id, venue_id: item.field.venue.venue_id })}
                                                 onPress={() =>
                                                     // item.order_status == "Settlement" ||
                                                     // item.order_status == "Failed" ?

@@ -103,6 +103,17 @@ const CreateOperational = ({ route, navigation }) => {
         console.log(newItems);
     }
 
+    const handleSelectOpen = (values, initial) => {
+        const newItems = time.map((item, i) => {
+            if (initial == item.operational_day) {
+                return { ...item, operational_day: item.operational_day, operational_timeOpen: values, operational_timeClose: item.operational_timeClose }
+            }
+            return item;
+        });
+        setTime(newItems)
+        console.log(newItems);
+    }
+
     return (
         <View style={styles.container}>
             <View style={{ width: '100%', alignItems: 'center' }}><Text style={{ fontSize: 18, fontWeight: 'bold' }}>Set Venue Operational Time Hour</Text></View>
@@ -157,7 +168,7 @@ const CreateOperational = ({ route, navigation }) => {
                                                     defaultButtonText={item.operational_timeOpen}
                                                     buttonStyle={[styles.datePickForm]}
                                                     onSelect={(selectedItem) => {
-                                                        handleSelectClose(selectedItem, item.operational_day)
+                                                        handleSelectOpen(selectedItem, item.operational_day)
                                                     }}
                                                     buttonTextAfterSelection={(selectedItem, index) => {
                                                         // text represented after item is selected

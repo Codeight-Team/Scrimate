@@ -9,7 +9,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import TrophySVG from '../../assets/icons/trophy.svg';
 import Loading from '../../shared/loading'
 import api from '../../services/api';
-import {IMAGE_URL} from '@env'
+import { AntDesign } from '@expo/vector-icons';
+import { IMAGE_URL } from '@env'
 
 function ProfileScreen({ navigation }) {
   const [data, setData] = useState([]);
@@ -38,7 +39,7 @@ function ProfileScreen({ navigation }) {
 
   const fetchUserData = async (user, isActive) => {
     await api.get(`/api/users/${user}`).then(response => {
-      if(isActive)
+      if (isActive)
         setData(response.data.userData)
     })
       .catch(function (error) {
@@ -67,12 +68,22 @@ function ProfileScreen({ navigation }) {
           </View>
         </View>
 
+        {
+          !data?.isVerif &&
+          <View style={[styles.box, { backgroundColor: '#ffb2b2' }]}>
+            <Text style={styles.submenuText}> <AntDesign name="warning" size={15} color="black" /> Your Account is Not Verified </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('OTP', { email: data.email, id:data.user_id })}>
+              <Text style={{color: 'blue'}}>Verify Account</Text>
+            </TouchableOpacity>
+          </View>
+        }
+
         <View style={styles.box}>
           <Text style={styles.submenuText}>Activity</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('My Order', {user_id: data.user_id, type: "Order"})}>
+          <TouchableOpacity onPress={() => navigation.navigate('My Order', { user_id: data.user_id, type: "Order" })}>
             <Text>Order History</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('My Order', {user_id: data.user_id, type: "Match"})}>
+          <TouchableOpacity onPress={() => navigation.navigate('My Order', { user_id: data.user_id, type: "Match" })}>
             <Text>My Match</Text>
           </TouchableOpacity>
         </View>
@@ -82,11 +93,11 @@ function ProfileScreen({ navigation }) {
           <TouchableOpacity onPress={() => navigation.navigate("Edit Profile Screen", data)}>
             <Text>Update Profile</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Edit Location Screen', {data: data})}>
+          <TouchableOpacity onPress={() => navigation.navigate('Edit Location Screen', { data: data })}>
             <Text>Location / Address Settings</Text>
           </TouchableOpacity>
         </View>
-        {role.find(e=> e == "ROLE_USER")?
+        {role.find(e => e == "ROLE_HOST") ?
           <View style={styles.box}>
             <Text style={styles.submenuText}>Host</Text>
             <TouchableOpacity onPress={() => navigation.navigate("Manage Venue Screen", { user_id: data.user_id })}>
@@ -94,7 +105,7 @@ function ProfileScreen({ navigation }) {
             </TouchableOpacity>
           </View>
           :
-          <View/>
+          <View />
         }
         <View style={styles.box}>
           <Text style={styles.submenuText}>Account</Text>

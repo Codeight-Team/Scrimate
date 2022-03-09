@@ -1,25 +1,37 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Image } from "react-native";
+import React, { useEffect, useState, useCallback} from "react";
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Image, RefreshControl} from "react-native";
 import { Entypo } from '@expo/vector-icons';
 import api from "../../services/api";
 
 const ManageFields = ({ navigation, route }) => {
-
     const [fields, setFields] = useState([])
+    const [refreshing, setRefreshing] = useState(false);
+
     const venue_id = route.params.venue_id
+    const operationals = route.params.operationals
+
+    const wait = (timeout) => {
+        return new Promise(resolve => setTimeout(resolve, timeout));
+    }
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        wait(2000).then(() => [fetchFieldList(), setRefreshing(false)]);
+    }, []);
 
     useEffect(() => {
-        const fetchFieldList = async () => {
-            await api.get(`/api/field/get-fields/${venue_id}`)
-                .then(response => {
-                    setFields(response.data)
-                })
-                .catch(err => {
-                    console.warn(err)
-                })
-        }
         fetchFieldList()
     }, [])
+
+    const fetchFieldList = async () => {
+        await api.get(`/api/field/get-fields/${venue_id}`)
+            .then(response => {
+                setFields(response.data)
+            })
+            .catch(err => {
+                console.warn(err)
+            })
+    }
 
     const renderFields = () => {
         return (
@@ -27,7 +39,7 @@ const ManageFields = ({ navigation, route }) => {
                 return (
                     <View key={item.field_id} style={{ padding: 10, width: "50%", height: 200 }}>
                         <TouchableOpacity style={{ width: '100%', height: '100%', backgroundColor: "#FFF", elevation: 4, borderRadius: 15 }}
-                            onPress={() => navigation.navigate("Manage Schedule Screen")}
+                            onPress={() => navigation.navigate("Manage Schedule Screen", {field_id: item.field_id, operationals: operationals})}
                         >
                             <View style={{ width: "100%", padding: 5, height: '50%' }}>
                                 <Image style={{ width: '100%', height: '100%', borderRadius: 15 }} source={{ uri: 'http://scrimate.com/' + item.image }} />
@@ -52,17 +64,23 @@ const ManageFields = ({ navigation, route }) => {
 
     return (
         <View style={styles.container}>
-            <ScrollView style={{ width: '100%' }}>
-                {fields.length!=0?
+            <ScrollView style={{ width: '100%' }}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }>
+                {fields.length != 0 ?
                     <View style={{ flexWrap: 'wrap', flexDirection: "row" }}>
-                    {
-                        renderFields()
-                    }
-                </View>
-                :
-                <View style={{ flexDirection: "row", justifyContent: "center", padding: 20 }}>
-                    <Text style={{fontWeight: "bold", color: "gray"}}>No Fields</Text>
-                </View>
+                        {
+                            renderFields()
+                        }
+                    </View>
+                    :
+                    <View style={{ flexDirection: "row", justifyContent: "center", padding: 20 }}>
+                        <Text style={{ fontWeight: "bold", color: "gray" }}>No Fields</Text>
+                    </View>
                 }
             </ScrollView>
             <View style={{ paddingVertical: 8 }}>

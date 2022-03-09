@@ -14,6 +14,8 @@ import EditAddress from '../screens/user-profile/editLocation';
 import ManageFields from '../screens/venue-host/manageFields';
 import MyMatch from '../screens/my-activity/my-match/my-match';
 import ManageSchedule from '../screens/venue-host/manageSchedule';
+import OTPScreen from '../screens/register/screens/OTPScreen';
+import GiveRating from '../screens/rating/giveRating';
 
 const Stack = createNativeStackNavigator();
 
@@ -57,7 +59,16 @@ function ProfileStack() {
           }
         }
         />
+        <Stack.Screen name="OTP" component={OTPScreen}
+        />
+        
       </Stack.Group>
+      <Stack.Screen name="Give Rating" component={GiveRating} options={
+          {
+            headerShown: false
+          }
+        }
+        />
     </Stack.Navigator>
   );
 }

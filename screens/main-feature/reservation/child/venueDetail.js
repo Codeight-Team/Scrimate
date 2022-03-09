@@ -49,46 +49,6 @@ function ReserveVenue({ navigation, route }) {
             name: 'Sunday'
         }
     ]
-    const review = [
-        {
-            id: 1,
-            name: 'Juki',
-            rating: 5,
-            comment: "Have the best field in the city!!"
-        },
-        {
-            id: 2,
-            name: 'David',
-            rating: 5,
-            comment: "good for practice"
-        },
-        {
-            id: 3,
-            name: 'Malik',
-            rating: 5,
-            comment: "nice flooring"
-        },
-        {
-            id: 4,
-            name: 'Steven',
-            rating: 5,
-        },
-        {
-            id: 5,
-            name: 'Gary',
-            rating: 5
-        },
-        {
-            id: 6,
-            name: 'Bob',
-            rating: 5
-        },
-        {
-            id: 7,
-            name: 'John',
-            rating: 5
-        }
-    ]
 
     useEffect(() => {
         fetchVenueDetail()
@@ -167,7 +127,7 @@ function ReserveVenue({ navigation, route }) {
                 }
                 {/* venue.venue_rating.length  */}
 
-                {flag == 3 && (!venue.venue_rating.length ?
+                {flag == 3 && (venue.venue_rating.length ?
                     <ScrollView style={{ width: '100%' }}>
                         <View style={{ flexDirection: 'row', paddingBottom: 10 }}>
                             <Text style={{ paddingEnd: 20, fontWeight: 'bold' }}>
@@ -175,25 +135,24 @@ function ReserveVenue({ navigation, route }) {
                             </Text>
                             <View style={{ flexDirection: 'row' }}>
                                 {
-                                    renderRating(4, 20)
+                                    renderRating(venue.Average, 20)
                                 }
                             </View>
-                            <Text style={{ paddingHorizontal: 5 }}>({review.length})</Text>
+                            <Text style={{ paddingHorizontal: 5 }}>({venue.venue_rating.length})</Text>
                         </View>
                         <View style={{ paddingVertical: 5, }}>
                             <Text style={{ color: 'gray' }}>Review</Text>
                         </View>
                         {
-                            // venue.venue_rating.
-                            review.map(item => (
+                            venue.venue_rating.map(item => (
                                 <View key={item.id} style={{ paddingVertical: 10 }}>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         {
-                                            renderRating(item.rating, 14)
+                                            renderRating(item.rating_num, 14)
                                         }
                                     </View>
-                                    <Text style={{ paddingRight: 10, fontSize: 12, fontWeight: 'bold' }}>{item.name}</Text>
-                                    <Text>{item.comment}</Text>
+                                    <Text style={{ paddingRight: 10, fontSize: 12, fontWeight: 'bold' }}>{!item.name&&"Anonymous"}</Text>
+                                    <Text style={{fontSize: 12}}>{item.rating_comment?item.rating_comment:'-'}</Text>
                                 </View>
                             ))
                         }

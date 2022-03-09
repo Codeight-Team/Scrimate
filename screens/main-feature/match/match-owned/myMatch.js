@@ -3,6 +3,7 @@ import { StyleSheet, View, ScrollView } from 'react-native';
 import Loading from '../../../../shared/loading'
 import api from '../../../../services/api';
 import Post from '../components/post';
+import NoDataView from '../../../../shared/noDataFound';
 
 const MyMatchList = ({ navigation, route }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -44,6 +45,9 @@ const MyMatchList = ({ navigation, route }) => {
                         <View style={styles.container}>
                             <View style={styles.subContainer}>
                                 {
+                                    matchList.length < 1 ?
+                                    <NoDataView message={"You Have No Match"}/>
+                                    :
                                     RenderMatchList()
                                 }
                             </View>

@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useReducer, useMemo, useEffect } from 'react';
-import { Alert } from 'react-native';
+import React, { useState, useReducer, useMemo, useEffect, useRef } from 'react';
+import { Alert, AppState } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthContext } from './component/context';
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -8,9 +8,11 @@ import Main from './routes/mainTabStack'
 import Root from './routes/rootStack'
 import Loading from './shared/loading';
 import api from './services/api';
+import { SocketContext, socket } from './component/socket'
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const appState = useRef(AppState.currentState);
 
   const initialLoginState = {
     accessToken: null,
@@ -44,7 +46,7 @@ function App() {
           user_id: null,
           role: null
         }
-        case 'FETCH_DATA':
+      case 'FETCH_DATA':
         return {
           ...state,
           accessToken: action.token,
@@ -60,15 +62,15 @@ function App() {
   const auth = useMemo(() => ({
     login: async (data) => {
       let user = {}
-        await api.post('/api/auth/login', data)
-      .then(response => {
-        user = response.data
-      }
-      ).catch((error) => {
-        return error
-      }
-      )
-      if(user){
+      await api.post('/api/auth/login', data)
+        .then(response => {
+          user = response.data
+        }
+        ).catch((error) => {
+          return error
+        }
+        )
+      if (user) {
         try {
           await AsyncStorage.setItem('AccessToken', user.accessToken)
           await AsyncStorage.setItem('RefreshToken', user.refreshToken)
@@ -80,7 +82,7 @@ function App() {
       }
       else
         console.warn('null')
-      dispatch({ type: 'LOGIN', token: user.accessToken, refreshToken: user.refreshToken, user_id: user.user_id,  role: user.role})
+      dispatch({ type: 'LOGIN', token: user.accessToken, refreshToken: user.refreshToken, user_id: user.user_id, role: user.role })
     },
     signOut: async () => {
       try {
@@ -91,12 +93,33 @@ function App() {
       } catch (error) {
         Alert.alert('Try Again')
       }
-      dispatch({type: 'SIGN_OUT'})
+      dispatch({ type: 'SIGN_OUT' })
     }
   }))
 
-  useEffect(()=>{
-    setTimeout(async()=>{
+  var isFirst = true;
+
+  const _handleAppStateChange = (nextAppState) => {
+    // appState.current.match(/inactive|background/) &&
+    if ( (appState.current.match(/inactive|background/) || isFirst == true ) &&
+      nextAppState === "active"){
+        if(isFirst == true){
+          isFirst= false
+        }
+        socket.connect()
+       console.log("This is fore"); 
+      }else{
+       console.log("This is back"); 
+        socket.disconnect();
+      }
+    
+      // console.log('connection background ', socket.connected)
+    appState.current = nextAppState;
+    // console.log("AppState", appState.current);
+}  
+
+  useEffect(() => {
+    setTimeout(async () => {
       let accessToken = null
       let refreshToken = null
       let user_id = null
@@ -111,22 +134,29 @@ function App() {
       } catch (error) {
         Alert.alert('Sign in needed')
       }
-      dispatch({type:'FETCH_DATA', token: accessToken, refreshToken: refreshToken, user_id: user_id, role: JSON.parse(role)})
+      dispatch({ type: 'FETCH_DATA', token: accessToken, refreshToken: refreshToken, user_id: user_id, role: JSON.parse(role) })
     }, 1000)
-  },[]);
+  }, []);
+
+  useEffect(()=>{
+    AppState.addEventListener("change", _handleAppStateChange);
+  },[])
 
   return (
-    <AuthContext.Provider value={{state: loginState, dispatch:auth}}>
-      {isLoading?
-      <Loading/>
+    <AuthContext.Provider value={{ state: loginState, dispatch: auth }}>
+      {isLoading ?
+        <Loading />
         :
-      <NavigationContainer>{loginState.accessToken? 
-        <Main/>
+        <NavigationContainer>{loginState.accessToken ?
+          <SocketContext.Provider value={socket}>
+            <Main />
+          </SocketContext.Provider>
           :
-        <Root/>}
-        <StatusBar style="auto" />
-      </NavigationContainer>
-    }
+          <Root />
+          }
+          <StatusBar style="auto" />
+        </NavigationContainer>
+      }
     </AuthContext.Provider>
   );
 }
