@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useReducer, useMemo, useEffect, useRef } from 'react';
-import { Alert, AppState, Text } from 'react-native';
+import { Alert, AppState } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthContext } from './component/context';
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -9,7 +9,6 @@ import Root from './routes/rootStack'
 import Loading from './shared/loading';
 import api from './services/api';
 import { SocketContext, socket } from './component/socket'
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
