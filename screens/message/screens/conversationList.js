@@ -1,37 +1,76 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, TouchableOpacity, ScrollView, Image, Pressable } from 'react-native';
-import { useState, useEffect, useRef } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
+import { useState, useEffect, useContext } from 'react';
 import api from '../../../services/api';
 import moment from 'moment';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import io from 'socket.io-client';
+import UserFriend from '../components/userChat';
+import NoDataView from '../../../shared/noDataFound';
+import { useFocusEffect } from '@react-navigation/native';
+import { SocketContext } from '../../../component/socket'
 
 function ConversationList({ navigation }) {
     const [myChat, setMyChat] = useState()
-    const ENDPOINT = 'ws://66.42.49.240:8900';
+    const [user, setUser] = useState('')
+    const [conversation, setConversation] = useState([]);
+    const socket = useContext(SocketContext);
 
-    useEffect(() => {
-        const socket = io(ENDPOINT, {transport:['websocket'], jsonp: false})
-        socket.connect();
-        socket.on('connect', ()=> console.log('socket connected..'))
-    },[])
+    useFocusEffect(
+        React.useCallback(() => {
+            let isActive = true
+            const fetchUser = async () => {
+                let user
+                try {
+                    user = await AsyncStorage.getItem('user_id')
+                } catch (error) {
+                    Alert.alert('Sign in needed')
+                }
+                if (isActive) {
+                    fetchListConversation(user)
+                    setUser(user)
+                    socket.emit('addUser', user)
+                    socket.on('getUsers', users => {
+                        console.log(users);
+                    })
+                }
+                // set
+            }
+            fetchUser()
+            return () => { isActive = false }
+        }, [])
+    );
+
+    //   useEffect(() => {
+    //     socket.current.emit("addUser", user);
+    //     socket.current.on("getUsers", (users) => {
+    //       setOnlineUsers(
+    //         user.followings.filter((f) => users.some((u) => u.userId === f))
+    //       );
+    //     });
+    //   }, [user]);
+
+    const fetchListConversation = async (user) => {
+        await api.get('/api/messanger/get-conversation/' + user)
+            .then(response => {
+                setConversation(response.data)
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.inner}>
-                <TouchableOpacity style={{ width: '100%', height: 70, borderBottomWidth: 1, borderColor: '#cccccc', flexDirection: 'row' }} onPress={()=> navigation.navigate('Message Focus')}>
-                    <View style={{ width: '25%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                        <Image style={{ width: 60, height: 60, backgroundColor: 'black', borderRadius: 50 }} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
-                    </View>
-                    <View style={{ width: '55%', height: '100%', paddingVertical: 10 , justifyContent: 'center'}}>
-                        <Text style={{ fontSize: 17, fontWeight: 'bold' }}>
-                            Rafi
-                        </Text>
-                    </View>
-                    <View style={{ width: '15%', height: '100%', paddingVertical: 10, alignItems: 'flex-end' }}>
-                        <Text style={{ fontSize: 12, color: 'gray' }}>
-                            {moment(new Date()).format('HH:mm')}
-                        </Text>
-                    </View>
-                </TouchableOpacity>
+                {
+                    conversation.length > 0 ?
+                        conversation.map(item => (
+                            <UserFriend conversation={item} currentUser={user} key={item._id} onPress={() => navigation.navigate('Message Focus', { user: user, conversation: item })} />
+                        ))
+                        :
+                        <NoDataView message={'No Conversation'} />
+                }
             </View>
         </View>
     )

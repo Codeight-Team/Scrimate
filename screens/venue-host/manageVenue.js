@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, Image, RefreshControl } from 'react-native'
 import { Entypo } from '@expo/vector-icons';
-import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import api from '../../services/api';
 
@@ -17,18 +17,18 @@ const ManageVenue = ({ navigation, route }) => {
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        wait(2000).then(() => [fetchVenues(true),setRefreshing(false)]);
+        wait(2000).then(() => [fetchVenues(true), setRefreshing(false)]);
     }, []);
 
     // useFocusEffect(
     useEffect(() => {
         // React.useCallback(() => {
         let isActive = true
-        
+
         fetchVenues(isActive)
         return () => { isActive = false }
         // })
-    },[])
+    }, [])
     // ), [user_id];
 
     const fetchVenues = async (isActive) => {
@@ -108,27 +108,26 @@ const ManageVenue = ({ navigation, route }) => {
         <View style={styles.container}>
             <View style={styles.venueContainer}>
                 <View style={{ height: '90%', width: '100%', paddingVertical: 20 }}>
-                    {venue.length != 0 ?
-                        <View style={{ height: '100%', width: '100%' }}>
-                            <ScrollView refreshControl={
-                                <RefreshControl
-                                    refreshing={refreshing}
-                                    onRefresh={onRefresh}
-                                />
-                            }>
+                    <View style={{ height: '100%', width: '100%' }}>
+                        <ScrollView refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}
+                            />
+                        }>
+                            {venue.length != 0 ?
                                 <View style={{ flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'center' }}>
                                     {
                                         renderVenue()
                                     }
                                 </View>
-                            </ScrollView>
-
-                        </View>
-                        :
-                        <View style={{ width: '100%', alignItems: 'center', }}>
-                            <Text style={{ color: "gray" }}>You have no venue</Text>
-                        </View>
-                    }
+                                :
+                                <View style={{ width: '100%', alignItems: 'center', }}>
+                                    <Text style={{ color: "gray" }}>You have no venue</Text>
+                                </View>
+                            }
+                        </ScrollView>
+                    </View>
                 </View>
                 <View style={styles.addContainer}>
                     <TouchableOpacity style={{

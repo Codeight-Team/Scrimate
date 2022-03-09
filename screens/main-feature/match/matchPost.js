@@ -26,7 +26,7 @@ function MatchPost({ navigation, route }) {
     }, [address_user, myMatch])
 
     const fetchMatchList = async () => {
-        await api.post(`/api/match-making/list-match/${user_id}`, { sport_name: sport, address_region: "Kota Jakarta Barat" })
+        await api.post(`/api/match-making/list-match/${user_id}`, { sport_name: sport, address_region: address_user })
             .then(res => {
                 setMatchList(res.data)
             })

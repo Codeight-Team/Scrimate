@@ -53,7 +53,6 @@ const PickDateTime = ({ navigation, route }) => {
     const fetchTimeOpen = async (date) => {
         await api.post('/api/field/field-schedule/' + field.field_id, { date_choose: date })
             .then(res => {
-                // setOpen(res.data.times)
                 checkTimeOpen(res.data.times)
             })
             .catch(err => console.log(err))
@@ -206,7 +205,7 @@ const PickDateTime = ({ navigation, route }) => {
                 onCancel={onCancel}
                 onConfirm={onConfirm}
                 maxDate={dateNow}
-                minDate={new Date()}
+                // minDate={new Date()}
             />
             <View style={{ paddingVertical: 30, height: '50%', backgroundColor: '#6C63FF' }}>
                 <View style={{ height: '81%', width: '100%' }}>

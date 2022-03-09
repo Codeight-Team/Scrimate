@@ -1,16 +1,15 @@
 import moment from "moment";
 import React from "react";
 import { StyleSheet, View, Text, TouchableWithoutFeedback, Image } from "react-native";
-import Dummy from '../../../assets/lapangan-dummy.png'
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-const Card = ({ itemId, venue_name, onPress, status, time, date, field_name, image, price }) => {
-
+const Card = ({ itemId, venue_name, onPress, status, time, date, field_name, image, price, onPressRate }) => {
     return (
         <View style={styles.container}>
             <TouchableWithoutFeedback onPress={onPress}>
                 <View style={styles.inner}>
                     <Text style={{ color: 'gray', borderBottomWidth: 1, borderColor: '#cecece' }}>
-                        Order ID: SCR/<Text style={{textTransform: 'uppercase'}}>{itemId.substring(0, 30)}</Text>
+                        Order ID: SCR/<Text style={{ textTransform: 'uppercase' }}>{itemId.substring(0, 30)}</Text>
                     </Text>
                     <View style={styles.item}>
                         <Text style={{ fontWeight: 'bold' }}>
@@ -18,7 +17,7 @@ const Card = ({ itemId, venue_name, onPress, status, time, date, field_name, ima
                         </Text>
                         <View style={{ width: '100%', flexDirection: "row", paddingVertical: 10 }}>
                             <View style={{ width: "30%", height: 60, }}>
-                                <Image source={{uri: 'http://scrimate.com/'+ image}} style={{ width: '100%', height: '100%', borderRadius: 10 }} />
+                                <Image source={{ uri: 'http://scrimate.com/' + image }} style={{ width: '100%', height: '100%', borderRadius: 10 }} />
                             </View>
                             <View style={{ width: "70%", padding: 10, paddingRight: 0, justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
                                 <View style={{ width: 120, justifyContent: "flex-start", }}>
@@ -26,12 +25,12 @@ const Card = ({ itemId, venue_name, onPress, status, time, date, field_name, ima
                                         {moment(date).format("DD MMM YYYY")}
                                     </Text>
                                     <Text style={{ color: "black" }}>
-                                        {moment(time, 'HH:mm:ss').format('HH:mm')} - { moment((moment(time, "HH:mm:ss").hours()+1),"HH").format('HH:mm')} WIB
+                                        {moment(time, 'HH:mm:ss').format('HH:mm')} - {moment((moment(time, "HH:mm:ss").hours() + 1), "HH").format('HH:mm')} WIB
                                     </Text>
                                 </View>
-                                <View style={{width: "50%", alignItems: 'flex-end'}}>
-                                    <View style={[styles.statusbar, status == "Finish" ? styles.settle : status == "On Going" ? styles.onGoing : status == "Failed" ? styles.failure:status=="Refund"&& styles.refund]}>
-                                        <Text style={[{fontWeight: 'bold'},status == "Finish" ? styles.green : status == "On Going" ? styles.orange : status == "Failed" ? styles.red:status=="Refund"&& styles.blue]}>
+                                <View style={{ width: "50%", alignItems: 'flex-end' }}>
+                                    <View style={[styles.statusbar, status == "Finish" ? styles.settle : status == "On Going" ? styles.onGoing : status == "Failed" || status == "Invalid" ? styles.failure : status == "Refund" && styles.refund]}>
+                                        <Text style={[{ fontWeight: 'bold' }, status == "Finish" ? styles.green : status == "On Going" ? styles.orange : status == "Failed" || status == "Invalid" ? styles.red : status == "Refund" && styles.blue]}>
                                             {status}
                                         </Text>
                                     </View>
@@ -43,6 +42,18 @@ const Card = ({ itemId, venue_name, onPress, status, time, date, field_name, ima
                         <Text style={{ width: '50%', fontSize: 12 }}>
                             Total Price
                         </Text>
+                        {
+                            status == 'Finish' && new Date(date).getTime() > new Date().getTime() &&
+                            <View style={{ position: 'absolute', width: '100%', alignItems: "center" }}>
+                                <TouchableOpacity onPress={onPressRate}>
+                                    <TouchableWithoutFeedback>
+                                        <View style={{ padding: 5, backgroundColor: '#CBC3E3', paddingHorizontal: 30, borderWidth: 1, borderColor: '#6C63FF', alignItems: "center", justifyContent: "center", borderRadius: 10 }}>
+                                            <Text style={{ color: '#6C63FF', fontWeight: "bold" }}>Rate</Text>
+                                        </View>
+                                    </TouchableWithoutFeedback>
+                                </TouchableOpacity>
+                            </View>
+                        }
                         <Text style={{ width: '50%', textAlign: 'right', fontWeight: "bold" }}>
                             Rp {price}
                         </Text>
@@ -97,7 +108,7 @@ const styles = StyleSheet.create({
     red: {
         color: '#b10000'
     },
-    blue:{
+    blue: {
         color: '#29a8f6'
     }
 
