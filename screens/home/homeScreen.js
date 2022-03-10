@@ -2,22 +2,22 @@
 
 import * as React from 'react';
 import { StyleSheet, View, Text, useWindowDimensions, TouchableOpacity, Image, StatusBar } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, } from 'react-native-reanimated';
 import TrophySVG from '../../assets/icons/trophy.svg';
 import Swiper from 'react-native-swiper';
-import MenuComponent from '../../shared/menu';
+import SportCategory from '../../shared/menu';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Loading from '../../shared/loading';
-import dummy from '../../assets/lapangan-dummy.png'
 import { IMAGE_URL } from '@env'
 import api from '../../services/api';
 
 function HomeScreen({ navigation, route }) {
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true)
+  const [sports, setSports] = useState('')
 
   useFocusEffect(
     React.useCallback(() => {
@@ -37,6 +37,19 @@ function HomeScreen({ navigation, route }) {
       return () => { isActive = false }
     }, [])
   );
+
+  useEffect(()=>{
+    const fetchSport = () =>{
+      api.get('/api/sports/')
+      .then(res=>{
+        setSports(res.data);
+      })
+      .catch(err=>{
+
+      })
+    }
+    fetchSport();
+  },[])
 
 
   const fetchUserData = async (user) => {
@@ -168,12 +181,12 @@ function HomeScreen({ navigation, route }) {
   ]
 
   function RenderBubble() {
-    return sport.map((item) => {
+    return sports.map((item) => {
       return (
-        <TouchableOpacity key={item.sport} onPress={() =>
-          navigation.navigate(item.url, { sport: item.sport, user: data })
+        <TouchableOpacity key={item.sport_id} onPress={() =>
+          navigation.navigate(item.url, { sport: item.sport_name, user: data })
         }>
-          <MenuComponent name={item.name} image={item.svg}></MenuComponent>
+          <SportCategory name={item.sport_name} image={item.sport_name}></SportCategory>
         </TouchableOpacity>
       )
     });
