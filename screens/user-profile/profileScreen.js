@@ -83,9 +83,6 @@ function ProfileScreen({ navigation }) {
           <TouchableOpacity onPress={() => navigation.navigate('My Order', { user_id: data.user_id, type: "Order" })}>
             <Text>Order History</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('My Order', { user_id: data.user_id, type: "Match" })}>
-            <Text>My Match</Text>
-          </TouchableOpacity>
         </View>
 
         <View style={styles.box}>

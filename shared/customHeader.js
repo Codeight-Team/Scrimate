@@ -12,7 +12,7 @@ const CustomHeader = ({ title, onPressBackButton, backButtonModel, type, current
   }, [currentUser, conversation]);
 
   const getFriend = () =>{
-    const friendId = conversation.members.find((m) => m !== currentUser._id);
+    const friendId = conversation.members.find((m) => m !== currentUser);
     console.log(friendId);
 
     const getUser = async () => {

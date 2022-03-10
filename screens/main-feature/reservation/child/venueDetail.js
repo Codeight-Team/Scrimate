@@ -144,8 +144,8 @@ function ReserveVenue({ navigation, route }) {
                             <Text style={{ color: 'gray' }}>Review</Text>
                         </View>
                         {
-                            venue.venue_rating.map(item => (
-                                <View key={item.id} style={{ paddingVertical: 10 }}>
+                            venue.venue_rating.map((item, index) => (
+                                <View key={index} style={{ paddingVertical: 10 }}>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         {
                                             renderRating(item.rating_num, 14)

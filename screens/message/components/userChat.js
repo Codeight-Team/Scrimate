@@ -7,7 +7,7 @@ const UserChat = ({ conversation, currentUser, onPress }) => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        const friendId = conversation.members.find((m) => m !== currentUser._id);
+        const friendId = conversation.members.find((m) => m !== currentUser);
 
         const getUser = async () => {
             await api.get("/api/users/" + friendId)

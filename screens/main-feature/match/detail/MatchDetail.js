@@ -153,7 +153,7 @@ function MatchDetail({ navigation, route }) {
                                                 ])} />
                                         }
                                         {finder_id && (finder_id == user_id || creator_id == user_id) ?
-                                            <TouchableOpacity style={{ width: 50, alignItems: 'center' }}>
+                                            <TouchableOpacity style={{ width: 50, alignItems: 'center' }} onPress={() => navigation.navigate('Chat', {screen: 'Message Main'})}>
                                                 <Ionicons name="md-chatbubble-ellipses" size={30} color="#6C63FF" />
                                             </TouchableOpacity>
                                             :
