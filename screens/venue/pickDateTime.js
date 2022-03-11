@@ -205,7 +205,7 @@ const PickDateTime = ({ navigation, route }) => {
                 onCancel={onCancel}
                 onConfirm={onConfirm}
                 maxDate={dateNow}
-                // minDate={new Date()}
+                minDate={new Date()}
             />
             <View style={{ paddingVertical: 30, height: '50%', backgroundColor: '#6C63FF' }}>
                 <View style={{ height: '81%', width: '100%' }}>

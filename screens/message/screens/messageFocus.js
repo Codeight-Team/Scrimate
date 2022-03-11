@@ -15,6 +15,7 @@ function MessageFocus({ navigation, route }) {
     const scrollRef = useRef();
 
     useEffect(() => {
+        console.log(currentChat._id);
         arrivalMessage &&
             currentChat?.members.includes(arrivalMessage.sender) &&
             setMessages((prev) => [...prev, arrivalMessage]);
@@ -40,23 +41,24 @@ function MessageFocus({ navigation, route }) {
             text: newMessage,
             conversation_id: currentChat._id
         }
-        const receiverId = currentChat.members.find(
-            (member) => member !== user._id
-        );
+        // const receiverId = currentChat.members.find(
+        //     (member) => member !== user._id
+        // );
 
-        console.log(user);
+        // console.log(user);
 
-        socket.current.emit("sendMessage", 
-        {
-            sender_id: user,
-            receiver_id: receiverId,
-            text: newMessage,
-        }, ()=> console.log('Message Sent'));
+        // socket.current.emit("sendMessage", 
+        // {
+        //     sender_id: user,
+        //     receiver_id: receiverId,
+        //     text: newMessage,
+        // }, ()=> console.log('Message Sent'));
 
         await api.post("/api/messanger/add-message", message)
         .then(res=>{
             setMessages([...messages, res.data]);
             setNewMessage("");
+            console.log(res);
         })
         .catch(err=>{
             console.log(err);

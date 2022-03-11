@@ -11,11 +11,11 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 function MenuComp({ name, image }) {
     function Svg(){
-        if( image === 'futsal'){
+        if( image === 'Futsal'){
           return <Futsal width={50} height={50}/>
-        } else if(image === 'shuttle'){
+        } else if(image === 'Badminton'){
           return <MaterialCommunityIcons name="badminton" size={40} color="#6C63FF" />
-        } else if(image == 'basket'){
+        } else if(image == 'Basketball'){
             return <Ionicons name="basketball-sharp" size={40} color="#6C63FF" />
         } else{
           return <Football width={35} height={35} marginBottom={5}/>

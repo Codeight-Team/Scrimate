@@ -34,12 +34,13 @@ export default function OTPScreen({ navigation, route }) {
     }, [])
 
     const sendOTP = async () => {
-            await api.post('/api/auth/sendOTP/'+ route.params.id + '/' + route.params.email)
+        await api.post('/api/auth/sendOTP/'+ route.params.id + '/' + route.params.email)
         .then(response=>{
-            // console.log(response.data);
+            console.log(response.data);
         })
         .catch(err => {
-            console.log(err);
+            console.log(err.message);
+            setSend(true)
         })
         }
 
@@ -69,7 +70,7 @@ export default function OTPScreen({ navigation, route }) {
                                 />
                             </View>
                             {!firstSend?
-                                <TouchableOpacity style={styles.textcontainer} onPress={() => [setSend(true), sendOTP()]}>
+                                <TouchableOpacity style={styles.textcontainer} onPress={() => sendOTP()}>
                                     <Text style={styles.txt}>Send</Text>
                                 </TouchableOpacity>
                                 :

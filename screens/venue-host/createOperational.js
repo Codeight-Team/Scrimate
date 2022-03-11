@@ -56,6 +56,7 @@ const CreateOperational = ({ route, navigation }) => {
         '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
 
     const sendOperational = async(values) => {
+        console.log(values);
         await api.post("/api/venue/create-operationalhour/"+ venue, values)
         .then(()=>{
             Alert.alert(
@@ -99,7 +100,7 @@ const CreateOperational = ({ route, navigation }) => {
             }
             return item;
         });
-        setTime(newItems)
+        // setTime(newItems)
         console.log(newItems);
     }
 

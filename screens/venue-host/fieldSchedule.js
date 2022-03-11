@@ -6,7 +6,7 @@ import moment from "moment";
 import { ScrollView } from "react-native-gesture-handler";
 import api from "../../services/api";
 
-const ManageSchedule = ({ route }) => {
+const FieldSchedule = ({ route }) => {
     const [date, setDate] = useState(new Date)
     const [newDate, setNewDate] = useState(new Date)
     const [showDatePicker, setShowDatePicker] = useState(false)
@@ -25,6 +25,7 @@ const ManageSchedule = ({ route }) => {
     }
 
     const fetchTimeOpen = async (date) => {
+        console.log(route.params.field_id);
         await api.post('/api/field/field-schedule/' + route.params.field_id, { date_choose: date })
             .then(res => {
                 // checkTimeOpen(res.data.times)
@@ -79,15 +80,15 @@ const ManageSchedule = ({ route }) => {
         console.log(time);
     }
 
-    const bookedSchedule = async () =>{
-        // await api.post('')
-        // .then(res=>{
+    // const bookedSchedule = async () =>{
+    //     // await api.post('')
+    //     // .then(res=>{
 
-        // })
-        // .catch(err=>{
+    //     // })
+    //     // .catch(err=>{
 
-        // })
-    }
+    //     // })
+    // }
 
 
     return (
@@ -180,4 +181,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default ManageSchedule
+export default FieldSchedule
