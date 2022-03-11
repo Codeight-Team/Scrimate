@@ -30,9 +30,9 @@ function ConversationList({ navigation }) {
                     fetchListConversation(user)
                     setUser(user)
                     socket.emit('addUser', user)
-                    socket.on('getUsers', users => {
-                        console.log(users);
-                    })
+                    // socket.on('getUsers', users => {
+                    //     console.log(users);
+                    // })
                 }
                 // set
             }
@@ -54,12 +54,13 @@ function ConversationList({ navigation }) {
         await api.get('/api/messanger/get-conversation/' + user)
             .then(response => {
                 setConversation(response.data)
+                console.log(response.data);
             })
             .catch(error => {
                 console.log(error);
             })
     }
-
+    
     return (
         <View style={styles.container}>
             <View style={styles.inner}>

@@ -68,7 +68,7 @@ function ProfileScreen({ navigation }) {
           </View>
         </View>
 
-        {
+        {/* {
           !data?.isVerif &&
           <View style={[styles.box, { backgroundColor: '#ffb2b2' }]}>
             <Text style={styles.submenuText}> <AntDesign name="warning" size={15} color="black" /> Your Account is Not Verified </Text>
@@ -76,7 +76,7 @@ function ProfileScreen({ navigation }) {
               <Text style={{color: 'blue'}}>Verify Account</Text>
             </TouchableOpacity>
           </View>
-        }
+        } */}
 
         <View style={styles.box}>
           <Text style={styles.submenuText}>Activity</Text>

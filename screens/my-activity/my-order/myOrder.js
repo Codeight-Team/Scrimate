@@ -32,12 +32,12 @@ const MyOrder = ({ navigation, route }) => {
             <View style={styles.inner}>
                 <View style={styles.tabBar}>
                     <TouchableOpacity style={[styles.box, active == "progress" && { backgroundColor: '#fff' }]} onPress={() => setActive("progress")}>
-                        <Text style={[{ color: 'black' }, active != "progress" && { fontWeight: "bold" }]}>
+                        <Text style={[{ color: 'black' }, active == "progress" && { fontWeight: "bold" }]}>
                             Progress
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.box, active == "history" && { backgroundColor: '#fff' }]} onPress={() => setActive("history")}>
-                        <Text style={[{ color: 'black' }, active != "history" && { fontWeight: "bold" }]}>
+                        <Text style={[{ color: 'black' }, active == "history" && { fontWeight: "bold" }]}>
                             {route.params.type} History
                         </Text>
                     </TouchableOpacity>

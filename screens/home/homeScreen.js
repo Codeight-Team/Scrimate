@@ -17,6 +17,7 @@ import api from '../../services/api';
 function HomeScreen({ navigation, route }) {
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true)
+  const [isLoadingSport, setIsLoadingSport] = useState(true) 
   const [sports, setSports] = useState('')
 
   useFocusEffect(
@@ -42,6 +43,7 @@ function HomeScreen({ navigation, route }) {
     const fetchSport = () =>{
       api.get('/api/sports/')
       .then(res=>{
+        setIsLoadingSport(false)
         setSports(res.data);
       })
       .catch(err=>{
@@ -184,7 +186,7 @@ function HomeScreen({ navigation, route }) {
     return sports.map((item) => {
       return (
         <TouchableOpacity key={item.sport_id} onPress={() =>
-          navigation.navigate(item.url, { sport: item.sport_name, user: data })
+          navigation.navigate('Activity Screen', { sport: item.sport_name, user: data })
         }>
           <SportCategory name={item.sport_name} image={item.sport_name}></SportCategory>
         </TouchableOpacity>
@@ -247,7 +249,7 @@ function HomeScreen({ navigation, route }) {
                 style
               ]}>
               <View style={styles.csheet}>
-                {
+                {!isLoadingSport&&
                   RenderBubble()
                 }
               </View>

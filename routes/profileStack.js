@@ -13,7 +13,7 @@ import MyOrder from '../screens/my-activity/my-order/myOrder';
 import EditAddress from '../screens/user-profile/editLocation';
 import ManageFields from '../screens/venue-host/manageFields';
 import MyMatch from '../screens/my-activity/my-match/my-match';
-import ManageSchedule from '../screens/venue-host/manageSchedule';
+import ManageSchedule from '../screens/venue-host/fieldSchedule';
 import OTPScreen from '../screens/register/screens/OTPScreen';
 import GiveRating from '../screens/rating/giveRating';
 
